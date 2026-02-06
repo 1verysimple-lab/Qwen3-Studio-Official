@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "Chapter 3: Custom Voice Mastery. I am Vivian. This tab is for fast, high-quality production using pre-trained voices like myself.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "In the Custom Voice tab, you can pick from 9 distinct identities across English, Chinese, Japanese, and Korean native accents.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "Seductive",
+        "text": "Performance is everything. I am now using the 'Seductive' style. You can type any acting instruction into the box to change our mood instantly.",
+        "temp": 0.9,
+        "top_p": 0.9
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "The 'Generate Voice Set' button is your best friend. It creates multiple emotional versions of your line so you can pick the best one.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "It's now your turn to try. Go to the 'Custom Voice' tab. Write a style description you like in the instruction field, then use the 'Save As' box to save it. We will use this in Chapter 4.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "When done, come back here, load 'Tutorial_04_VoiceDesigner' and click 'Run Scene'.",
+        "temp": 0.6,
+        "top_p": 0.8
+    }
+]

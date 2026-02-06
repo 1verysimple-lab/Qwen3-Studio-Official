@@ -1,0 +1,197 @@
+{
+    "saved_voices": {
+        "david_friendly": {
+            "audio_path": "C:/Users/1very/Videos/Audio Clips/friends_dav.wav",
+            "transcript": "auditioned for them a year before for a show that they had going for ABC called  Couples and I came in and I auditioned and I actually tested with two other  actors. One of the actors who's a close friend of mine Johnny Silverman got the  part.",
+            "temp": 1.2772727272727273,
+            "top_p": 0.5806818181818182,
+            "whisper_lang": "Auto"
+        },
+        "mathew_c": {
+            "audio_path": "C:/Users/1very/Videos/Audio Clips/matthew_clip.wav",
+            "transcript": "It's slowly learning about me through conversations, then going,  oh, I think this is what you like based on our conversations.  No, I want the answers based on what I've uploaded it with.",
+            "temp": 1.5,
+            "top_p": 0.8977272727272727,
+            "whisper_lang": "Auto"
+        },
+        "adele_test": {
+            "audio_path": "C:/Users/1very/Videos/Audio Clips/adele_pathetic.wav",
+            "transcript": "I go out for dinner a bit more now, which I know sounds pathetic.",
+            "temp": 0.9909090909090909,
+            "top_p": 0.6522727272727272,
+            "whisper_lang": "Auto"
+        },
+        "trump_speech": {
+            "audio_path": "C:/Users/1very/Videos/Audio Clips/trump.wav",
+            "transcript": "we're going to do work that's never been as good.  So I think that's basically what's happened in our first  year.  We've had an amazing year, and this will be our first  Cabinet after the year.  So we're starting our second year.  Tremendous progress has been made.  I want to thank my entire Cabinet.",
+            "temp": 1.2454545454545456,
+            "top_p": 0.26363636363636367,
+            "whisper_lang": "Auto"
+        },
+        "david att": {
+            "audio_path": "C:/Users/1very/Videos/Audio Clips/david_A_short_con.wav",
+            "transcript": "The year is 2015.  The world appears to have a green tint to it,  but there are also some dead insects in the foreground.  But don't worry about that for now.",
+            "temp": 1.2772727272727273,
+            "top_p": 0.7545454545454545,
+            "whisper_lang": "Auto"
+        },
+        "bogart": {
+            "audio_path": "C:/Users/1very/Videos/Audio Clips/bogart.wav",
+            "transcript": "If I have the boy pick up my laundry this morning, when can I expect it back?  Wednesday, huh? When does the laundry pick it up?  What time this afternoon?",
+            "temp": 1.2772727272727273,
+            "top_p": 0.7545454545454545,
+            "whisper_lang": "Auto"
+        },
+        "love you tral": {
+            "audio_path": "C:\\Users\\1very\\source\\cloneMe\\saved_assets\\20260206-021714_Rec_Recording.wav",
+            "transcript": "Oh, girlfriend, I love you, tralalalalala.",
+            "temp": 0.9909090909090909,
+            "top_p": 0.6522727272727272,
+            "whisper_lang": "Auto"
+        },
+        "whisperme": {
+            "audio_path": "C:\\Users\\1very\\source\\cloneMe\\saved_assets\\20260206-023926_Rec_Recording.wav",
+            "transcript": "Girlfriend. Girlfriend. He's really late.",
+            "temp": 0.9909090909090909,
+            "top_p": 0.6522727272727272,
+            "whisper_lang": "Auto"
+        }
+    },
+    "design_profiles": {
+        "1. Broadcaster": {
+            "desc": "Middle-aged male, deep baritone, clear standard American accent, professional.",
+            "instruct": "Read clearly and confidently. Neutral tone. Even pacing.",
+            "script": "Tonight\u2019s top story: A breakthrough in renewable energy promises to cut costs by half within the next decade. Experts say this could be the turning point we've been waiting for.",
+            "temp": 0.4,
+            "top_p": 0.5
+        },
+        "2. Bedtime Story": {
+            "desc": "Female, mid-40s, very soft and warm texture, soothing and gentle.",
+            "instruct": "Read softly and slowly. Warm, reassuring tone.",
+            "script": "Once upon a time, in a forest where the leaves whispered secrets to the wind, a little fox curled up in his den. The stars above blinked like sleepy eyes, watching over the world.",
+            "temp": 0.6,
+            "top_p": 0.8
+        },
+        "3. Podcast Host": {
+            "desc": "Young adult male, energetic, bright, slightly casual tone.",
+            "instruct": "Conversational but focused. Moderate pace. Friendly clarity.",
+            "script": "Welcome back to the show. Today we\u2019re diving into something that affects all of us\u2014how we spend our time. It\u2019s not just about productivity; it\u2019s about what actually matters.",
+            "temp": 0.7,
+            "top_p": 0.8
+        },
+        "4. Documentary": {
+            "desc": "Older male, British accent, rich texture, deep and resonant.",
+            "instruct": "Measured, observant tone. Slightly slower than conversational.",
+            "script": "The desert at night is a place of stark contrasts. As the heat of the day dissipates, life begins to stir from the shadows, adapted perfectly to this harsh, beautiful landscape.",
+            "temp": 0.5,
+            "top_p": 0.7
+        },
+        "5. Erotic (Soft)": {
+            "desc": "Young female, breathy texture, soft and intimate, close to microphone.",
+            "instruct": "Low and intimate tone. Slow pace. Soft emphasis.",
+            "script": "The room was warm, the air heavy with the scent of jasmine. He leaned closer, his voice barely a whisper against her ear, sending a shiver down her spine.",
+            "temp": 0.7,
+            "top_p": 0.9
+        },
+        "6. AI Assistant": {
+            "desc": "Neutral gender, flat pitch, crisp articulation, no breathiness, robotic.",
+            "instruct": "Neutral tone. Even pacing. No emotion. Clear pronunciation.",
+            "script": "System check complete. All modules are functioning within normal parameters. Please select a command to proceed.",
+            "temp": 0.3,
+            "top_p": 0.1
+        },
+        "7. Motivational": {
+            "desc": "30s male, clear and resonant, projecting authority, confident.",
+            "instruct": "Steady and encouraging. Moderate pace. Confidence without urgency.",
+            "script": "You have everything you need right now. It\u2019s not about waiting for the perfect moment; it\u2019s about taking that first step and trusting that the path will appear.",
+            "temp": 0.6,
+            "top_p": 0.8
+        },
+        "8. Academic": {
+            "desc": "Elderly female, crisp articulation, formal tone, intellectual.",
+            "instruct": "Formal but accessible. Measured pace. Clear articulation.",
+            "script": "In this lecture, we will examine the fundamental principles of quantum mechanics. Note specifically how the observer effect challenges our traditional understanding of reality.",
+            "temp": 0.4,
+            "top_p": 0.6
+        },
+        "9. Audiobook": {
+            "desc": "Middle-aged female, smooth texture, expressive and clear, storytelling voice.",
+            "instruct": "Narrative tone. Moderate pace. Smooth flow.",
+            "script": "She stood at the edge of the cliff, the wind tearing at her coat. Below, the ocean churned, grey and unforgiving. It was here that the journey had begun, and here it would end.",
+            "temp": 0.6,
+            "top_p": 0.8
+        },
+        "10. Internal Monologue": {
+            "desc": "Young male, soft, slightly raspy, whispering, close to the mic.",
+            "instruct": "Quiet, thoughtful tone. Slow pace. Longer pauses.",
+            "script": "I wonder if I made the right choice. It felt right at the time... but looking back, everything seems different. Maybe that's just how memory works.",
+            "temp": 0.7,
+            "top_p": 0.8
+        },
+        "11. Sales (Soft)": {
+            "desc": "Young adult female, energetic, bright, smiling voice, trustworthy.",
+            "instruct": "Friendly and confident. Light emphasis on benefits. No pressure.",
+            "script": "Imagine a solution that just works. No complicated setup, no hidden fees. Just simple, reliable performance that gives you your time back.",
+            "temp": 0.7,
+            "top_p": 0.8
+        },
+        "12. Meditation": {
+            "desc": "Androgynous, very soft, calm, slow and deep, hypnotic.",
+            "instruct": "Very slow pace. Low, steady tone. Long pauses.",
+            "script": "Take a deep breath in... and let it out slowly. Feel the tension leaving your shoulders. For the next few moments, there is nowhere else you need to be.",
+            "temp": 0.5,
+            "top_p": 0.8
+        },
+        "13. Technical": {
+            "desc": "Middle-aged male, precise, flat pitch, no accent, dry tone.",
+            "instruct": "Precise, neutral tone. Even pace. Clear pronunciation.",
+            "script": "The hydraulic pressure must be maintained at 2000 PSI. If the gauge drops below this threshold, the safety valve will automatically engage to prevent system failure.",
+            "temp": 0.3,
+            "top_p": 0.5
+        },
+        "14. Dramatic": {
+            "desc": "Middle-aged male, deep, gravelly, intense, movie trailer style.",
+            "instruct": "Low, controlled tone. Slow pace. Clear pauses.",
+            "script": "In a world where silence is the only weapon... one man must scream to be heard. Coming this summer.",
+            "temp": 1.0,
+            "top_p": 0.9
+        },
+        "15. Casual": {
+            "desc": "Young female, relaxed, slightly high-pitched, informal, fast.",
+            "instruct": "Relaxed, natural tone. Conversational pace.",
+            "script": "Hey! Just wanted to check in and see how you're doing. Let's grab coffee sometime next week if you're free. Talk soon!",
+            "temp": 0.8,
+            "top_p": 0.9
+        },
+        "Tutorial Wizard": {
+            "desc": "An elderly male with a deep, resonant voice and a gentle rasp.",
+            "instruct": "Wise, calm, and slightly breathy.",
+            "script": "Knowledge is the only treasure that grows when shared. Welcome to my sanctum.",
+            "temp": 0.7,
+            "top_p": 0.8
+        }
+    },
+    "style_instructions": {
+        "Heartbroken": "Trembling voice, holding back tears, slow pace, frequent pauses, sorrowful and broken.",
+        "Furious": "Aggressive, shouting, very fast pace, sharp articulation, intense anger, slamming words.",
+        "Panicked": "Breathless, fast pace, high pitch, stuttering slightly, terrified, hyperventilating.",
+        "Sarcastic": "Bored tone, slow drawl, emphasizing the wrong words, rolling eyes, dry humor.",
+        "Overjoyed": "Laughing voice, high energy, fast pace, smiling while speaking, ecstatic.",
+        "Seductive": "Low pitch, breathy texture, very slow, close to microphone, intimate whisper.",
+        "Villain": "Low, menacing whisper. Slow and calculated. Arrogant tone. Cold and gravelly.",
+        "Horror Narrator": "Deep, gravelly whisper, slow and ominous, eerie pauses, threatening tone.",
+        "News Anchor": "Professional, neutral tone, clear articulation, even pacing, authoritative, no emotion.",
+        "The Drunk": "Slurred speech, uneven rhythm, fluctuating pitch, hiccuping, slow and confused.",
+        "Old Radio": "Mid-Atlantic accent, fast pace, energetic, sharp and punchy, enthusiastic announcer.",
+        "Exhausted": "Yawning, heavy sighs, monotone, very slow, dragging words, sleepy.",
+        "ASMR": "Soft whisper, extremely close to mic, mouth sounds, slow and gentle, relaxing.",
+        "Dying Breath": "Weak, fading voice, long pauses, shallow breathing, barely audible."
+    },
+    "temp": 0.9431818181818181,
+    "top_p": 0.7136363636363636,
+    "autoplay": true,
+    "sound_on_ready": false,
+    "last_out_dir": "",
+    "custom_notification_sound": null,
+    "engine_root": "C:/Users/1very/source/cloneMe/_internal/engine"
+}

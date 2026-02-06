@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Eric",
+        "style": "News Anchor",
+        "text": "Hi, I am Eric. I am a built-in voice, and you just generated me! Welcome to your new creative suite.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Eric",
+        "style": "News Anchor",
+        "text": "Take a look at the Session History panel on the right. You will see my takes appearing there in real-time.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Eric",
+        "style": "News Anchor",
+        "text": "In that history list, you can replay, delete, or even convert files to M P 3. Every line you make is automatically logged there.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Eric",
+        "style": "News Anchor",
+        "text": "It's now your turn to try. Click the 'Clear All' button in the toolbar above, then load 'Tutorial_02_UI_Overview' from the tutorials folder, and click 'Run Scene' to see how to navigate the app.",
+        "temp": 0.6,
+        "top_p": 0.8
+    }
+]

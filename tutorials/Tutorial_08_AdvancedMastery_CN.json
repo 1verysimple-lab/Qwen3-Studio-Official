@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "第8章：专业级制作。让我们谈谈那些能带来巨大差异的小细节。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "你知道你可以触发人类声音吗？尝试在文本中添加 [ laughter ] 或 [ breath ]。只要记得在括号周围加上空格！",
+        "temp": 0.8,
+        "top_p": 0.9
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "如果生成的音频太安静，请在 History 面板中找到它，右键点击并选择 'Normalize'。这会自动将音量提升到专业水平。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "帮助应用学习你电脑的速度。生成成功后，点击标题栏中的 'Log' 按钮。应用将开始预测每行台词完成所需的时间。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "需要移动文件吗？点击右上角的齿轮图标更改你的 SoX 或 Engine 路径，无需重新安装任何东西。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "现在轮到你实验了。使用动作标签和滑块来找到你独特的声音。你现在是 Qwen 3 T T S Pro Suite 的大师了。祝你导演愉快！",
+        "temp": 0.7,
+        "top_p": 0.8
+    }
+]

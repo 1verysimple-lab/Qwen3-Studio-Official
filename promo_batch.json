@@ -1,0 +1,56 @@
+[
+  {
+    "type": "clone",
+    "speaker": "trump",
+    "style": "",
+    "language": "English",
+    "text": "Look, people ask me all the time, they say 'Sir, how is your voice so clear?' And I tell them, it’s Qwen Pro Studio. It’s frankly tremendous. The other AI studios? Total disasters. Sad! They want your data, they want your money... we don't do that. We run local. It’s huge.",
+    "temp": 0.85,
+    "top_p": 0.90
+  },
+  {
+    "type": "clone",
+    "speaker": "trump",
+    "style": "",
+    "language": "Spanish",
+    "text": "Y déjenme decirles algo más. Hablo español perfectamente. Nadie habla español mejor que yo. Es una tecnología fantástica. Vamos a construir un muro... de sonido increíble. Muchas gracias.",
+    "temp": 0.80,
+    "top_p": 0.95
+  },
+  {
+    "type": "clone",
+    "speaker": "david_att",
+    "style": "",
+    "language": "English",
+    "text": "Here we observe the modern content creator in their natural habitat... struggling with expensive cloud subscriptions. It is a harsh environment. But wait... what is this? Qwen Pro Studio. A magnificent, locally-run specimen. It adapts. It evolves.",
+    "temp": 0.65,
+    "top_p": 0.98
+  },
+  {
+    "type": "clone",
+    "speaker": "david_att",
+    "style": "",
+    "language": "Spanish",
+    "text": "Y observen la facilidad con la que cambia de piel. Ahora habla en la lengua de Cervantes, conservando su elegancia natural. Un fenómeno verdaderamente extraordinario del mundo digital.",
+    "temp": 0.60,
+    "top_p": 0.98
+  },
+  {
+    "type": "clone",
+    "speaker": "bogart",
+    "style": "",
+    "language": "English",
+    "text": "Of all the Github repos in all the towns in all the world... she walks into mine. Listen to me, kid. You want high fidelity? You want zero latency? You’re playing with the big boys now. This is Qwen Pro.",
+    "temp": 0.40,
+    "top_p": 0.95
+  },
+  {
+    "type": "clone",
+    "speaker": "bogart",
+    "style": "",
+    "language": "Spanish",
+    "text": "Escúchame bien, muñeca. Esto no es un juego. Esto es calidad de estudio. Tócala otra vez, Sam... pero esta vez, hazlo en español. Aquí te estoy mirando a ti, chico.",
+    "temp": 0.40,
+    "top_p": 0.95
+  }
+]

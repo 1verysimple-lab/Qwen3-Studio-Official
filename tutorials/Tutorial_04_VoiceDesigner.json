@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "Welcome to the Laboratory! This is Chapter 4: Voice Design. I was created right here by a simple text description.",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "In this tab, you see two main boxes. The Description box defines the 'Body' - things like Age, Gender, and Vocal Texture.",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "The Style box defines the 'Acting'. You can even load that custom style you saved in Chapter 3 right here!",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "It's now your turn to try. Go to the 'Voice Design' tab. In the description box, type: 'A futuristic A I assistant voice, neutral and crisp'. In the target text box, type: 'Engine Loaded', and click 'Generate Design'.",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "Next, go to your Session History. Right-click your new take and select 'Set as Notification Sound'. This makes your creation the app's ready sound!",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "Finally, create one more character you love, generate a line, and click 'Save WAV' in the history. We will clone that file in Chapter 5. Load it when you are ready.",
+        "temp": 0.7,
+        "top_p": 0.8
+    }
+]

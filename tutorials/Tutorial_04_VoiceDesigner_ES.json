@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "¡Bienvenido al Laboratorio! Este es el Capítulo 4: Voice Design. Fui creado justo aquí mediante una simple descripción de texto.",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "En esta pestaña, ves dos cuadros principales. El cuadro Description define el 'Cuerpo' - cosas como Edad, Género y Textura Vocal.",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "El cuadro Style define la 'Actuación'. ¡Incluso puedes cargar ese estilo personalizado que guardaste en el Capítulo 3 justo aquí!",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "Ahora es tu turno. Ve a la pestaña 'Voice Design'. En el cuadro de descripción, escribe: 'A futuristic AI assistant voice, neutral and crisp'. En el cuadro de texto objetivo, escribe: 'Engine Loaded', y haz clic en 'Generate Design'.",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "Luego, ve a tu Session History. Haz clic derecho en tu nueva toma y selecciona 'Set as Notification Sound'. ¡Esto convierte tu creación en el sonido de listo de la aplicación!",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "Finalmente, crea un personaje más que te encante, genera una línea y haz clic en 'Save WAV' en el historial. Clonaremos ese archivo en el Capítulo 5. Cárgalo cuando estés listo.",
+        "temp": 0.7,
+        "top_p": 0.8
+    }
+]

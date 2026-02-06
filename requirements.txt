@@ -1,0 +1,17 @@
+torch
+torchaudio
+numpy
+scipy
+soundfile
+sounddevice
+librosa
+transformers==4.57.3
+accelerate==1.12.0
+inflect
+faster-whisper
+Pillow
+huggingface_hub
+windnd
+onnxruntime
+einops
+gradio

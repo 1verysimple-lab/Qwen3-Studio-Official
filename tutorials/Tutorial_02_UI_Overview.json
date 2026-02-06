@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "Welcome to Chapter 2: The Navigation Deck. I am Ryan. Let's look at the layout of the app.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "At the very top is the Header. This is where you find the Precision Sliders. Temperature controls my creativity, while Top P controls my vocabulary breadth.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "The Stop button in the top right is your safety switch. If the engine ever feels stuck or slows down, use the 'Reset' button next to the model name to clear the memory.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "Below the header are the Tabs. We have five stations: Transcript Helper, Voice Clone, Voice Design, Custom Voice, and where we are now: the Batch Studio.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "Finally, look at the bottom of the window. The colored Status Bar will always tell you which engine is currently loaded and warn you if you are in the wrong tab.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "It's now your turn to try. Load 'Tutorial_03_CustomMastery' from the tutorials folder and click 'Run Scene' to explore the Custom Voice presets.",
+        "temp": 0.5,
+        "top_p": 0.7
+    }
+]

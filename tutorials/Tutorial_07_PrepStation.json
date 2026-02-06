@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "Welcome to Chapter 7: The Prep Station. This is the 'Transcript Helper' tab, where you capture and clean your reference data.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "The Workbench features a recorder that supports both your Microphone and System Audio via the 'Sys Audio' loopback checkbox.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "It's now your turn to try. Go to the 'Transcript Helper'. Click the 'Audio to Text' button. The app will use the Whisper engine to listen to your file and write the script for you!",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "Need to clean up a recording? Left-click the waveform for the start and Right-click for the end, then click 'Crop'. It's that simple.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "Finally, give your voice a name in the Profile box and click 'Save'. This creates a permanent Studio Profile that you can load anywhere in the app.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "When you are ready, load the final chapter, Chapter 8, to learn the pro techniques for high-end production.",
+        "temp": 0.6,
+        "top_p": 0.8
+    }
+]

@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "Chapter 8: Pro-Level Production. Let's talk about the small details that make a big difference.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "Did you know you can trigger human sounds? Try adding [ laughter ] or [ breath ] inside your text. Just remember to put spaces around the brackets!",
+        "temp": 0.8,
+        "top_p": 0.9
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "If a generation is too quiet, find it in the History panel, right-click, and select 'Normalize'. This will boost the volume to a professional level automatically.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "Help the app learn your computer's speed. After a successful generation, click the 'Log' button in the header. The app will start predicting how long each line will take to finish.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "Need to move your files? Click the Gear icon in the top right to change your SoX or Engine paths without reinstalling anything.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "It's now your turn to try. Experiment with action tags and sliders to find your unique sound. You are now a master of the Qwen 3 T T S Pro Suite. Happy directing!",
+        "temp": 0.7,
+        "top_p": 0.8
+    }
+]

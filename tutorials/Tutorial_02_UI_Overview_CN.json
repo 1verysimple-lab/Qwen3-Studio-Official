@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "欢迎来到第2章：导航面板。我是 Ryan。让我们看看应用的布局。",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "最顶部是 Header。在这里你可以找到 Precision Sliders。Temperature 控制我的创造力，而 Top P 控制我的词汇广度。",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "右上角的 Stop 按钮是你的安全开关。如果引擎感觉卡住或变慢，请使用模型名称旁边的 'Reset' 按钮清除内存。",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "在标题下方是 Tabs。我们有五个工作站：Transcript Helper、Voice Clone、Voice Design、Custom Voice，以及我们现在所在的：Batch Studio。",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "最后，看窗口底部。彩色的 Status Bar 总是会告诉你当前加载了哪个引擎，并会在你处于错误的标签页时警告你。",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "现在轮到你尝试了。加载 'Tutorial_03_CustomMastery' 并点击 'Run Scene' 来探索 Custom Voice 预设。",
+        "temp": 0.5,
+        "top_p": 0.7
+    }
+]

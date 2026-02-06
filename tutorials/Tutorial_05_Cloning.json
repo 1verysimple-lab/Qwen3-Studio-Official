@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "Chapter 5: Voice Cloning. I am Aiden. This is the Purple engine, used for creating perfect digital replicas of any person.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "For a good clone, you need clean audio. You can prepare these in the 'Transcript Helper' tab, which includes a recorder and a manual cropping tool.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "In the Clone tab, you can use 'Ignore Text' mode for a quick acoustic match, but providing a transcript always gives you much higher accuracy.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "Use the 'Lock Voice' button to cache the speaker's data so you can generate thousands of lines without any extra loading time.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "It's now your turn to try. Go to the 'Voice Clone' tab. Load the character WAV you saved in the previous chapter. Type some text, use the 'Lock Voice' button, and generate your first clone.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "When you are done, come back to the Studio, load 'Tutorial_06_BatchStudio' and click 'Run Scene' for the grand finale.",
+        "temp": 0.5,
+        "top_p": 0.7
+    }
+]

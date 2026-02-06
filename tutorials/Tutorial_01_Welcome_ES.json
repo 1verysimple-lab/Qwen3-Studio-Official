@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Eric",
+        "style": "News Anchor",
+        "text": "Hola, soy Eric. Soy una voz integrada, ¡y acabas de generarme! Bienvenido a tu nueva suite creativa.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Eric",
+        "style": "News Anchor",
+        "text": "Echa un vistazo al panel Session History a la derecha. Verás mis tomas apareciendo allí en tiempo real.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Eric",
+        "style": "News Anchor",
+        "text": "En esa lista del history, puedes reproducir, eliminar o incluso convertir archivos a MP3. Cada línea que haces se registra automáticamente allí.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Eric",
+        "style": "News Anchor",
+        "text": "Ahora es tu turno de probar. Haz clic en el botón 'Clear All' en la barra de herramientas superior, luego carga 'Tutorial_02_UI_Overview' desde la carpeta de tutoriales y haz clic en 'Run Scene' para ver cómo navegar por la aplicación.",
+        "temp": 0.6,
+        "top_p": 0.8
+    }
+]

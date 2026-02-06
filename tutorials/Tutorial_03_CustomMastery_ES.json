@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "Capítulo 3: Maestría en Custom Voice. Soy Vivian. Esta pestaña es para producción rápida y de alta calidad usando voces preentrenadas como yo.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "En la pestaña Custom Voice, puedes elegir entre 9 identidades distintas con acentos nativos en inglés, chino, japonés y coreano.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "Seductive",
+        "text": "La actuación lo es todo. Ahora estoy usando el estilo 'Seductive'. Puedes escribir cualquier instrucción de actuación en el cuadro para cambiar nuestro estado de ánimo al instante.",
+        "temp": 0.9,
+        "top_p": 0.9
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "El botón 'Generate Voice Set' es tu mejor amigo. Crea múltiples versiones emocionales de tu línea para que puedas elegir la mejor.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "Ahora es tu turno. Ve a la pestaña 'Custom Voice'. Escribe una descripción de estilo que te guste en el campo de instrucción, luego usa el cuadro 'Save As' para guardarlo. Usaremos esto en el Capítulo 4.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "Cuando termines, vuelve aquí, carga 'Tutorial_04_VoiceDesigner' y haz clic en 'Run Scene'.",
+        "temp": 0.6,
+        "top_p": 0.8
+    }
+]

@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "第5章：Voice Cloning。我是 Aiden。这是紫色引擎，用于创建任何人的完美数字复制品。",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "为了获得好的克隆，你需要干净的音频。你可以在 'Transcript Helper' 标签页中准备这些，那里包含录音机和手动裁剪工具。",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "在 Clone 标签页中，你可以使用 'Ignore Text' 模式进行快速声学匹配，但提供文本记录总是能给你更高的准确性。",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "使用 'Lock Voice' 按钮缓存说话者的数据，这样你就可以生成数千行台词而无需额外的加载时间。",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "现在轮到你尝试了。去 'Voice Clone' 标签页。加载你在上一章保存的角色 WAV 文件。输入一些文本，使用 'Lock Voice' 按钮，并生成你的第一个克隆。",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "完成后，回到 Studio，加载 'Tutorial_06_BatchStudio' 并点击 'Run Scene' 观看大结局。",
+        "temp": 0.5,
+        "top_p": 0.7
+    }
+]

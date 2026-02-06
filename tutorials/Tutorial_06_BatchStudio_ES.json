@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "Final: Capítulo 6. El Batch Studio. Aquí es donde se encuentran todos los motores. Actualmente estás viendo la interfaz del editor.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "Observa la barra de herramientas arriba. Puedes usar Save y Load para tus guiones, e incluso ver el nombre de tu proyecto actual junto al icono de página.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "En el extremo derecho está el Style Manager. Puedes crear nuevas instrucciones de actuación aquí y aparecerán instantáneamente en todos tus bloques de guion.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "El sistema de Review es clave. Los bloques amarillos son tomas nuevas. Haz clic para aprobarlas (Verde) o clic derecho para rechazarlas (Rojo) y reintentar.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "Ahora es tu turno. Marca la casilla 'Auto-Switch' en la parte inferior y haz clic en 'RUN SCENE'. La aplicación cambiará automáticamente los modelos y reproducirá toda tu escena cuando termine!",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "¡Has dominado el escenario principal! Pero aún no hemos terminado. Carga el Capítulo 7 para aprender sobre la 'Prep Station' y la transcripción automática.",
+        "temp": 0.6,
+        "top_p": 0.8
+    }
+]

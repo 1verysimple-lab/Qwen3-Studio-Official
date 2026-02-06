@@ -1,0 +1,16 @@
+dist/
+build/
+Output/
+__pycache__/
+*.spec
+Qwen3-TTS/
+qwen_tts/
+.venv/
+_internal/
+temp_outputs/
+saved_assets/
+*.wav
+*.mp3
+*.log
+app.lock
+launcher.lock

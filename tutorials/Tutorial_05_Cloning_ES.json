@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "Capítulo 5: Voice Cloning. Soy Aiden. Este es el motor Púrpura, usado para crear réplicas digitales perfectas de cualquier persona.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "Para un buen clon, necesitas audio limpio. Puedes prepararlos en la pestaña 'Transcript Helper', que incluye una grabadora y una herramienta de recorte manual.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "En la pestaña Clone, puedes usar el modo 'Ignore Text' para una coincidencia acústica rápida, pero proporcionar una transcripción siempre te da una precisión mucho mayor.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "Usa el botón 'Lock Voice' para guardar en caché los datos del hablante y así poder generar miles de líneas sin tiempo de carga extra.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "Ahora es tu turno. Ve a la pestaña 'Voice Clone'. Carga el WAV del personaje que guardaste en el capítulo anterior. Escribe algo de texto, usa el botón 'Lock Voice' y genera tu primer clon.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Aiden",
+        "style": "News Anchor",
+        "text": "Cuando termines, vuelve al Studio, carga 'Tutorial_06_BatchStudio' y haz clic en 'Run Scene' para el gran final.",
+        "temp": 0.5,
+        "top_p": 0.7
+    }
+]

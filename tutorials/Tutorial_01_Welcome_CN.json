@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Eric",
+        "style": "News Anchor",
+        "text": "嗨，我是 Eric。我是内置语音，你刚刚生成了我！欢迎使用你的新创意套件。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Eric",
+        "style": "News Anchor",
+        "text": "看看右边的 Session History 面板。你会看到我的录音实时出现在那里。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Eric",
+        "style": "News Anchor",
+        "text": "在这个 history 列表中，你可以重播、删除，甚至将文件转换为 MP3。你制作的每一行都会自动记录在那里。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Eric",
+        "style": "News Anchor",
+        "text": "现在轮到你尝试了。点击上方工具栏中的 'Clear All' 按钮，然后从教程文件夹加载 'Tutorial_02_UI_Overview'，并点击 'Run Scene' 看看如何导航应用。",
+        "temp": 0.6,
+        "top_p": 0.8
+    }
+]

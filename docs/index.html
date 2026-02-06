@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qwen3 TTS Pro Suite | The NLE for AI Audio</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --accent-primary: #8b5cf6; /* Purple for AI */
+            --accent-secondary: #06b6d4; /* Cyan for Tech */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- HERO SECTION --- */
+        header {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.15), transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.15), transparent 40%);
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--accent-secondary);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .sub-text {
+            max-width: 600px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 30px -10px rgba(139, 92, 246, 0.6);
+        }
+
+        /* --- FEATURES GRID --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-secondary);
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+
+        .feature-block {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 8rem;
+        }
+
+        .feature-block.reversed {
+            direction: rtl; /* Quick way to swap columns */
+        }
+
+        .feature-block.reversed .feature-text {
+            direction: ltr; /* Reset text direction */
+        }
+
+        .feature-image {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.3s;
+        }
+        
+        .feature-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .feature-image:hover {
+            transform: scale(1.02);
+        }
+
+        .feature-text h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        .feature-text p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .badge-purple { background: rgba(139, 92, 246, 0.2); color: #c4b5fd; }
+        .badge-cyan { background: rgba(6, 182, 212, 0.2); color: #67e8f9; }
+        .badge-green { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+
+        /* --- GALLERY SECTION --- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .sample-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.3s;
+        }
+
+        .sample-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+        }
+
+        .sample-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .sample-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .sample-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .lang-tag {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+            color: var(--text-muted);
+        }
+
+        .sample-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            height: 80px;
+            overflow-y: auto;
+            border-left: 2px solid rgba(255,255,255,0.1);
+            padding-left: 10px;
+        }
+
+        audio {
+            width: 100%;
+            height: 35px;
+            filter: invert(100%) hue-rotate(180deg) brightness(1.5); /* Modern dark mode audio */
+        }
+
+        /* --- ABOUT DEV --- */
+        .about-section {
+            background: var(--bg-card);
+            padding: 5rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .profile-quote {
+            font-size: 1.5rem;
+            font-style: italic;
+            color: var(--text-main);
+            margin: 2rem 0;
+            line-height: 1.4;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .footer-links a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .feature-block { grid-template-columns: 1fr; gap: 2rem; direction: ltr !important; }
+            .feature-text { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <span class="badge badge-purple">v3.8.1 Production Ready</span>
+        <h1>Qwen3 TTS Pro Suite</h1>
+        <p class="tagline">Design. Direct. Render.</p>
+        <p class="sub-text">
+            Most AI tools are just generators. This is a Director's Studio.<br>
+            The first <b>Non-Linear Editor (NLE)</b> with a <b>Dynamic Plugin System</b> for headless automation and local AI audio.
+        </p>
+        <a href="https://drive.google.com/file/d/1Y-7_nJ7o5AMIjn_sC84IS9rWCZGPpFyb/view?usp=sharing" target="_blank" class="cta-button">
+            Download Qwen3 Pro v3.8.1 (Windows)
+        </a>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: #64748b;">Requires NVIDIA GPU & Windows 10/11</p>
+    </header>
+
+    <div class="container">
+        
+        <h2 class="section-title">A Complete Audio Ecosystem</h2>
+
+        <div class="feature-block">
+            <div class="feature-text">
+                <span class="badge badge-green">The Core</span>
+                <h3>Batch Studio (NLE)</h3>
+                <p>Don't just generate lines; build scenes. The block-based editor allows you to mix multiple speakers, clone voices, and custom designs into a single script.</p>
+                <p>Features a "Traffic Light" system to track generation status and a smart stitching engine to render full conversations instantly.</p>
+            </div>
+            <div class="feature-image">
+                <img src="images/pq_bs.jpg" alt="Batch Studio Interface">
+            </div>
+        </div>
+
+        <div class="feature-block reversed">
+            <div class="feature-text">
+                <span class="badge badge-cyan">Automation</span>
+                <h3>Dynamic Plugin System</h3>
+                <p>The first extensible AI audio suite. Drop new features into the <code>modules/</code> folder to add custom tabs, automation scripts, and entirely new workflows without touching the core code.</p>
+                <p>Supports <b>Headless Integration</b>: Build background services like Watch Folders or Local HTTP APIs to generate audio from external applications.</p>
+            </div>
+            <div class="feature-image">
+                <img src="images/pq_cv.jpg" alt="Custom Voice Interface">
+            </div>
+        </div>
+
+        <div class="feature-block">
+            <div class="feature-text">
+                <span class="badge badge-purple">The Replica</span>
+                <h3>Professional Voice Cloning</h3>
+                <p>Turn any audio file into a digital actor. The integrated cloning engine uses "Lock Voice" technology to cache speaker profiles, allowing for instant generation without re-processing.</p>
+                <p>Includes a <b>Multi-Part Mode</b> to handle long scripts by splitting them automatically.</p>
+            </div>
+            <div class="feature-image">
+                <img src="images/pq_vc.jpg" alt="Voice Cloning Interface">
+            </div>
+        </div>
+
+        <div class="feature-block reversed">
+            <div class="feature-text">
+                <span class="badge badge-cyan">Workflow</span>
+                <h3>Transcript Helper</h3>
+                <p>Good data equals good audio. The Prep Station includes a built-in <b>Whisper AI</b> engine to auto-transcribe your reference files.</p>
+                <p>Record from your microphone or system audio, crop the waveform visually, and send it directly to the cloner.</p>
+            </div>
+            <div class="feature-image">
+                <img src="images/pq_th.jpg" alt="Transcript Helper Interface">
+            </div>
+        </div>
+
+    </div>
+
+    <!-- --- VOICE CLONE SHOWCASE --- -->
+    <div class="container" style="padding-top: 0;">
+        <h2 class="section-title">Voice Clone Showcase</h2>
+        <p style="text-align: center; color: var(--text-muted); max-width: 700px; margin: -2rem auto 4rem;">
+            Experience the power of local digital mimicry. These samples were generated using 5-second references and zero cloud latency.
+        </p>
+
+        <div class="gallery-grid">
+            <!-- Trump -->
+            <div class="sample-card">
+                <div class="sample-header">
+                    <div class="sample-avatar" style="background: #e74c3c;">DT</div>
+                    <div class="sample-info">
+                        <h4>Donald Trump</h4>
+                        <span class="lang-tag">English</span>
+                    </div>
+                </div>
+                <div class="sample-text">"Look, people ask me all the time, they say 'Sir, how is your voice so clear?' And I tell them, it’s Qwen Pro Studio..."</div>
+                <audio controls src="audio/promo_trump_english.mp3"></audio>
+            </div>
+
+            <div class="sample-card">
+                <div class="sample-header">
+                    <div class="sample-avatar" style="background: #e74c3c;">DT</div>
+                    <div class="sample-info">
+                        <h4>Donald Trump</h4>
+                        <span class="lang-tag">Spanish</span>
+                    </div>
+                </div>
+                <div class="sample-text">"Y déjenme decirles algo más. Hablo español perfectamente. Nadie habla español mejor que yo..."</div>
+                <audio controls src="audio/promo_trump_spanish.mp3"></audio>
+            </div>
+
+            <!-- Attenborough -->
+            <div class="sample-card">
+                <div class="sample-header">
+                    <div class="sample-avatar" style="background: #27ae60;">DA</div>
+                    <div class="sample-info">
+                        <h4>Sir David Attenborough</h4>
+                        <span class="lang-tag">English</span>
+                    </div>
+                </div>
+                <div class="sample-text">"Here we observe the modern content creator in their natural habitat... struggling with expensive cloud subscriptions..."</div>
+                <audio controls src="audio/promo_attenborough_english.mp3"></audio>
+            </div>
+
+            <div class="sample-card">
+                <div class="sample-header">
+                    <div class="sample-avatar" style="background: #27ae60;">DA</div>
+                    <div class="sample-info">
+                        <h4>Sir David Attenborough</h4>
+                        <span class="lang-tag">Spanish</span>
+                    </div>
+                </div>
+                <div class="sample-text">"Y observen la facilidad con la que cambia de piel. Ahora habla en la lengua de Cervantes, conservando su elegancia natural..."</div>
+                <audio controls src="audio/promo_attenborough_spanish.mp3"></audio>
+            </div>
+
+            <!-- Bogart -->
+            <div class="sample-card">
+                <div class="sample-header">
+                    <div class="sample-avatar" style="background: #34495e;">HB</div>
+                    <div class="sample-info">
+                        <h4>Humphrey Bogart</h4>
+                        <span class="lang-tag">English</span>
+                    </div>
+                </div>
+                <div class="sample-text">"Of all the Github repos in all the towns in all the world... she walks into mine. Listen to me, kid..."</div>
+                <audio controls src="audio/promo_bogart_english.mp3"></audio>
+            </div>
+
+            <div class="sample-card">
+                <div class="sample-header">
+                    <div class="sample-avatar" style="background: #34495e;">HB</div>
+                    <div class="sample-info">
+                        <h4>Humphrey Bogart</h4>
+                        <span class="lang-tag">Spanish</span>
+                    </div>
+                </div>
+                <div class="sample-text">"Escúchame bien, muñeca. Esto no es un juego. Esto es calidad de estudio. Tócala otra vez, Sam..."</div>
+                <audio controls src="audio/promo_bogart_spanish.mp3"></audio>
+            </div>
+        </div>
+    </div>
+
+    <section class="about-section">
+        <div class="profile-container">
+            <span class="badge badge-purple">About the Developer</span>
+            <h2>Hi, I'm Blues.</h2>
+            <p class="profile-quote">
+                "To me, good development is simply finding the best solution to a problem. Imagine you are in charge of finding the best way to get from your home to work. 
+                As a developer, I have to know all the options—whether that is walking, digging a tunnel, or taking a helicopter."
+            </p>
+            <p class="sub-text" style="margin: 0 auto; text-align: left;">
+                My task is to find the way that makes the journey as smooth as possible for the person traveling. 
+                I don’t need to know how to build the airplane to solve the problem; I just need to know exactly when to use it. 
+                Everything I learn from life helps me find a better way to get people where they need to go. 
+                And I am always open to listening and learning from anyone who thinks we should take a different path.
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        <h3>Ready to Direct?</h3>
+        <div style="margin: 2rem 0;">
+            <a href="https://drive.google.com/file/d/1Y-7_nJ7o5AMIjn_sC84IS9rWCZGPpFyb/view?usp=sharing" target="_blank" class="cta-button">
+                Download Qwen3 Pro v3.8.1
+            </a>
+        </div>
+        <div class="footer-links">
+            <a href="https://github.com/1verysimple-lab/Qwen3-TTS">GitHub Repo</a> • 
+            <a href="https://buymeacoffee.com/appbyblues">Support on Buy Me A Coffee</a>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.8rem;">
+            Built with Python & Love in Spain.<br>
+            © 2026 Blues Creative Engineering.
+        </p>
+    </footer>
+
+</body>
+</html>

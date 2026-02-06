@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "Bienvenido al Capítulo 2: El Panel de Navegación. Soy Ryan. Veamos el diseño de la aplicación.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "En la parte superior está el Header. Aquí es donde encuentras los Precision Sliders. Temperature controla mi creatividad, mientras que Top P controla la amplitud de mi vocabulario.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "El botón Stop arriba a la derecha es tu interruptor de seguridad. Si el motor parece atascado o lento, usa el botón 'Reset' junto al nombre del modelo para limpiar la memoria.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "Debajo del encabezado están las Tabs. Tenemos cinco estaciones: Transcript Helper, Voice Clone, Voice Design, Custom Voice, y donde estamos ahora: el Batch Studio.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "Finalmente, mira la parte inferior de la ventana. La Status Bar de color siempre te dirá qué motor está cargado y te avisará si estás en la pestaña incorrecta.",
+        "temp": 0.5,
+        "top_p": 0.7
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "Ahora es tu turno. Carga 'Tutorial_03_CustomMastery' y haz clic en 'Run Scene' para explorar los ajustes preestablecidos de Custom Voice.",
+        "temp": 0.5,
+        "top_p": 0.7
+    }
+]

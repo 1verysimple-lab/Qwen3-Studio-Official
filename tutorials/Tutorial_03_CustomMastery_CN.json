@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "第3章：精通 Custom Voice。我是 Vivian。这个标签页用于使用像我这样的预训练语音进行快速、高质量的制作。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "在 Custom Voice 标签页中，你可以从9个不同的身份中进行选择，涵盖英语、中文、日语和韩语的母语口音。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "Seductive",
+        "text": "表演就是一切。我现在使用的是 'Seductive' 风格。你可以在框中输入任何表演指令来立即改变我们的情绪。",
+        "temp": 0.9,
+        "top_p": 0.9
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "'Generate Voice Set' 按钮是你最好的朋友。它会为你的一行台词创建多个情感版本，以便你选择最好的一个。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "现在轮到你尝试了。去 'Custom Voice' 标签页。在指令字段中写下你喜欢的风格描述，然后使用 'Save As' 框保存它。我们将在第4章中使用这个。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "完成后，回到这里，加载 'Tutorial_04_VoiceDesigner' 并点击 'Run Scene'。",
+        "temp": 0.6,
+        "top_p": 0.8
+    }
+]

@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "欢迎来到实验室！这是第4章：Voice Design。我就是在这里通过简单的文字描述被创造出来的。",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "在这个标签页中，你看到两个主要框。Description 框定义了 '身体' —— 比如年龄、性别和声音质感。",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "Style 框定义了 '表演'。你甚至可以在这里加载你在第3章中保存的那个自定义风格！",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "现在轮到你尝试了。去 'Voice Design' 标签页。在描述框中输入：'A futuristic AI assistant voice, neutral and crisp'。在目标文本框中输入：'Engine Loaded'，然后点击 'Generate Design'。",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "接下来，去你的 Session History。右键点击你的新录音并选择 'Set as Notification Sound'。这会把你的作品变成应用的就绪提示音！",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "最后，再创建一个你喜欢的角色，生成一行台词，然后在历史记录中点击 'Save WAV'。我们将在第5章克隆那个文件。准备好后加载它。",
+        "temp": 0.7,
+        "top_p": 0.8
+    }
+]

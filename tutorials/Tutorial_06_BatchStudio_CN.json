@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "终章：第6章。Batch Studio。这是所有引擎汇聚的地方。你现在看到的是编辑器界面。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "观察上方的工具栏。你可以使用 Save 和 Load 来管理你的剧本，甚至可以在页面图标旁边看到当前项目的名称。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "最右边是 Style Manager。你可以在这里创建新的表演指令，它们会立即出现在你所有的剧本块中。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "Review 系统是关键。黄色块是新生成的。点击批准（绿色）或右键点击拒绝（红色）并重试。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "News Anchor",
+        "text": "现在轮到你尝试了。勾选底部的 'Auto-Switch' 框，然后点击 'RUN SCENE'。应用会自动切换模型并在完成后播放你的整个场景！",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "你已经掌握了主舞台！但我们还没结束。加载第7章以了解 'Prep Station' 和自动转录。",
+        "temp": 0.6,
+        "top_p": 0.8
+    }
+]
