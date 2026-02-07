@@ -1,16 +1,29 @@
+# --- Heavy & Build Artifacts ---
 dist/
 build/
 Output/
 __pycache__/
 *.spec
-Qwen3-TTS/
-qwen_tts/
-.venv/
 _internal/
+
+# --- The Heavy AI Engine (Keep this ignored!) ---
+Qwen3-TTS/
+
+# --- Virtual Environment ---
+.venv/
+venv/
+
+# --- Temporary & Local Data ---
 temp_outputs/
 saved_assets/
 *.wav
 *.mp3
 *.log
-app.lock
-launcher.lock
+*.lock
+
+# --- Secrets & Deployment Tools (DO NOT UPLOAD) ---
+deploy_payload.py
+link_to_use.txt
+full_structure.txt
+myfiles.txt
+find_the_engine.py

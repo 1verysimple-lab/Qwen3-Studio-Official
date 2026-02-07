@@ -1,197 +1,131 @@
 import os
 import sys
-import subprocess
-import requests
+import threading
 import tkinter as tk
 from tkinter import ttk, messagebox
-import threading
-import json
+import requests
+import zipfile
 import time
-import tempfile
 
-# --- CONFIGURATION ---
-REPO_URL = "https://huggingface.co/Qwen/Qwen2.5-Audio-Instruct/resolve/main"
-# IMPORTANT: This JSON file on GitHub dictates if an update is needed
-VERSION_URL = "https://raw.githubusercontent.com/1verysimple-lab/Qwen3-TTS/main/version.json"
+# =========================================================================
+# ⚙️ CONFIGURATION
+# =========================================================================
+# The hidden system folder where the heavy engine lives
+APP_DATA_ROOT = os.path.join(os.getenv('LOCALAPPDATA'), "Qwen3Studio")
+ENGINE_ROOT = os.path.join(APP_DATA_ROOT, "Qwen3-TTS")
 
-REQUIRED_FILES = ["model.safetensors", "config.json", "tokenizer.json", "preprocessor_config.json"]
+# YOUR HUGGING FACE DIRECT LINK
+ENGINE_DOWNLOAD_URL = "https://huggingface.co/Bluesed/blues-qwen/resolve/main/blues-Qwen3-TTS.zip?download=true"
 
-if getattr(sys, 'frozen', False):
-    ROOT_DIR = os.path.dirname(sys.executable)
-else:
-    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-MODEL_DIR = os.path.join(ROOT_DIR, "Qwen3-TTS")
-MAIN_EXE = os.path.join(ROOT_DIR, "app_main.exe")
-
-class LauncherUI:
+class EngineInstaller(tk.Tk):
     def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("Qwen3 Studio Launcher")
-        self.root.geometry("450x320")
-        self.root.configure(bg="#1e1e1e")
-        self.center_window(450, 320)
+        super().__init__()
+        self.title("Qwen3 Studio - Setup")
+        self.geometry("480x320")
+        self.resizable(False, False)
+        self.success = False
 
-        try: self.root.iconbitmap(os.path.join(ROOT_DIR, "pq.ico"))
-        except: pass
-
-        # UI Elements
-        tk.Label(self.root, text="Qwen3 Studio", font=("Segoe UI", 16, "bold"), fg="white", bg="#1e1e1e").pack(pady=(20, 5))
+        # Center window
+        self.eval('tk::PlaceWindow . center')
         
-        self.lbl_status = tk.Label(self.root, text="Initializing...", font=("Segoe UI", 10), fg="#aaaaaa", bg="#1e1e1e")
-        self.lbl_status.pack(pady=5)
+        # UI Styling
+        style = ttk.Style()
+        style.theme_use('clam')
+        
+        # Header
+        tk.Label(self, text="Installing AI Engine", font=("Segoe UI", 16, "bold")).pack(pady=(25, 10))
+        tk.Label(self, text="Downloading high-fidelity models (4.5 GB).\nHosted on Hugging Face High-Speed Servers.", font=("Segoe UI", 10), fg="#555").pack(pady=5)
 
-        self.progress = ttk.Progressbar(self.root, orient="horizontal", length=350, mode="determinate")
+        # Progress Bar
+        self.progress = ttk.Progressbar(self, orient="horizontal", length=400, mode="determinate")
         self.progress.pack(pady=20)
 
-        # Action Button
-        self.btn_action = tk.Button(self.root, text="Wait...", state="disabled", command=self.launch_app, 
-                                    bg="#2980b9", fg="white", font=("Segoe UI", 11, "bold"), width=20, relief="flat")
-        self.btn_action.pack(pady=20)
+        # Status Label
+        self.status_label = tk.Label(self, text="Initializing...", font=("Segoe UI", 9), fg="#333")
+        self.status_label.pack(pady=5)
 
-        # Start Logic
-        threading.Thread(target=self.startup_sequence, daemon=True).start()
-        self.root.mainloop()
+        # Start Download Thread
+        threading.Thread(target=self.start_installation, daemon=True).start()
 
-    def center_window(self, w, h):
-        ws = self.root.winfo_screenwidth()
-        hs = self.root.winfo_screenheight()
-        x = (ws/2) - (w/2)
-        y = (hs/2) - (h/2)
-        self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
-
-    def update_ui(self, status=None, progress=None, btn_text=None, btn_state=None, btn_cmd=None, color=None):
-        """Thread-safe UI updater"""
-        self.root.after(0, lambda: self._apply_ui(status, progress, btn_text, btn_state, btn_cmd, color))
-
-    def _apply_ui(self, status, progress, btn_text, btn_state, btn_cmd, color):
-        if status: self.lbl_status.config(text=status)
-        if progress is not None: self.progress['value'] = progress
-        if btn_text: self.btn_action.config(text=btn_text)
-        if btn_state: self.btn_action.config(state=btn_state)
-        if btn_cmd: self.btn_action.config(command=btn_cmd)
-        if color: self.btn_action.config(bg=color)
-
-    def startup_sequence(self):
-        # 1. CHECK UPDATES
-        self.update_ui("Checking for updates...", 10)
-        if self.check_updates():
-            return # Pause here if update found
-
-        # 2. VERIFY FILES
-        self.update_ui("Verifying AI Models...", 30)
-        if not self.verify_models():
-            self.download_models()
+    def start_installation(self):
+        temp_zip = os.path.join(APP_DATA_ROOT, "engine_temp.zip")
+        os.makedirs(APP_DATA_ROOT, exist_ok=True)
         
-        # 3. LAUNCH
-        self.update_ui("Ready", 100, "Launch Studio", "normal", self.launch_app, "#27ae60")
-        time.sleep(1)
-        self.launch_app()
-
-    def check_updates(self):
         try:
-            # Get Local Version
-            local_ver = "0.0.0"
-            ver_file = os.path.join(ROOT_DIR, "version.json")
-            if os.path.exists(ver_file):
-                with open(ver_file, 'r') as f:
-                    local_ver = json.load(f).get("version", "0.0.0")
-
-            # Get Remote Version
-            response = requests.get(VERSION_URL, timeout=3)
-            if response.status_code == 200:
-                data = response.json()
-                remote_ver = data.get("version", "0.0.0")
-                download_url = data.get("download_url", "")
-
-                if remote_ver != local_ver:
-                    self.update_ui(
-                        f"Update Available: v{remote_ver}", 
-                        0, 
-                        "Download & Update", 
-                        "normal", 
-                        lambda: threading.Thread(target=self.perform_update, args=(download_url,), daemon=True).start(),
-                        "#e67e22"
-                    )
-                    return True
-        except Exception as e:
-            print(f"Update check failed: {e}")
-        return False
-
-    def perform_update(self, url):
-        """Downloads the new installer and runs it"""
-        try:
-            self.update_ui("Initializing Download...", 0, "Downloading...", "disabled")
+            self.update_status("Connecting to server...")
+            response = requests.get(ENGINE_DOWNLOAD_URL, stream=True)
+            response.raise_for_status()
             
-            # Create temp path for the installer
-            installer_path = os.path.join(tempfile.gettempdir(), "Qwen3_Studio_Update.exe")
-            
-            # Stream Download
-            response = requests.get(url, stream=True)
             total_size = int(response.headers.get('content-length', 0))
-            
-            with open(installer_path, 'wb') as f:
-                downloaded = 0
-                for chunk in response.iter_content(chunk_size=8192):
-                    if chunk:
-                        f.write(chunk)
-                        downloaded += len(chunk)
-                        if total_size > 0:
-                            percent = (downloaded / total_size) * 100
-                            self.update_ui(f"Downloading Update... {int(percent)}%", percent)
+            block_size = 1024 * 1024 # 1MB chunks
+            downloaded = 0
 
-            self.update_ui("Launching Installer...", 100)
+            with open(temp_zip, 'wb') as f:
+                for data in response.iter_content(block_size):
+                    downloaded += len(data)
+                    f.write(data)
+                    
+                    if total_size > 0:
+                        percent = (downloaded / total_size) * 100
+                        self.progress['value'] = percent
+                        # Show GB progress
+                        downloaded_gb = downloaded / (1024**3)
+                        total_gb = total_size / (1024**3)
+                        self.update_status(f"Downloading: {int(percent)}%  ({downloaded_gb:.2f} GB / {total_gb:.2f} GB)")
             
-            # Run the installer and exit launcher
-            subprocess.Popen([installer_path])
-            self.root.quit()
+            self.update_status("Extracting (This takes 1-2 mins)...")
+            self.progress['mode'] = 'indeterminate'
+            self.progress.start(10)
             
+            if not zipfile.is_zipfile(temp_zip):
+                 raise ValueError("Downloaded file is corrupt.")
+
+            with zipfile.ZipFile(temp_zip, 'r') as zip_ref:
+                zip_ref.extractall(APP_DATA_ROOT)
+            
+            self.update_status("Cleaning up...")
+            os.remove(temp_zip)
+            
+            if os.path.exists(ENGINE_ROOT):
+                self.success = True
+                self.quit()
+            else:
+                messagebox.showerror("Structure Error", f"Folder '{ENGINE_ROOT}' not found after extraction.")
+                self.quit()
+
         except Exception as e:
-            messagebox.showerror("Update Error", f"Failed to download update.\n{e}")
-            self.update_ui("Update Failed", 0, "Retry", "normal", lambda: threading.Thread(target=self.perform_update, args=(url,), daemon=True).start())
+            messagebox.showerror("Installation Error", f"Failed: {str(e)}")
+            if os.path.exists(temp_zip):
+                try: os.remove(temp_zip)
+                except: pass
+            self.quit()
 
-    def verify_models(self):
-        if not os.path.exists(MODEL_DIR): return False
-        for f in REQUIRED_FILES:
-            if not os.path.exists(os.path.join(MODEL_DIR, f)): return False
-        return True
+    def update_status(self, text):
+        self.status_label.config(text=text)
 
-    def download_models(self):
-        if not os.path.exists(MODEL_DIR): os.makedirs(MODEL_DIR)
-        self.update_ui("Downloading AI Models...", 0, "Downloading...", "disabled")
+def main():
+    # 1. Check if Engine Exists in AppData
+    if not os.path.exists(ENGINE_ROOT):
+        installer = EngineInstaller()
+        installer.mainloop()
+        if not installer.success:
+            return # User closed window or failed
+
+    # 2. Launch Main App
+    try:
+        # We import app_main only AFTER the engine is confirmed
+        import app_main
         
-        total_files = len(REQUIRED_FILES)
-        for idx, filename in enumerate(REQUIRED_FILES):
-            dest = os.path.join(MODEL_DIR, filename)
-            if os.path.exists(dest): continue
-
-            url = f"{REPO_URL}/{filename}?download=true"
-            self.update_ui(f"Downloading {filename} ({idx+1}/{total_files})", (idx / total_files) * 100)
-
-            try:
-                r = requests.get(url, stream=True)
-                total = int(r.headers.get('content-length', 0))
-                with open(dest, 'wb') as f:
-                    down = 0
-                    for chunk in r.iter_content(8192):
-                        f.write(chunk)
-                        down += len(chunk)
-                        if total > 0:
-                            f_prog = (down / total) * (100 / total_files)
-                            base = (idx / total_files) * 100
-                            self.update_ui(None, base + f_prog)
-            except Exception as e:
-                messagebox.showerror("Error", f"Failed to download {filename}\n{e}")
-                sys.exit()
-
-    def launch_app(self):
-        self.update_ui("Launching Studio...", 100)
-        if os.path.exists(MAIN_EXE):
-            subprocess.Popen([MAIN_EXE], cwd=ROOT_DIR)
-            self.root.destroy()
-        elif os.path.exists("app_main.py"):
-            subprocess.Popen(["python", "app_main.py"], cwd=ROOT_DIR)
-            self.root.destroy()
+        # Launch logic
+        if hasattr(app_main, 'launch_studio'):
+            app_main.launch_studio()
+        elif hasattr(app_main, 'main'):
+            app_main.main()
+        else:
+            messagebox.showerror("Error", "Could not find 'launch_studio' in app_main.py")
+            
+    except Exception as e:
+        messagebox.showerror("Crash", f"App failed to launch: {e}")
 
 if __name__ == "__main__":
-    LauncherUI()
+    main()

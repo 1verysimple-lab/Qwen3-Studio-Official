@@ -7,54 +7,46 @@ def build():
     start_time = time.time()
     work_dir = os.path.dirname(os.path.abspath(__file__))
     dist_dir = os.path.join(work_dir, "dist")
-    final_output = os.path.join(dist_dir, "Qwen3_Studio")
     
-    # 1. CLEANUP
-    print("STEP 1: Cleaning...")
-    if os.path.exists(dist_dir): shutil.rmtree(dist_dir)
-    if os.path.exists("build"): shutil.rmtree("build")
+    # 1. CLEANUP (Remove old builds to prevent stalling)
+    print("STEP 1: Cleaning Workspace...")
+    folders_to_clean = ["dist", "build", "Output", "_internal"]
+    for folder in folders_to_clean:
+        if os.path.exists(folder):
+            try:
+                shutil.rmtree(folder)
+            except Exception as e:
+                print(f"Warning: Could not delete {folder}: {e}")
 
-    # 2. BUILD MAIN APP (Folder Mode)
-    print("STEP 2: Building Main Studio (Folder Mode)...")
+    # 2. BUILD SINGLE EXE
+    print("STEP 2: Building Unified Qwen3 Studio Installer...")
+    
     PyInstaller.__main__.run([
-        'app_main.py',
-        '--name=Qwen3_Studio',
-        '--onedir',             # Important: Folder mode
-        '--noconsole',
-        '--clean',
-        '--icon=pq.ico',
+        'app_launcher.py',              # Main Entry Point
+        '--name=Qwen3_Studio_Setup',    # Output Name
+        '--onefile',                    # Single EXE
+        '--noconsole',                  # No Black Window
+        '--clean',                      # Clear PyInstaller Cache
+        '--icon=pq.ico',                # App Icon
+        
+        # --- ASSETS (Everything the app needs) ---
         '--add-data=tutorials;tutorials',
         '--add-data=sox;sox',
         '--add-data=version.json;.',
-        '--hidden-import=scipy.special.cython_special'
+        '--add-data=pq.ico;.',
+        
+        # --- HIDDEN IMPORTS (Crucial for AI libs) ---
+        '--hidden-import=app_main',     # Pack the App inside the Launcher
+        '--hidden-import=scipy.special.cython_special',
+        '--hidden-import=sklearn.utils._cython_blas',
+        '--hidden-import=sklearn.neighbors.typedefs',
+        '--hidden-import=sklearn.neighbors.quad_tree',
+        '--hidden-import=sklearn.tree',
+        '--hidden-import=sklearn.tree._utils'
     ])
 
-    # 3. BUILD LAUNCHER (OneFile Mode)
-    print("STEP 3: Building Launcher (OneFile)...")
-    PyInstaller.__main__.run([
-        'app_launcher.py',
-        '--name=app_launcher',
-        '--onefile',            # Important: Single EXE
-        '--noconsole',
-        '--clean',
-        '--icon=pq.ico'
-    ])
-
-    # 4. MERGE
-    print("STEP 4: Merging Launcher into Studio Folder...")
-    # Move the launcher exe from dist/app_launcher.exe to dist/Qwen3_Studio/app_launcher.exe
-    src_launcher = os.path.join(dist_dir, "app_launcher.exe")
-    dst_launcher = os.path.join(final_output, "app_launcher.exe")
-    
-    if os.path.exists(src_launcher):
-        shutil.move(src_launcher, dst_launcher)
-    else:
-        print("ERROR: Launcher build failed!")
-
-    print(f"\nBUILD COMPLETE in {int(time.time() - start_time)}s")
-    print(f"Final App Location: {final_output}")
-    print("You can now zip this folder for 'Portable' release,")
-    print("or run Inno Setup on it for the 'Installer' release.")
+    print(f"DONE! Build took {int(time.time() - start_time)} seconds.")
+    print(f"Your Final File is: {os.path.join(dist_dir, 'Qwen3_Studio_Setup.exe')}")
 
 if __name__ == "__main__":
     build()

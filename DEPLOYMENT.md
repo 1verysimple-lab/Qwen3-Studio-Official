@@ -1,60 +1,67 @@
-# ðŸ“¦ The Master Release Reference (v3.8.1)
+ï»¿# í ½íº€ Professional Deployment Protocol (Smart Hybrid)
+**Status:** ACTIVE | **Method:** Stub Installer + Hugging Face Cloud
+**Version:** 1.0 (Production)
 
-## ðŸš€ The "Slim" Distribution Strategy
-We distribute a lightweight installer that downloads the large AI models on the user's first run. This keeps the initial download small (~200MB) instead of 15GB.
+## 1. The Architecture
+We utilize a **Hybrid Deployment** strategy to bypass GitHub's file size limits and Google Drive's bandwidth quotas.
 
-### 1. Build the Application (.exe)
-Run this command from your terminal to create the single-file launcher:
+1.  **The "Stub" (The Installer):** A lightweight (~200MB) executable (`Qwen3_Studio_Setup.exe`). This contains the App Logic, UI, and Icons.
+2.  **The "Brain" (The Engine):** A massive (~4.5GB) archive (`blues-Qwen3-TTS.zip`) hosted on **Hugging Face**.
 
-```bash
-pyinstaller --noconsole --onefile --name="Qwen3_Studio_Pro" ^
---icon="pq.ico" ^
---add-data "tutorials;tutorials" ^
---add-data "sox;sox" ^
---add-data "modules;modules" ^
---add-data "pq.ico;." ^
---add-data "version.json;." ^
---hidden-import="scipy.special.cython_special" ^
-"Pro_Studio_Launcher.py"
-```
-
-### 2. Create the Distribution Zip
-Your final public archive should contain **ONLY** these items:
-1.  `Qwen3_Studio_Pro.exe` (Found in `./dist/`)
-2.  `sox/` folder (The folder containing `sox.exe` and binaries)
-
-**Do NOT include:**
-*   `engine/` folder (The app will download this)
-*   `_internal/` or `build/` folders
-*   `temp_outputs/`
+**User Experience:**
+1.  User downloads small EXE.
+2.  User runs EXE.
+3.  App detects missing engine in `%LOCALAPPDATA%`.
+4.  App auto-downloads from Hugging Face (High Speed).
+5.  App launches seamlessly.
 
 ---
 
-## ðŸŒ Preparing for Public Release
+## 2. Hosting the Engine (One-Time Setup)
+*Current Host:* **Hugging Face** (Unlimited Bandwidth)
 
-### 1. Versioning & Identity
-*   **Version**: Ensure `version.json` is set to `3.8.0`.
-*   **Branding**: All headers reference "Blues Creative Engineering".
-*   **Official Link**: [https://blues-lab.pro](https://blues-lab.pro)
-
-### 2. The Setup Wizard Workflow
-On first run, the user experience is:
-1.  **Safety First**: A full-screen warning about **Windows Smart App Control** and how to bypass it.
-2.  **Download Center**: One-click download for the 15GB AI engines via HuggingFace.
-3.  **Finish**: Explaining that the very first launch will take 1-2 minutes to load into VRAM.
-
-### 3. MP3 Support Strategy
-Since we cannot redistribute the MP3 DLL directly:
-1.  User clicks the Gear icon (âš™).
-2.  The user follows the built-in guide to drop `libmp3lame-0.dll` into `./sox/`.
-3.  Status flips to "âœ… ACTIVE".
-
-### 4. Repository Cleanup
-Before pushing code, ensure you delete:
-*   `*.log` files
-*   `*.lock` files
-*   `__pycache__`
-*   Any previous `.zip` backups
+1.  **Zip the Engine:** Compress your local `Qwen3-TTS` folder into `blues-Qwen3-TTS.zip`.
+2.  **Upload:** Upload to a public Hugging Face Model repository.
+3.  **Get Link:** Copy the download link.
+    * **CRITICAL:** Must use the `resolve` link format:
+    * `https://huggingface.co/USERNAME/MODEL/resolve/main/FILE.zip?download=true`
 
 ---
-Â© 2026 Blues Creative Engineering.
+
+## 3. The Code Configuration
+Ensure `app_launcher.py` and `app_main.py` are synchronized to the **AppData** standard.
+
+**A. app_launcher.py (The Installer)**
+* **Target:** `os.environ['LOCALAPPDATA'] + "/Qwen3Studio"`
+* **Source:** Your Hugging Face Link.
+* **Logic:** Download -> Extract -> Delete Zip -> Launch.
+
+**B. app_main.py (The App)**
+* **Engine Root:** Must point to `os.path.join(os.environ['LOCALAPPDATA'], "Qwen3Studio", "Qwen3-TTS")`.
+* **Instance Lock:** Must check `app.lock` in the Base Directory to prevent double-opening.
+
+---
+
+## 4. The Build Process (Release Cycle)
+To release a new version of the App (Logic/UI) without forcing users to re-download the 4.5GB engine:
+
+1.  **Clean Workspace:**
+    * Delete `dist/`, `build/`, and `_internal/` folders.
+    * **IMPORTANT:** Ensure your local `Qwen3-TTS` folder is renamed or moved so it is **NOT** included in the build.
+2.  **Run Builder:**
+    ```powershell
+    python build_distribution.py
+    ```
+3.  **Verify Output:**
+    * Go to `Output/`.
+    * Check file size (Should be ~150-200MB).
+    * **Rename:** `Qwen3_Studio_Setup_vX.X.exe`.
+4.  **Publish:**
+    * Upload the EXE to GitHub Releases.
+
+---
+
+## 5. Troubleshooting
+* **"Quota Exceeded":** Ensure you are using Hugging Face, not Google Drive.
+* **"Permission Denied":** Ensure the app is writing to `AppData`, NOT `Program Files`.
+* **"App Not Found":** Ensure `app_launcher.py` imports `app_main` directly, rather than using `subprocess` to call a file that doesn't exist in the frozen EXE.

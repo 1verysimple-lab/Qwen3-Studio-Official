@@ -91,4 +91,34 @@ python Pro_Studio_Launcher.py
 ## ‚öñÔ∏è License
 This project is licensed under the Apache-2.0 License. AI models are subject to the original Qwen license terms.
 
+## Ì†ΩÌ≥Ç Project Structure
+
+### Ì†ΩÌ∫Ä Core Application
+| File | Description |
+| :--- | :--- |
+| **`app_main.py`** | The main entry point for the Qwen3 Studio application (The "Pro" App). |
+| **`app_launcher.py`** | Handles environment setup and launches the main app. |
+| **`config_manager.py`** | Manages user settings and configuration (paths, defaults). |
+| **`batch_director.py`** | Logic for the "Podcast Mode" and batch processing. |
+| **`modules/`** | Contains core logic for TTS, Voice Cloning, and Audio Processing. |
+| **`qwen_tts/`** | Interface for the AI Model inference. |
+
+### Ì†ΩÌª†Ô∏è Installer & Build System
+| File | Description |
+| :--- | :--- |
+| **`tiny_loader.py`** | Source code for the **Web Launcher**. Downloads the main app from Hugging Face. |
+| **`build_tiny.py`** | Script to compile `tiny_loader.py` into the ~15MB `Qwen3_Launcher.exe`. |
+| **`build_distribution.py`** | Script to build the full "Heavy" Pro App (2.7GB). |
+| **`deploy_payload.py`** | Utility to zip and upload the Pro App to Hugging Face. |
+| **`requirements.txt`** | Python dependencies required to run the source code. |
+
+### Ì†ΩÌ≥Ñ Documentation & Assets
+| File | Description |
+| :--- | :--- |
+| **`README.md`** | Main project overview and user instructions. |
+| **`GUIDE.md`** | Detailed user manual for Studio features. |
+| **`FEATURES.md`** | Marketing list of capabilities. |
+| **`tutorials/`** | JSON scripts used for the in-app interactive tutorial system. |
+| **`pq.ico`** | Application icon file. |
+
 *Built with ‚ù§Ô∏è by Blues in Spain.*

@@ -10,74 +10,69 @@ import subprocess
 import gc
 import shutil
 import msvcrt
+import importlib.util
 from typing import Optional, Dict, Any, List
+
 try:
     import winsound
 except ImportError:
     winsound = None
 
-# --- STABILITY: SOX PATH SETUP (MUST BE FIRST) ---
-if getattr(sys, 'frozen', False):
-    current_dir = os.path.dirname(sys.executable)
-else:
-    current_dir = os.path.dirname(os.path.abspath(__file__))
+import sys
+import os
 
-sox_path = os.path.join(current_dir, "sox")
-if os.path.exists(sox_path):
-    if sox_path not in os.environ["PATH"]:
-        os.environ["PATH"] = sox_path + os.pathsep + os.environ["PATH"]
+# --- GLOBALS ---
+BASE_DIR = ""
+APP_DATA_ROOT = ""
+ENGINE_ROOT = ""
+sox_path = ""
+VERSION_FILE = ""
+CONFIG_FILE = ""
+APP_VERSION = "3.8.2"
+MODEL_CUSTOM = ""
+MODEL_BASE = ""
+MODEL_DESIGN = ""
 
-# --- INSTANCE LOCKING ---
-LOCK_HANDLE = None
+def setup_environment():
+    """Configures all system paths and environment variables. 
+    Must be called BEFORE UI or Locking starts."""
+    global BASE_DIR, APP_DATA_ROOT, ENGINE_ROOT, sox_path
+    global VERSION_FILE, CONFIG_FILE, APP_VERSION
+    global MODEL_CUSTOM, MODEL_BASE, MODEL_DESIGN
 
-def acquire_lock():
-    """Tries to acquire an exclusive lock on the app to prevent multiple instances."""
-    global LOCK_HANDLE
-    lock_file = os.path.join(current_dir, "app.lock")
-    try:
-        LOCK_HANDLE = open(lock_file, "a") 
+    # 1. Internal Assets (Icons, Sox, JSONs) - "Where am I unpacked?"
+    if getattr(sys, 'frozen', False):
+        # In --onefile mode, assets are in sys._MEIPASS
+        BASE_DIR = sys._MEIPASS
+    else:
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+    # 2. External Data (The Engine) - "Where is the heavy stuff?"
+    # We use local AppData so it persists even if the EXE is moved/deleted.
+    APP_DATA_ROOT = os.path.join(os.getenv('LOCALAPPDATA'), "Qwen3Studio")
+    ENGINE_ROOT = os.path.join(APP_DATA_ROOT, "Qwen3-TTS")
+
+    # 3. Setup Dependencies (Sox)
+    sox_path = os.path.join(BASE_DIR, "sox")
+    if os.path.exists(sox_path):
+        if sox_path not in os.environ["PATH"]:
+            os.environ["PATH"] = sox_path + os.pathsep + os.environ["PATH"]
+
+    # 4. CONFIG & PATH SETUP
+    VERSION_FILE = os.path.join(BASE_DIR, "version.json")
+    CONFIG_FILE = os.path.join(BASE_DIR, "app_config.json")
+
+    # Load Version
+    if os.path.exists(VERSION_FILE):
         try:
-            msvcrt.locking(LOCK_HANDLE.fileno(), msvcrt.LK_NBLCK, 1)
-            return True
-        except:
-            LOCK_HANDLE.close()
-            LOCK_HANDLE = None
-            return False
-    except:
-        return False
-
-# --- CONFIG & PATH SETUP ---
-VERSION_FILE = os.path.join(current_dir, "version.json")
-CONFIG_FILE = os.path.join(current_dir, "app_config.json")
-
-def get_engine_root():
-    """Gets the engine root from config or defaults to local './engine'."""
-    root = os.path.join(current_dir, "engine")
-    if os.path.exists(CONFIG_FILE):
-        try:
-            with open(CONFIG_FILE, 'r') as f:
-                cfg = json.load(f)
-                root = cfg.get("engine_root", root)
+            with open(VERSION_FILE, 'r') as f:
+                APP_VERSION = json.load(f).get("version", APP_VERSION)
         except: pass
-    return root
 
-engine_root = get_engine_root()
-
-# 1. Load Version
-APP_VERSION = "3.8.1"
-if os.path.exists(VERSION_FILE):
-    try:
-        with open(VERSION_FILE, 'r') as f:
-            APP_VERSION = json.load(f).get("version", APP_VERSION)
-    except: pass
-
-# 2. Load Config
-initial_config = {}
-if os.path.exists(CONFIG_FILE):
-    try:
-        with open(CONFIG_FILE, 'r') as f:
-            initial_config = json.load(f)
-    except: pass
+    # 5. Local Path Mappings (Forced Stability)
+    MODEL_CUSTOM = os.path.join(ENGINE_ROOT, "custom")
+    MODEL_BASE = os.path.join(ENGINE_ROOT, "base")
+    MODEL_DESIGN = os.path.join(ENGINE_ROOT, "design")
 
 # --- THIRD PARTY IMPORTS ---
 import torch
@@ -117,11 +112,6 @@ MODEL_REPOS = {
     "base":   "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
     "design": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign"
 }
-
-# Local Path Mappings (Forced Stability)
-MODEL_CUSTOM = os.path.join(engine_root, "custom")
-MODEL_BASE = os.path.join(engine_root, "base")
-MODEL_DESIGN = os.path.join(engine_root, "design")
 
 DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"
 STATS_FILE = "generation_stats.json"
@@ -559,13 +549,15 @@ class QwenTTSApp:
         self.root.geometry("1170x850")
         
         # Paths
-        self.temp_dir = os.path.join(current_dir, "temp_outputs")
+        self.temp_dir = os.path.join(BASE_DIR, "temp_outputs")
         if not os.path.exists(self.temp_dir):
             os.makedirs(self.temp_dir)
             
-        self.assets_dir = os.path.join(current_dir, "saved_assets")
+        self.assets_dir = os.path.join(BASE_DIR, "saved_assets")
         if not os.path.exists(self.assets_dir):
             os.makedirs(self.assets_dir)
+
+        self.model_dir = ENGINE_ROOT 
 
         # Config & Profiles - LOAD THIS FIRST
         self.app_config = self.load_app_config()
@@ -2277,7 +2269,7 @@ class QwenTTSApp:
         tk.Label(f, text="AI Engine Root:", anchor="w", font=("Segoe UI", 9, "bold")).pack(fill=tk.X)
         qwen_f = tk.Frame(f)
         qwen_f.pack(fill=tk.X, pady=(0, 15))
-        self.engine_path_var = tk.StringVar(value=engine_root)
+        self.engine_path_var = tk.StringVar(value=ENGINE_ROOT)
         ttk.Entry(qwen_f, textvariable=self.engine_path_var, state="readonly").pack(side=tk.LEFT, fill=tk.X, expand=True)
         
         def browse_engine():
@@ -2289,8 +2281,8 @@ class QwenTTSApp:
 
         ttk.Button(qwen_f, text="Browse...", command=browse_engine).pack(side=tk.LEFT, padx=5)
         
-        lbl_eng_stat = tk.Label(qwen_f, text="✅ ACTIVE" if os.path.exists(engine_root) else "📁 AUTO", 
-                               fg="#27ae60" if os.path.exists(engine_root) else "#f39c12", font=("Segoe UI", 8, "bold"))
+        lbl_eng_stat = tk.Label(qwen_f, text="✅ ACTIVE" if os.path.exists(ENGINE_ROOT) else "📁 AUTO", 
+                               fg="#27ae60" if os.path.exists(ENGINE_ROOT) else "#f39c12", font=("Segoe UI", 8, "bold"))
         lbl_eng_stat.pack(side=tk.LEFT, padx=5)
 
         # MP3 DLL Logic
@@ -2362,7 +2354,7 @@ class QwenTTSApp:
         suffix, model_lang = lang_cfg.get(language, ("", "English"))
         
         fname = f"Tutorial_01_Welcome{suffix}.json"
-        fpath = os.path.join(current_dir, "tutorials", fname)
+        fpath = os.path.join(BASE_DIR, "tutorials", fname)
         
         if not os.path.exists(fpath):
             messagebox.showerror("Error", f"Tutorial file not found: {fname}")
@@ -2445,7 +2437,7 @@ class QwenTTSApp:
         tk.Label(modal, text="Support Qwen3 Creative Suite", font=("Segoe UI", 16, "bold"), bg="white", pady=20).pack()
         
         # QR Code / Image Area
-        qr_path = os.path.join(current_dir, "qr-code.png")
+        qr_path = os.path.join(BASE_DIR, "qr-code.png")
         if os.path.exists(qr_path):
             try:
                 img = Image.open(qr_path)
@@ -2522,7 +2514,7 @@ class QwenTTSApp:
         
         if not os.path.exists(sox_exe):
             # Fallback to local if configured path fails
-            sox_exe = os.path.join(current_dir, "sox", "sox.exe")
+            sox_exe = os.path.join(BASE_DIR, "sox", "sox.exe")
             
         if not os.path.exists(sox_exe):
             messagebox.showerror("Error", f"SoX not found at: {sox_exe}\n\nPlease check your System Settings (⚙).")
@@ -3480,32 +3472,72 @@ class QwenTTSApp:
                 except Exception as e:
                     print(f"Failed to load module '{item}': {e}")
 
-def launch_studio():
-    """Main entry point for the launcher."""
-    # 0. Instance Lock
-    lock = acquire_lock()
-    if not lock:
-        # If we are here, another instance is running
-        # (Usually the launcher prevents this, but for direct runs we check too)
-        from tkinter import messagebox
-        root = tk.Tk()
-        root.withdraw()
-        messagebox.showwarning("Already Running", "Another instance of Qwen3 Studio is already running.")
-        root.destroy()
-        return
+# =========================================================================
+# 🚀 LAUNCHER LOGIC
+# =========================================================================
+
+LOCK_HANDLE = None
+
+def acquire_lock():
+    """Prevents multiple instances using a file lock in AppData (Shared Location)."""
+    global LOCK_HANDLE
+    
+    # 1. Setup paths first (Just in case)
+    setup_environment() 
+    
+    # 2. Place lock in APPDATA (Persists across runs)
+    lock_file = os.path.join(APP_DATA_ROOT, "app.lock")
+    
+    # Ensure the folder exists
+    try:
+        os.makedirs(APP_DATA_ROOT, exist_ok=True)
+    except OSError:
+        pass
 
     try:
+        LOCK_HANDLE = open(lock_file, "a") 
+        try:
+            msvcrt.locking(LOCK_HANDLE.fileno(), msvcrt.LK_NBLCK, 1)
+            return True
+        except IOError:
+            return False
+    except PermissionError:
+        return False
+
+def launch_studio():
+    """Main entry point called by the Installer."""
+    # 1. Setup Environment
+    setup_environment()
+
+    # 2. Instance Lock
+    if not acquire_lock():
+        # Using a hidden root to show the error since main root isn't created yet
+        temp_root = tk.Tk()
+        temp_root.withdraw() 
+        messagebox.showwarning("Already Running", "Qwen3 Studio is already open.")
+        temp_root.destroy()
+        return
+
+    # 3. Launch UI
+    try:
         root = tk.Tk()
-        curr = os.path.dirname(os.path.abspath(__file__))
-        icon_path = os.path.join(curr, "pq.ico")
+        
+        # Set Icon
+        icon_path = os.path.join(BASE_DIR, "pq.ico")
         if os.path.exists(icon_path):
             root.iconbitmap(icon_path)
+            
         app = QwenTTSApp(root)
         root.mainloop()
+        
     except Exception as e:
+        # Emergency Crash Logging
         import traceback
-        with open("crash.log", "w") as f:
+        log_path = os.path.join(BASE_DIR, "crash_log.txt")
+        with open(log_path, "w", encoding="utf-8") as f:
             f.write(traceback.format_exc())
+        
+        messagebox.showerror("Critical Error", f"App Crashed.\nLog saved to: {log_path}\n\nError: {e}")
 
 if __name__ == "__main__":
     launch_studio()
