@@ -122,8 +122,7 @@ def initialize(app):
                 text_input.delete("1.0", tk.END)
                 text_input.insert("1.0", content)
             except Exception as e:
-                messagebox.showerror("Error", f"Failed to read file:
-{e}")
+                messagebox.showerror("Error", f"Failed to read file:\n{e}")
 
     ttk.Button(btn_frame, text="📂 Open Text File", command=open_file, style="Big.TButton").pack(side=tk.LEFT, padx=(0, 10))
 
@@ -136,8 +135,7 @@ def initialize(app):
         d.grab_set()
 
         tk.Label(d, text="Long Sentences Detected", font=("Segoe UI", 12, "bold"), pady=10).pack()
-        tk.Label(d, text=f"The following sentences exceed your {max_words_var.get()} word limit.
-Please split them manually using [SPLIT] markers or punctuation.", 
+        tk.Label(d, text=f"The following sentences exceed your {max_words_var.get()} word limit.\nPlease split them manually using [SPLIT] markers or punctuation.", 
                  font=("Segoe UI", 9), wraplength=550).pack(pady=(0, 10))
 
         # List Area
@@ -349,8 +347,7 @@ Please split them manually using [SPLIT] markers or punctuation.",
                     app.notebook.select(app.tab_batch)
                     messagebox.showinfo("Success", f"Loaded {len(script_data)} blocks into Batch Studio.")
                 except Exception as e:
-                    messagebox.showerror("Error", f"Failed to load data into Batch Studio:
-{e}")
+                    messagebox.showerror("Error", f"Failed to load data into Batch Studio:\n{e}")
 
         if long_sentences:
             # We need to change the callback to handle nested lists to maintain order
