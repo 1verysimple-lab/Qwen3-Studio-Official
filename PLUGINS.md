@@ -8,7 +8,7 @@ The Qwen3-TTS Pro Suite is designed to be extensible. You can add entirely new f
 On startup, the application scans the `./modules/` folder. The **Module Hub** then checks the `enabled_modules.json` registry to determine which plugins should be initialized.
 
 ### The Module Hub (Settings)
-Starting in v3.9.0, you can manage your plugins via the **Settings -> Module Hub** tab:
+Starting in v3.9.1, you can manage your plugins via the **Settings -> Module Hub** tab:
 *   **Synchronize**: Pulls the latest official plugins from the GitHub repository.
 *   **Toggle**: Enable or disable plugins without deleting the files.
 *   **Validation**: The Hub automatically verifies that the plugin contains the required `initialize(app)` header.

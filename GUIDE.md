@@ -278,31 +278,26 @@ Use these combinations in the **Voice Design** tab to achieve specific results.
 
 ---
 
-## 5. Automated Scripting & Plugins (The Power User's Deck)
+## 5. Script Helper (Text Parser)
 
-Starting in v3.6.2, Qwen3 Studio supports a dynamic plugin system.
+The **Script Helper** tab is a specialized tool for turning long documents into production-ready batch scripts.
+*   **Automatic Splitting**: Splits long text by sentence or word count to prevent engine timeouts.
+*   **Cleaning Logic**: Automatically removes square brackets `[ ]` or parentheses `( )` often found in scripts.
+*   **Manual Refinement**: If a sentence is too long, the helper will prompt you to split it manually before sending it to the Batch Studio.
 
-### **The "Auto-Script" Module**
-You will see a tab labeled **🤖 Auto-Script**. This is a demonstration of the plugin system. It shows how the engine can be controlled by an external script to run sequences of different voices and texts automatically.
+## 6. Module Hub & Dynamic Sync (v3.9.1)
 
-### **Extending the Studio**
-You can create your own workflows by adding Python scripts to the `./modules/` folder.
-*   **Headless Automation:** Build background services that watch folders for script files.
-*   **Custom APIs:** Turn the Studio into a local server that other apps can talk to.
-*   **New Stations:** Add entirely new tabs for specific project needs.
+Found in **Settings (⚙️)**, the Module Hub is your gateway to extending the Studio.
+*   **🔍 Check for new plugins**: Surgeons the official GitHub repository to find new creative tools.
+*   **Color-Coded Status**: 🟢 Active, 🔴 Disabled, 🟡 New (from current sync).
+*   **Registry Persistence**: Enabling or disabling a module is saved immediately. Restart the app to apply changes.
 
-See `PLUGINS.md` for the full developer documentation.
+## 7. Automated Scripting & Plugins
+Starting in v3.6.2, Qwen3 Studio supports a dynamic plugin system. Any `.py` file in the `./modules/` folder can be managed via the Hub.
+*   **Headless Automation**: Build services that watch folders or provide local APIs.
+*   **Custom Tabs**: Add entirely new interfaces for specialized tasks.
 
----
-
-## 5. Module Hub & Dynamic Sync (v3.9.0)
-
-The **Module Hub** (found in Settings ⚙️) is your control center for extending the Studio.
-*   **Synchronize Hub**: Click this to check for new plugins or updates.
-*   **Active Modules**: Toggle plugins on or off to keep your workspace clean.
-*   **Restart Required**: Changes take effect after the next app launch.
-
-## 6. Pro-Tips for Better Generation
+## 8. Pro-Tips for Better Generation
 
 **1. The "Pause" Trick**
 The AI respects punctuation. If you want a dramatic pause, don't just write text. Use line breaks.
