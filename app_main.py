@@ -2332,16 +2332,25 @@ class QwenTTSApp:
     def show_settings_dialog(self):
         d = tk.Toplevel(self.root)
         d.title("System Status & Settings")
-        d.geometry("550x550") # Increased height to ensure all tabs fit
+        d.geometry("550x600") # Increased height slightly more
         d.resizable(False, False)
         try:
             x = self.root.winfo_rootx() + (self.root.winfo_width()//2) - 275
-            y = self.root.winfo_rooty() + (self.root.winfo_height()//2) - 275
+            y = self.root.winfo_rooty() + (self.root.winfo_height()//2) - 300
             d.geometry(f"+{x}+{y}")
         except: pass
 
+        # Save Button (Packed BOTTOM first so it's always visible)
+        def save():
+            self.save_app_config()
+            messagebox.showinfo("Saved", "System status verified and configuration updated.")
+            d.destroy()
+
+        btn_save = tk.Button(d, text="💾 Close & Apply Changes", command=save, bg=self.colors["accent"], fg="white", font=("Segoe UI", 10, "bold"), pady=8)
+        btn_save.pack(side=tk.BOTTOM, fill=tk.X, padx=50, pady=20)
+
         nb = ttk.Notebook(d)
-        nb.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        nb.pack(fill=tk.BOTH, expand=True, padx=10, pady=(10, 0))
 
         # TAB 1: System Architecture
         tab_sys = ttk.Frame(nb)
@@ -2510,17 +2519,6 @@ class QwenTTSApp:
             self.hub.sync_from_github(on_sync_done)
             
         sync_btn.config(command=run_sync)
-
-        # Save Button (Bottom of dialog - now redundant but kept for other tabs)
-            
-        
-        def save():
-            self.save_app_config()
-            messagebox.showinfo("Saved", "System status verified and configuration updated.")
-            d.destroy()
-
-        btn_save = tk.Button(d, text="💾 Close & Apply Changes", command=save, bg=self.colors["accent"], fg="white", font=("Segoe UI", 10, "bold"), pady=8)
-        btn_save.pack(fill=tk.X, padx=50, pady=20)
 
     def start_tutorial_flow(self):
         # 1. Select Language Dialog
