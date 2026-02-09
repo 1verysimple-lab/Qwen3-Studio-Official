@@ -2332,11 +2332,11 @@ class QwenTTSApp:
     def show_settings_dialog(self):
         d = tk.Toplevel(self.root)
         d.title("System Status & Settings")
-        d.geometry("550x450") # Increased height for visibility
+        d.geometry("550x550") # Increased height to ensure all tabs fit
         d.resizable(False, False)
         try:
             x = self.root.winfo_rootx() + (self.root.winfo_width()//2) - 275
-            y = self.root.winfo_rooty() + (self.root.winfo_height()//2) - 225
+            y = self.root.winfo_rooty() + (self.root.winfo_height()//2) - 275
             d.geometry(f"+{x}+{y}")
         except: pass
 
@@ -2411,15 +2411,31 @@ class QwenTTSApp:
         tk.Label(hub_main, text="Dynamic Module & Sync Manager", font=("Segoe UI", 11, "bold")).pack(anchor="w")
         
         sync_btn = ttk.Button(hub_main, text="🔍 Check for new plugins", width=30)
-        sync_btn.pack(pady=5)
+        sync_btn.pack(pady=10)
         
+        # Action Buttons for Hub (MOVED TO TOP for visibility if list gets too long)
+        hub_btns = tk.Frame(hub_main)
+        hub_btns.pack(fill=tk.X, pady=(0, 10))
+
+        def hub_save():
+            self.hub.registry = self._pending_registry
+            self.hub.save_registry()
+            messagebox.showinfo("Saved", "Module configuration updated. Restart app to apply.")
+            d.destroy()
+            
+        def hub_cancel():
+            d.destroy()
+
+        tk.Button(hub_btns, text="💾 Save and Exit", command=hub_save, bg="#27ae60", fg="white", font=("Segoe UI", 9, "bold"), padx=10).pack(side=tk.RIGHT, padx=5)
+        tk.Button(hub_btns, text="Cancel", command=hub_cancel, font=("Segoe UI", 9), padx=10).pack(side=tk.RIGHT)
+
         # Tracking states locally for the session
         self._new_modules = set()
         self._pending_registry = self.hub.registry.copy()
 
         # Scrollable List Area
         list_f = ttk.LabelFrame(hub_main, text=" Plugin Inventory ", padding=10)
-        list_f.pack(fill=tk.BOTH, expand=True, pady=10)
+        list_f.pack(fill=tk.BOTH, expand=True)
         
         canvas = tk.Canvas(list_f, highlightthickness=0)
         scroll = ttk.Scrollbar(list_f, orient="vertical", command=canvas.yview)
@@ -2495,23 +2511,9 @@ class QwenTTSApp:
             
         sync_btn.config(command=run_sync)
 
-        # Action Buttons for Hub
-        hub_btns = tk.Frame(hub_main)
-        hub_btns.pack(fill=tk.X, pady=5)
-
-        def hub_save():
-            self.hub.registry = self._pending_registry
-            self.hub.save_registry()
-            messagebox.showinfo("Saved", "Module configuration updated. Restart app to apply.")
-            d.destroy()
-            
-        def hub_cancel():
-            d.destroy()
-
-        tk.Button(hub_btns, text="💾 Save and Exit", command=hub_save, bg="#27ae60", fg="white", font=("Segoe UI", 9, "bold")).pack(side=tk.RIGHT, padx=5)
-        tk.Button(hub_btns, text="Cancel", command=hub_cancel, font=("Segoe UI", 9)).pack(side=tk.RIGHT)
-
         # Save Button (Bottom of dialog - now redundant but kept for other tabs)
+            
+        
         def save():
             self.save_app_config()
             messagebox.showinfo("Saved", "System status verified and configuration updated.")
