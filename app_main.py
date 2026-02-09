@@ -736,6 +736,40 @@ class QwenTTSApp:
 
         # Start System Monitors
         self._start_vram_monitor()
+        
+        # Check for Studio Updates
+        self.root.after(3000, self.check_for_updates)
+
+    def check_for_updates(self):
+        """Fetches the latest version.json from GitHub and compares with local APP_VERSION."""
+        def task():
+            try:
+                import requests
+                raw_url = "https://raw.githubusercontent.com/1verysimple-lab/Qwen3-Studio-Official/main/version.json"
+                r = requests.get(raw_url, timeout=10)
+                if r.status_code == 200:
+                    remote_data = r.json()
+                    remote_ver = remote_data.get("version", "0.0.0")
+                    
+                    # Version comparison (simple string check for now, but usually should be numeric)
+                    if remote_ver > APP_VERSION:
+                        msg = remote_data.get("message", f"A new version (v{remote_ver}) is available.")
+                        url = remote_data.get("download_url", "https://blues-lab.pro")
+                        
+                        def notify():
+                            if messagebox.askyesno("Update Available", 
+                                f"Current Version: v{APP_VERSION}\n"
+                                f"Latest Version: v{remote_ver}\n\n"
+                                f"{msg}\n\n"
+                                "Would you like to visit the download page?"):
+                                import webbrowser
+                                webbrowser.open(url)
+                        
+                        self.root.after(0, notify)
+            except:
+                pass # Silent fail for updates
+
+        threading.Thread(target=task, daemon=True).start()
 
     def setup_styles(self):
         self.colors = {
