@@ -220,11 +220,11 @@ class ModuleHub:
                 headers = {'Accept': 'application/vnd.github.v3+json'}
                 r = requests.get(self.repo_url, headers=headers, timeout=10)
                 if r.status_code != 200:
-                    if callback: callback("error", f"GitHub API Error: {r.status_code}")
+                    if callback: callback("error", f"GitHub API Error: {r.status_code}", [])
                     return
 
                 files = r.json()
-                updated_count = 0
+                newly_downloaded = []
                 
                 for f in files:
                     name = f['name']
@@ -239,14 +239,15 @@ class ModuleHub:
                         if r_code.status_code == 200:
                             with open(target_path, 'w', encoding='utf-8') as mod_file:
                                 mod_file.write(r_code.text)
-                            updated_count += 1
+                            newly_downloaded.append(name)
                             if name not in self.registry:
                                 self.registry[name] = True
                 
                 self.save_registry()
-                if callback: callback("success", f"Sync Complete. Found {len(files)} items, downloaded {updated_count} new modules.")
+                msg = f"Sync Complete. Found {len(files)} items, downloaded {len(newly_downloaded)} new modules."
+                if callback: callback("success", msg, newly_downloaded)
             except Exception as e:
-                if callback: callback("error", str(e))
+                if callback: callback("error", str(e), [])
 
         threading.Thread(target=task, daemon=True).start()
 
@@ -2408,13 +2409,16 @@ class QwenTTSApp:
         hub_main.pack(fill=tk.BOTH, expand=True)
         
         tk.Label(hub_main, text="Dynamic Module & Sync Manager", font=("Segoe UI", 11, "bold")).pack(anchor="w")
-        tk.Label(hub_main, text="Synchronize with the official repository and toggle active plugins.", font=("Segoe UI", 9)).pack(anchor="w", pady=(0, 10))
         
-        sync_btn = ttk.Button(hub_main, text="🔄 Synchronize Hub (GitHub)", width=30)
+        sync_btn = ttk.Button(hub_main, text="🔍 Check for new plugins", width=30)
         sync_btn.pack(pady=5)
         
+        # Tracking states locally for the session
+        self._new_modules = set()
+        self._pending_registry = self.hub.registry.copy()
+
         # Scrollable List Area
-        list_f = ttk.LabelFrame(hub_main, text=" Installed Modules ", padding=10)
+        list_f = ttk.LabelFrame(hub_main, text=" Plugin Inventory ", padding=10)
         list_f.pack(fill=tk.BOTH, expand=True, pady=10)
         
         canvas = tk.Canvas(list_f, highlightthickness=0)
@@ -2436,30 +2440,54 @@ class QwenTTSApp:
                 return
                 
             for f_name in sorted(files):
-                row = tk.Frame(scroll_f)
+                is_enabled = self._pending_registry.get(f_name, True)
+                is_new = f_name in self._new_modules
+                
+                # Container row
+                row = tk.Frame(scroll_f, pady=1, bg="#f0f0f0")
                 row.pack(fill=tk.X, pady=2)
                 
-                var = tk.BooleanVar(value=self.hub.is_enabled(f_name))
-                def toggle(name=f_name, v=var):
-                    self.hub.toggle_module(name, v.get())
+                # Status Color
+                color = "#2ecc71" if is_enabled else "#e74c3c" # Green or Red
+                if is_new: color = "#f1c40f" # Yellow for new
                 
-                cb = ttk.Checkbutton(row, text=f_name, variable=var, command=toggle)
-                cb.pack(side=tk.LEFT)
+                lbl_status = tk.Label(row, text="●", fg=color, bg="#f0f0f0", font=("Segoe UI", 12))
+                lbl_status.pack(side=tk.LEFT, padx=5)
                 
-                # Check for 'initialize' header
+                btn_text = f"{f_name} [{'ACTIVE' if is_enabled else 'DISABLED'}]"
+                if is_new: btn_text += " [NEW!]"
+                
+                # Make the whole label a button to toggle
+                def toggle(name=f_name):
+                    current = self._pending_registry.get(name, True)
+                    self._pending_registry[name] = not current
+                    refresh_hub_list()
+                
+                btn = tk.Button(row, text=btn_text, font=("Segoe UI", 9), anchor="w", 
+                                relief=tk.FLAT, bg="#f0f0f0", command=toggle,
+                                activebackground="#dfe6e9")
+                btn.pack(side=tk.LEFT, fill=tk.X, expand=True)
+                
+                # Valid Header Indicator
                 try:
                     with open(os.path.join(self.modules_dir, f_name), 'r', encoding='utf-8') as f:
                         if "def initialize(app):" in f.read():
-                            tk.Label(row, text=" [Valid Plugin]", fg="#27ae60", font=("Segoe UI", 7)).pack(side=tk.LEFT)
+                            tk.Label(row, text="[Blues-Approved]", fg="#2980b9", font=("Segoe UI", 7), bg="#f0f0f0").pack(side=tk.RIGHT, padx=5)
                 except: pass
 
         refresh_hub_list()
         
         def run_sync():
-            sync_btn.config(state=tk.DISABLED, text="⌛ Syncing...")
-            def on_sync_done(status, msg):
+            sync_btn.config(state=tk.DISABLED, text="⌛ Checking GitHub...")
+            def on_sync_done(status, msg, new_files):
+                if status == "success":
+                    self._new_modules.update(new_files)
+                    # Merge new files into pending as enabled
+                    for nf in new_files: 
+                        if nf not in self._pending_registry: self._pending_registry[nf] = True
+                
                 self.root.after(0, lambda: [
-                    sync_btn.config(state=tk.NORMAL, text="🔄 Synchronize Hub (GitHub)"),
+                    sync_btn.config(state=tk.NORMAL, text="🔍 Check for new plugins"),
                     refresh_hub_list(),
                     messagebox.showinfo("Sync", msg) if status == "success" else messagebox.showerror("Sync Error", msg)
                 ])
@@ -2467,9 +2495,23 @@ class QwenTTSApp:
             
         sync_btn.config(command=run_sync)
 
-        tk.Label(hub_main, text="* Changes require app restart to take effect.", font=("Segoe UI", 8, "italic"), fg="#7f8c8d").pack(pady=5)
+        # Action Buttons for Hub
+        hub_btns = tk.Frame(hub_main)
+        hub_btns.pack(fill=tk.X, pady=5)
 
-        # Save Button (Bottom)
+        def hub_save():
+            self.hub.registry = self._pending_registry
+            self.hub.save_registry()
+            messagebox.showinfo("Saved", "Module configuration updated. Restart app to apply.")
+            d.destroy()
+            
+        def hub_cancel():
+            d.destroy()
+
+        tk.Button(hub_btns, text="💾 Save and Exit", command=hub_save, bg="#27ae60", fg="white", font=("Segoe UI", 9, "bold")).pack(side=tk.RIGHT, padx=5)
+        tk.Button(hub_btns, text="Cancel", command=hub_cancel, font=("Segoe UI", 9)).pack(side=tk.RIGHT)
+
+        # Save Button (Bottom of dialog - now redundant but kept for other tabs)
         def save():
             self.save_app_config()
             messagebox.showinfo("Saved", "System status verified and configuration updated.")

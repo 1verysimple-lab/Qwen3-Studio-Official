@@ -199,6 +199,6 @@
     "autoplay": true,
     "sound_on_ready": false,
     "last_out_dir": "",
-    "custom_notification_sound": null,
+    "custom_notification_sound": "C:\\Users\\1very\\source\\cloneMe\\saved_assets\\20260209-110832_Cln_Engineloaded.wav",
     "engine_root": "C:/Users/1very/source/cloneMe/_internal/engine"
 }
