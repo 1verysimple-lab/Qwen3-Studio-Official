@@ -1,4 +1,4 @@
-# ğŸ™ï¸ Qwen3-TTS Pro Suite v3.8.1
+# ğŸ™ï¸ Qwen3-TTS Pro Suite v3.9.0
 
 **Local AI Voice Design, Cloning, and Batch Production**
 
@@ -30,7 +30,9 @@ To run the suite:
     *   ğŸŸ¢ **Custom Voice**: Use natural language instructions and style descriptors to command high-quality pre-trained personas.
     *   ğŸ”µ **Voice Design**: Create entirely new vocal identities from scratch using text descriptions.
     *   ğŸŸ£ **Voice Clone**: Perfect digital replicas of any person from just a few seconds of reference audio.
+*   **ğŸ”Œ Module Hub (New)**: A unified manager to synchronize plugins with the official GitHub repository and toggle features on/off dynamically.
 *   **Smart Director Architecture**: Includes an integrated **Batch Studio** (Non-Linear Editor) for sequencing complex multi-voice scripts and scenes.
+*   **VRAM Monitor**: Real-time GPU memory tracking integrated into the status bar for stability.
 *   **Dynamic Extension Support**: A modular plugin system allows you to add new features and automated scripting via the `modules/` folder. [Read the Plugin Guide (PLUGINS.md)](PLUGINS.md).
 *   **Stability First**: Forced local path architecture ensures core components (SoX, Engines) are always where they need to be.
 *   **Auto-Managed Engines**: Missing models are detected and downloaded automatically from HuggingFace.
@@ -91,9 +93,9 @@ python Pro_Studio_Launcher.py
 ## âš–ï¸ License
 This project is licensed under the Apache-2.0 License. AI models are subject to the original Qwen license terms.
 
-## í ½í³‚ Project Structure
+## ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Project Structure
 
-### í ½íº€ Core Application
+### ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Core Application
 | File | Description |
 | :--- | :--- |
 | **`app_main.py`** | The main entry point for the Qwen3 Studio application (The "Pro" App). |
@@ -103,7 +105,7 @@ This project is licensed under the Apache-2.0 License. AI models are subject to 
 | **`modules/`** | Contains core logic for TTS, Voice Cloning, and Audio Processing. |
 | **`qwen_tts/`** | Interface for the AI Model inference. |
 
-### í ½í» ï¸ Installer & Build System
+### ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¸ Installer & Build System
 | File | Description |
 | :--- | :--- |
 | **`tiny_loader.py`** | Source code for the **Web Launcher**. Downloads the main app from Hugging Face. |
@@ -112,7 +114,7 @@ This project is licensed under the Apache-2.0 License. AI models are subject to 
 | **`deploy_payload.py`** | Utility to zip and upload the Pro App to Hugging Face. |
 | **`requirements.txt`** | Python dependencies required to run the source code. |
 
-### í ½í³„ Documentation & Assets
+### ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Documentation & Assets
 | File | Description |
 | :--- | :--- |
 | **`README.md`** | Main project overview and user instructions. |

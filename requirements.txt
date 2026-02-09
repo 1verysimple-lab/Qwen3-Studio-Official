@@ -11,6 +11,7 @@ inflect
 faster-whisper
 Pillow
 huggingface_hub
+requests
 windnd
 onnxruntime
 einops

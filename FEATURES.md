@@ -1,4 +1,4 @@
-# 🎙️ Qwen3-TTS Pro Suite: Functional Specification (v3.6.9)
+# 🎙️ Qwen3-TTS Pro Suite: Functional Specification (v3.9.0)
 
 This document outlines the full functional capabilities of the **Qwen3-TTS Pro Suite**, organized by the logical creative workflow.
 
@@ -11,13 +11,14 @@ The application balances local stability with power-user flexibility:
 *   **Audio Processor**: Forced to root `./sox/` folder for binary reliability.
 *   **Custom Engine Root**: Users can select a custom folder for the large AI models (15GB+) via the Launcher or Settings to save space on their primary drive.
 *   **Smart Downloader**: Integrated HuggingFace hub downloader fetches missing assets on-demand.
+*   **VRAM Monitor**: Real-time monitoring of GPU memory usage with color-coded safety indicators.
 
-### 🔌 Module Extension System
-Developers can extend the application without modifying the core source code:
-*   **Drop-in Plugins**: Any `.py` file in the `modules/` folder is automatically loaded.
-*   **Dynamic Plugin Architecture**: Supports both UI-based tabs (like the Auto-Script demo) and Headless background services (Watch Folders, Local APIs).
-*   **Full API Access**: Plugins receive the main app instance, allowing them to control the UI, change settings, and trigger generations.
-*   **Automated Scripting**: Support for `on_complete` callbacks allows modules to run complex sequences of audio generation autonomously.
+### 🔌 Module Hub (Extension System)
+The "Triple Pavilion" architecture for module management:
+*   **GitHub Synchronization**: A surgical sync engine via GitHub REST API to pull the latest official plugins without full git overhead.
+*   **Registry Management**: A persistence layer (`enabled_modules.json`) to toggle modules on/off.
+*   **Dynamic Plugin Architecture**: Supports both UI-based tabs and Headless background services.
+*   **Blues-Approved Headers**: Security check to verify plugin validity before initialization.
 
 ---
 

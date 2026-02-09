@@ -28,7 +28,7 @@ ENGINE_ROOT = ""
 sox_path = ""
 VERSION_FILE = ""
 CONFIG_FILE = ""
-APP_VERSION = "3.8.2"
+APP_VERSION = "3.9.0"
 MODEL_CUSTOM = ""
 MODEL_BASE = ""
 MODEL_DESIGN = ""
@@ -55,8 +55,14 @@ def setup_environment():
     # 3. Setup Dependencies (Sox)
     sox_path = os.path.join(BASE_DIR, "sox")
     if os.path.exists(sox_path):
-        if sox_path not in os.environ["PATH"]:
-            os.environ["PATH"] = sox_path + os.pathsep + os.environ["PATH"]
+        # Force absolute path for environment variables
+        abs_sox = os.path.abspath(sox_path)
+        os.environ["SOX_PATH"] = abs_sox
+        # Add to beginning of PATH to ensure priority
+        if abs_sox not in os.environ["PATH"]:
+            os.environ["PATH"] = abs_sox + os.pathsep + os.environ["PATH"]
+        # On Windows, some libraries also look at 'sox' in PATH
+        os.environ["sox"] = os.path.join(abs_sox, "sox.exe")
 
     # 4. CONFIG & PATH SETUP
     VERSION_FILE = os.path.join(BASE_DIR, "version.json")
@@ -73,6 +79,9 @@ def setup_environment():
     MODEL_CUSTOM = os.path.join(ENGINE_ROOT, "custom")
     MODEL_BASE = os.path.join(ENGINE_ROOT, "base")
     MODEL_DESIGN = os.path.join(ENGINE_ROOT, "design")
+
+# --- INITIALIZE ENVIRONMENT IMMEDIATELY ---
+setup_environment()
 
 # --- THIRD PARTY IMPORTS ---
 import torch
@@ -169,6 +178,77 @@ class GenerationEstimator:
             return max(0.0, est)
         except:
             return 0.0
+
+class ModuleHub:
+    """Handles synchronization with GitHub and managing enabled/disabled states."""
+    def __init__(self, modules_dir):
+        self.modules_dir = modules_dir
+        self.registry_file = os.path.join(modules_dir, "enabled_modules.json")
+        self.registry = self.load_registry()
+        # Official Repo for syncing
+        self.repo_url = "https://api.github.com/repos/1verysimple-lab/Qwen3-Studio-Official/contents/modules"
+        self.raw_base_url = "https://raw.githubusercontent.com/1verysimple-lab/Qwen3-Studio-Official/main/modules"
+
+    def load_registry(self):
+        if os.path.exists(self.registry_file):
+            try:
+                with open(self.registry_file, 'r') as f:
+                    return json.load(f)
+            except: pass
+        return {}
+
+    def save_registry(self):
+        try:
+            with open(self.registry_file, 'w') as f:
+                json.dump(self.registry, f, indent=4)
+        except: pass
+
+    def is_enabled(self, filename):
+        # Default to True if not in registry
+        return self.registry.get(filename, True)
+
+    def toggle_module(self, filename, state):
+        self.registry[filename] = state
+        self.save_registry()
+
+    def sync_from_github(self, callback=None):
+        """Fetches the list of modules from GitHub and updates/downloads if needed."""
+        def task():
+            try:
+                import requests
+                # 1. Fetch File List
+                headers = {'Accept': 'application/vnd.github.v3+json'}
+                r = requests.get(self.repo_url, headers=headers, timeout=10)
+                if r.status_code != 200:
+                    if callback: callback("error", f"GitHub API Error: {r.status_code}")
+                    return
+
+                files = r.json()
+                updated_count = 0
+                
+                for f in files:
+                    name = f['name']
+                    if not name.endswith(".py"): continue
+                    
+                    target_path = os.path.join(self.modules_dir, name)
+                    
+                    # Download if missing
+                    if not os.path.exists(target_path):
+                        raw_url = f"{self.raw_base_url}/{name}"
+                        r_code = requests.get(raw_url, timeout=15)
+                        if r_code.status_code == 200:
+                            with open(target_path, 'w', encoding='utf-8') as mod_file:
+                                mod_file.write(r_code.text)
+                            updated_count += 1
+                            if name not in self.registry:
+                                self.registry[name] = True
+                
+                self.save_registry()
+                if callback: callback("success", f"Sync Complete. Found {len(files)} items, downloaded {updated_count} new modules.")
+            except Exception as e:
+                if callback: callback("error", str(e))
+
+        threading.Thread(target=task, daemon=True).start()
 
 SUPPORTED_LANGUAGES = [
     "English", "Chinese", "Japanese", "Korean", "Cantonese", 
@@ -559,6 +639,12 @@ class QwenTTSApp:
 
         self.model_dir = ENGINE_ROOT 
 
+        # Module Hub Initialization
+        self.modules_dir = os.path.join(BASE_DIR, "modules")
+        if not os.path.exists(self.modules_dir):
+            os.makedirs(self.modules_dir, exist_ok=True)
+        self.hub = ModuleHub(self.modules_dir)
+
         # Config & Profiles - LOAD THIS FIRST
         self.app_config = self.load_app_config()
         self.voice_configs = self.app_config.get("saved_voices", {})
@@ -644,9 +730,11 @@ class QwenTTSApp:
         self.root.update()
         self.setup_history_panel()
 
-    # --- UI SETUP ---
         # Load External Modules (Extensions)
         self.load_external_modules()
+
+        # Start System Monitors
+        self._start_vram_monitor()
 
     def setup_styles(self):
         self.colors = {
@@ -2251,9 +2339,16 @@ class QwenTTSApp:
             d.geometry(f"+{x}+{y}")
         except: pass
 
-        tk.Label(d, text="System Architecture (Stable Mode)", font=("Segoe UI", 12, "bold"), pady=15).pack()
+        nb = ttk.Notebook(d)
+        nb.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # TAB 1: System Architecture
+        tab_sys = ttk.Frame(nb)
+        nb.add(tab_sys, text="System Architecture")
         
-        f = tk.Frame(d, padx=20)
+        tk.Label(tab_sys, text="System Architecture (Stable Mode)", font=("Segoe UI", 12, "bold"), pady=15).pack()
+        
+        f = tk.Frame(tab_sys, padx=20)
         f.pack(fill=tk.BOTH, expand=True)
 
         # Sox Path (ReadOnly)
@@ -2304,6 +2399,75 @@ class QwenTTSApp:
         help_f.pack(fill="x", pady=5)
         help_msg = "💡 HOW TO ENABLE MP3:\n1. Download 'libmp3lame-0.dll' (32-bit or 64-bit to match SoX).\n2. Place it DIRECTLY inside the './sox/' folder.\n3. Restart the app. MP3 export will unlock automatically."
         tk.Label(help_f, text=help_msg, justify="left", font=("Segoe UI", 8), bg="#fffde7", wraplength=480).pack()
+
+        # TAB 2: Module Hub
+        tab_hub = ttk.Frame(nb)
+        nb.add(tab_hub, text="🔌 Module Hub")
+        
+        hub_main = tk.Frame(tab_hub, padx=20, pady=10)
+        hub_main.pack(fill=tk.BOTH, expand=True)
+        
+        tk.Label(hub_main, text="Dynamic Module & Sync Manager", font=("Segoe UI", 11, "bold")).pack(anchor="w")
+        tk.Label(hub_main, text="Synchronize with the official repository and toggle active plugins.", font=("Segoe UI", 9)).pack(anchor="w", pady=(0, 10))
+        
+        sync_btn = ttk.Button(hub_main, text="🔄 Synchronize Hub (GitHub)", width=30)
+        sync_btn.pack(pady=5)
+        
+        # Scrollable List Area
+        list_f = ttk.LabelFrame(hub_main, text=" Installed Modules ", padding=10)
+        list_f.pack(fill=tk.BOTH, expand=True, pady=10)
+        
+        canvas = tk.Canvas(list_f, highlightthickness=0)
+        scroll = ttk.Scrollbar(list_f, orient="vertical", command=canvas.yview)
+        scroll_f = tk.Frame(canvas)
+        
+        scroll_f.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        canvas.create_window((0, 0), window=scroll_f, anchor="nw", width=420)
+        canvas.configure(yscrollcommand=scroll.set)
+        canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        
+        def refresh_hub_list():
+            for widget in scroll_f.winfo_children(): widget.destroy()
+            
+            files = [f for f in os.listdir(self.modules_dir) if f.endswith(".py") and not f.startswith("__")]
+            if not files:
+                tk.Label(scroll_f, text="No modules found.", font=("Segoe UI", 9, "italic")).pack(pady=10)
+                return
+                
+            for f_name in sorted(files):
+                row = tk.Frame(scroll_f)
+                row.pack(fill=tk.X, pady=2)
+                
+                var = tk.BooleanVar(value=self.hub.is_enabled(f_name))
+                def toggle(name=f_name, v=var):
+                    self.hub.toggle_module(name, v.get())
+                
+                cb = ttk.Checkbutton(row, text=f_name, variable=var, command=toggle)
+                cb.pack(side=tk.LEFT)
+                
+                # Check for 'initialize' header
+                try:
+                    with open(os.path.join(self.modules_dir, f_name), 'r', encoding='utf-8') as f:
+                        if "def initialize(app):" in f.read():
+                            tk.Label(row, text=" [Valid Plugin]", fg="#27ae60", font=("Segoe UI", 7)).pack(side=tk.LEFT)
+                except: pass
+
+        refresh_hub_list()
+        
+        def run_sync():
+            sync_btn.config(state=tk.DISABLED, text="⌛ Syncing...")
+            def on_sync_done(status, msg):
+                self.root.after(0, lambda: [
+                    sync_btn.config(state=tk.NORMAL, text="🔄 Synchronize Hub (GitHub)"),
+                    refresh_hub_list(),
+                    messagebox.showinfo("Sync", msg) if status == "success" else messagebox.showerror("Sync Error", msg)
+                ])
+            self.hub.sync_from_github(on_sync_done)
+            
+        sync_btn.config(command=run_sync)
+
+        tk.Label(hub_main, text="* Changes require app restart to take effect.", font=("Segoe UI", 8, "italic"), fg="#7f8c8d").pack(pady=5)
 
         # Save Button (Bottom)
         def save():
@@ -3451,18 +3615,22 @@ class QwenTTSApp:
         threading.Thread(target=_task, daemon=True).start()
     def load_external_modules(self):
         """Scans the 'modules' folder and initializes any plugins found."""
-        modules_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "modules")
-        if not os.path.exists(modules_dir):
-            os.makedirs(modules_dir, exist_ok=True)
+        if not os.path.exists(self.modules_dir):
+            os.makedirs(self.modules_dir, exist_ok=True)
             return
         import importlib.util
-        if modules_dir not in sys.path:
-            sys.path.append(modules_dir)
-        for item in os.listdir(modules_dir):
+        if self.modules_dir not in sys.path:
+            sys.path.append(self.modules_dir)
+        for item in os.listdir(self.modules_dir):
             if item.endswith(".py") and not item.startswith("__"):
+                # Use Hub to check if enabled
+                if not self.hub.is_enabled(item):
+                    print(f"Module '{item}' is disabled. Skipping.")
+                    continue
+
                 try:
                     module_name = item[:-3]
-                    module_path = os.path.join(modules_dir, item)
+                    module_path = os.path.join(self.modules_dir, item)
                     spec = importlib.util.spec_from_file_location(module_name, module_path)
                     mod = importlib.util.module_from_spec(spec)
                     spec.loader.exec_module(mod)
@@ -3471,6 +3639,51 @@ class QwenTTSApp:
                         print(f"Module '{module_name}' loaded successfully.")
                 except Exception as e:
                     print(f"Failed to load module '{item}': {e}")
+
+    def _start_vram_monitor(self):
+        """Starts a background thread to monitor VRAM usage."""
+        self.vram_var = tk.StringVar(value="VRAM: 0/0 MB")
+        self.vram_lbl = tk.Label(
+            self.root, 
+            textvariable=self.vram_var, 
+            font=("Segoe UI", 9, "bold"), 
+            bg="#e9ecef", 
+            fg="#2c3e50",
+            padx=5
+        )
+        self.vram_lbl.place(relx=1.0, rely=1.0, anchor="se", x=-5, y=-5)
+        
+        def loop():
+            while True:
+                try:
+                    if not self.root.winfo_exists(): break
+                    used, total = self._get_vram_usage()
+                    color = "#2c3e50"
+                    if total > 0:
+                        pct = used / total
+                        if pct > 0.9: color = "#c0392b"
+                        elif pct > 0.7: color = "#d35400"
+                    
+                    status_text = f"VRAM: {used}/{total} MB"
+                    self.root.after(0, lambda t=status_text, c=color: [self.vram_var.set(t), self.vram_lbl.config(fg=c)])
+                except: break
+                time.sleep(2)
+        
+        threading.Thread(target=loop, daemon=True).start()
+
+    def _get_vram_usage(self):
+        """Helper to query nvidia-smi."""
+        try:
+            si = None
+            if os.name == 'nt':
+                si = subprocess.STARTUPINFO()
+                si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                si.wShowWindow = subprocess.SW_HIDE
+            cmd = "nvidia-smi --query-gpu=memory.used,memory.total --format=csv,nounits,noheader"
+            output = subprocess.check_output(cmd.split(), startupinfo=si).decode('utf-8').strip()
+            used, total = map(int, output.split(','))
+            return used, total
+        except: return 0, 0
 
 # =========================================================================
 # 🚀 LAUNCHER LOGIC
@@ -3506,9 +3719,6 @@ def acquire_lock():
 
 def launch_studio():
     """Main entry point called by the Installer."""
-    # 1. Setup Environment
-    setup_environment()
-
     # 2. Instance Lock
     if not acquire_lock():
         # Using a hidden root to show the error since main root isn't created yet

@@ -295,6 +295,13 @@ See `PLUGINS.md` for the full developer documentation.
 
 ---
 
+## 5. Module Hub & Dynamic Sync (v3.9.0)
+
+The **Module Hub** (found in Settings ⚙️) is your control center for extending the Studio.
+*   **Synchronize Hub**: Click this to check for new plugins or updates.
+*   **Active Modules**: Toggle plugins on or off to keep your workspace clean.
+*   **Restart Required**: Changes take effect after the next app launch.
+
 ## 6. Pro-Tips for Better Generation
 
 **1. The "Pause" Trick**

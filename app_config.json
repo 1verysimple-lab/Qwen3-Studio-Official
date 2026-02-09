@@ -55,6 +55,13 @@
             "temp": 0.9909090909090909,
             "top_p": 0.6522727272727272,
             "whisper_lang": "Auto"
+        },
+        "serious_slow_deep": {
+            "audio_path": "C:/Users/1very/Videos/Audio Clips/serious_clip_good.wav",
+            "transcript": "happy. I think the word has been abused and many people believe our goal is to just be  happy like. If you're not happy, you must be sad. I think happy is a special feeling  just like love, hate, sadness.",
+            "temp": 0.1,
+            "top_p": 1.0,
+            "whisper_lang": "Auto"
         }
     },
     "design_profiles": {
@@ -187,8 +194,8 @@
         "ASMR": "Soft whisper, extremely close to mic, mouth sounds, slow and gentle, relaxing.",
         "Dying Breath": "Weak, fading voice, long pauses, shallow breathing, barely audible."
     },
-    "temp": 0.9431818181818181,
-    "top_p": 0.7136363636363636,
+    "temp": 0.1,
+    "top_p": 1.0,
     "autoplay": true,
     "sound_on_ready": false,
     "last_out_dir": "",

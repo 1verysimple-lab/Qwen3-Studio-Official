@@ -1,0 +1,5 @@
+{
+    "text_parser_plugin.py": true,
+    "tutorial_plugin.py": true,
+    "test_vibe_check.py": true
+}

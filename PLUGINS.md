@@ -5,7 +5,13 @@ The Qwen3-TTS Pro Suite is designed to be extensible. You can add entirely new f
 ---
 
 ## 🛠️ How it Works
-On startup, the application scans the `./modules/` folder. Any `.py` file found in this directory (that does not start with an underscore) is dynamically loaded as a plugin.
+On startup, the application scans the `./modules/` folder. The **Module Hub** then checks the `enabled_modules.json` registry to determine which plugins should be initialized.
+
+### The Module Hub (Settings)
+Starting in v3.9.0, you can manage your plugins via the **Settings -> Module Hub** tab:
+*   **Synchronize**: Pulls the latest official plugins from the GitHub repository.
+*   **Toggle**: Enable or disable plugins without deleting the files.
+*   **Validation**: The Hub automatically verifies that the plugin contains the required `initialize(app)` header.
 
 ### The Plugin Interface
 Every plugin must define an `initialize(app)` function. This function is called by the main application and receives the `app` instance (the `QwenTTSApp` object), giving you full control over the suite.
