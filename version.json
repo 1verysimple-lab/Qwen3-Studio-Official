@@ -1,5 +1,5 @@
 {
-    "version": "3.9.1",
-    "download_url": "https://github.com/1verysimple-lab/Qwen3-Studio-Official/releases",
-    "message": "v3.9.1: Introducing Module Hub & Dynamic Sync. Ready Sound persistence fixed."
+    "version": "3.9.2",
+    "download_url": "https://github.com/1verysimple-lab/Qwen3-Studio-Official/releases/download/3.9.2/Qwen3_Launcher.exe",
+    "message": "v3.9.2: Module Hub & Sync Engine optimization. Release ready."
 }
