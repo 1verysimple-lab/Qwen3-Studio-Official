@@ -1,5 +1,5 @@
 {
-    "version": "3.9.0",
+    "version": "3.9.1",
     "download_url": "https://github.com/1verysimple-lab/Qwen3-Studio-Official/releases/download/v3.8.2/Pro_Studio_Setup_v3.8.2.exe",
-    "message": "Update available! v3.9.0 Introducing Module Hub."
+    "message": "Update available! v3.9.1 Persistence fix for sound settings."
 }

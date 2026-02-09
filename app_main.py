@@ -28,7 +28,7 @@ ENGINE_ROOT = ""
 sox_path = ""
 VERSION_FILE = ""
 CONFIG_FILE = ""
-APP_VERSION = "3.9.0"
+APP_VERSION = "3.9.1"
 MODEL_CUSTOM = ""
 MODEL_BASE = ""
 MODEL_DESIGN = ""
@@ -879,10 +879,10 @@ class QwenTTSApp:
         auto_f.pack(side=tk.LEFT, padx=5, fill=tk.Y)
         
         self.autoplay_var = tk.BooleanVar(value=self.app_config.get("autoplay", True))
-        ttk.Checkbutton(auto_f, text="⚡ Auto-Play", variable=self.autoplay_var).pack(anchor=tk.W)
+        ttk.Checkbutton(auto_f, text="⚡ Auto-Play", variable=self.autoplay_var, command=self.save_app_config).pack(anchor=tk.W)
         
         self.sound_on_ready_var = tk.BooleanVar(value=self.app_config.get("sound_on_ready", False))
-        cb_snd = ttk.Checkbutton(auto_f, text="🔔 Ready Sound", variable=self.sound_on_ready_var)
+        cb_snd = ttk.Checkbutton(auto_f, text="🔔 Ready Sound", variable=self.sound_on_ready_var, command=self.save_app_config)
         cb_snd.pack(anchor=tk.W, pady=(5,0))
         
         sound_name = os.path.basename(self.app_config.get("custom_notification_sound") or "Default Beep")
