@@ -9,7 +9,7 @@ def initialize(app):
     plugin_tab = ttk.Frame(app.notebook)
     app.notebook.add(plugin_tab, text="✨ Vibe Check")
     
-    f = tk.Frame(plugin_tab, padding=40)
+    f = ttk.Frame(plugin_tab, padding=40)
     f.pack(fill=tk.BOTH, expand=True)
     
     tk.Label(f, text="✨ Plugin System: ONLINE", font=("Segoe UI", 16, "bold")).pack(pady=10)

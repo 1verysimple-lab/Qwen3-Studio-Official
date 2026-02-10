@@ -1,6 +1,6 @@
 import PyInstaller.__main__
 
-print("🚀 Building Qwen3 Launcher...")
+print("Building Qwen3 Launcher...")
 
 PyInstaller.__main__.run([
     'tiny_loader.py',           # The script that downloads from Hugging Face
@@ -11,4 +11,4 @@ PyInstaller.__main__.run([
     '--icon=pq.ico'             # Your icon
 ])
 
-print("✅ DONE! Check dist/ folder for Qwen3_Launcher.exe")
+print("DONE! Check dist/ folder for Qwen3_Launcher.exe")

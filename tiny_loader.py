@@ -12,7 +12,7 @@ import time
 # 🔗 CONFIGURATION
 # =========================================================================
 # The link to your "Payload" (The 2.7GB App)
-APP_ZIP_URL = "https://huggingface.co/datasets/Bluesed/QWEN_STUDIO/resolve/main/Qwen3_Studio_Setup.exe.zip?download=true"
+APP_ZIP_URL = "https://huggingface.co/Bluesed/blues-qwen/resolve/main/Studio_App_v3.8.2.zip?download=true"
 
 # The name of the file INSIDE the zip (The Payload's true name)
 APP_EXE_NAME = "Qwen3_Studio_Setup.exe"

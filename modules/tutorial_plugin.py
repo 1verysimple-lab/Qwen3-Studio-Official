@@ -1,62 +1,108 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
 import threading
 import time
+import os
+import json
+import shutil
 
 def initialize(app):
     """
-    Automated Scripting Demo Plugin.
-    Shows how a module can run a sequence of generations automatically.
+    Tutorial & Automated Scripting Module.
+    Injects the 'Generate Tutorial' feature and manages automated sequences.
     """
-    plugin_tab = ttk.Frame(app.notebook)
-    app.notebook.add(plugin_tab, text="🤖 Auto-Script")
+    # 1. UI Injection: Inject the button into the Branding Frame (Legacy Location)
+    # Uses app.colors and branding frame provided in the main app structure
+    tut_row = tk.Frame(app.brand_frame, bg=app.colors["header_bg"])
+    tut_row.pack(anchor=tk.W, pady=(5,0))
     
-    tk.Label(plugin_tab, text="Automated Scripting Module", font=("Segoe UI", 14, "bold")).pack(pady=20)
-    
-    log_text = tk.Text(plugin_tab, height=10, width=60, font=("Consolas", 9))
-    log_text.pack(padx=20, pady=10)
-    
-    def log(msg):
-        log_text.insert(tk.END, f"{msg}\n")
-        log_text.see(tk.END)
-
-    script = [
-        {"voice": "Aiden (English Male)", "text": "Starting the automated sequence. Step one is complete."},
-        {"voice": "Serena (Chinese Female)", "text": "Step two. I am now speaking in a different voice automatically."},
-        {"voice": "Ryan (English Male)", "text": "Sequence complete. The module has successfully controlled the engine."}
-    ]
-
-    def run_automated_script():
-        log("--- Starting Auto-Script ---")
+    def start_tutorial_flow():
+        """Selected Language Dialog with proper window centering."""
+        d = tk.Toplevel(app.root)
+        d.title("Select Tutorial Language")
+        d.geometry("350x250")
+        d.resizable(False, False)
+        d.transient(app.root)
+        d.grab_set()
         
-        def process_next(index):
-            if index >= len(script):
-                log("--- All Tasks Finished ---")
-                return
+        try:
+            x = app.root.winfo_rootx() + (app.root.winfo_width()//2) - 175
+            y = app.root.winfo_rooty() + (app.root.winfo_height()//2) - 125
+            d.geometry(f"+{x}+{y}")
+        except: pass
 
-            item = script[index]
-            log(f"Processing {index+1}/{len(script)}: {item['voice']}")
+        tk.Label(d, text="Tutorial Setup", font=("Segoe UI", 12, "bold"), pady=15).pack()
+        tk.Label(d, text="Choose your preferred language:", font=("Segoe UI", 10)).pack(pady=(0, 10))
+        
+        lang_var = tk.StringVar(value="English")
+        opts = ["English", "Spanish", "Chinese"]
+        combo = ttk.Combobox(d, textvariable=lang_var, values=opts, state="readonly", width=20)
+        combo.pack(pady=5)
+        
+        def begin():
+            language = lang_var.get()
+            d.destroy()
             
-            # 1. Setup the main app's UI state
-            app.speaker_var.set(item['voice'])
-            app.text_input_custom.delete("1.0", tk.END)
-            app.text_input_custom.insert("1.0", item['text'])
+            # Destination selection - User decides where to create the tutorial folder
+            dest_dir = filedialog.askdirectory(title=f"Select Destination for {language} Tutorial Files")
+            if not dest_dir: return
             
-            # 2. Define what happens when THIS specific generation is done
-            def on_finished(result):
-                if result["status"] == "success":
-                    log(f"   Success! (Duration: {result['duration']:.2f}s)")
-                    # Wait a small bit before the next one for natural feel
-                    time.sleep(1) 
-                    process_next(index + 1)
-                else:
-                    log(f"   Error: {result.get('message')}")
+            execute_tutorial_generation(language, dest_dir)
 
-            # 3. Trigger the generation with our callback
-            app.start_gen_custom(on_complete=on_finished)
+        tk.Button(d, text="Begin Generation", command=begin, bg=app.colors["accent"], fg="white", 
+                  font=("Segoe UI", 10, "bold"), pady=8).pack(fill=tk.X, padx=40, pady=20)
 
-        # Start the recursive chain in a background thread so we don't freeze the UI
-        threading.Thread(target=lambda: process_next(0), daemon=True).start()
+    def execute_tutorial_generation(language, dest_dir):
+        """Generates files in chosen folder and LOADS them without auto-running."""
+        lang_cfg = {
+            "English": ("", "English"),
+            "Spanish": ("_ES", "Spanish"),
+            "Chinese": ("_CN", "Chinese")
+        }
+        suffix, model_lang = lang_cfg.get(language, ("", "English"))
+        
+        # Determine paths relative to the application root
+        base_dir = os.path.dirname(app.modules_dir)
+        source_fname = f"Tutorial_01_Welcome{suffix}.json"
+        source_fpath = os.path.join(base_dir, "tutorials", source_fname)
+        
+        if not os.path.exists(source_fpath):
+            messagebox.showerror("Error", f"Source tutorial file not found: {source_fname}")
+            return
 
-    btn = ttk.Button(plugin_tab, text="🎬 Run Automated Script", command=run_automated_script)
-    btn.pack(pady=20)
+        try:
+            # Create a specific folder in the user's chosen destination
+            final_output_path = os.path.join(dest_dir, f"Blues_Tutorial_{language}")
+            if not os.path.exists(final_output_path):
+                os.makedirs(final_output_path)
+
+            # Copy tutorial JSONs to the new destination for the user to keep
+            tutorial_src_dir = os.path.join(base_dir, "tutorials")
+            for item in os.listdir(tutorial_src_dir):
+                if item.endswith(".json"):
+                    shutil.copy2(os.path.join(tutorial_src_dir, item), os.path.join(final_output_path, item))
+
+            with open(source_fpath, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            # Force the correct language for the engine blocks
+            for block in data:
+                block["language"] = model_lang
+            
+            # Switch to Batch Tab so user sees the result
+            app.notebook.select(app.tab_batch)
+            
+            # Feed data to director but DO NOT trigger start_scene_generation automatically
+            if hasattr(app, 'director'):
+                app.director.load_script_data(data, name=f"Tutorial Chapter 1 ({language})")
+                # Removed auto-trigger logic per Blues' request
+                messagebox.showinfo("Success", f"Tutorial generated in:\n{final_output_path}\n\nChapter 1 loaded in Batch Studio. Press 'Start Batch' when ready.")
+                
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to generate tutorial: {e}")
+
+    # Button setup inside the Branding Frame row
+    app.btn_tut = tk.Button(tut_row, text="Generate Tutorial", command=start_tutorial_flow, 
+                        bg=app.colors["accent"], fg="white", font=("Segoe UI", 8, "bold"), 
+                        bd=0, padx=8, pady=2, cursor="hand2")
+    app.btn_tut.pack(side=tk.LEFT)

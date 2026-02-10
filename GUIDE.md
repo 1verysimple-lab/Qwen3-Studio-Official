@@ -285,15 +285,15 @@ The **Script Helper** tab is a specialized tool for turning long documents into 
 *   **Cleaning Logic**: Automatically removes square brackets `[ ]` or parentheses `( )` often found in scripts.
 *   **Manual Refinement**: If a sentence is too long, the helper will prompt you to split it manually before sending it to the Batch Studio.
 
-## 6. Module Hub & Dynamic Sync (v3.9.1)
+## 6. Modules Manager (v3.9.2)
 
-Found in **Settings (⚙️)**, the Module Hub is your gateway to extending the Studio.
-*   **🔍 Check for new plugins**: Surgeons the official GitHub repository to find new creative tools.
-*   **Color-Coded Status**: 🟢 Active, 🔴 Disabled, 🟡 New (from current sync).
-*   **Registry Persistence**: Enabling or disabling a module is saved immediately. Restart the app to apply changes.
+Found as a dedicated tab in the main window, the Modules Manager is your gateway to extending the Studio.
+*   **Check for new plugins**: Synchronizes with the official GitHub repository to find new creative tools.
+*   **Color-Coded Status**: Green (Active), Red (Disabled), Yellow (New from current sync).
+*   **Instant Toggling**: Enabling or disabling a module is applied immediately. No restart required.
 
 ## 7. Automated Scripting & Plugins
-Starting in v3.6.2, Qwen3 Studio supports a dynamic plugin system. Any `.py` file in the `./modules/` folder can be managed via the Hub.
+Starting in v3.6.2, Qwen3 Studio supports a dynamic plugin system. Any .py file in the ./modules/ folder can be managed via the Modules tab.
 *   **Headless Automation**: Build services that watch folders or provide local APIs.
 *   **Custom Tabs**: Add entirely new interfaces for specialized tasks.
 
@@ -302,8 +302,8 @@ Starting in v3.6.2, Qwen3 Studio supports a dynamic plugin system. Any `.py` fil
 **1. The "Pause" Trick**
 The AI respects punctuation. If you want a dramatic pause, don't just write text. Use line breaks.
 
-* *Bad:* "I saw him and then I ran away."
-* *Good:*
+* Bad: "I saw him and then I ran away."
+* Good:
 "I saw him."
 (Line Break)
 "And then... I ran away."
@@ -319,5 +319,5 @@ The **Voice Design** tab is random. If you generate a "Wizard" voice you absolut
 
 1. **Save the Audio:** Click "Save WAV".
 2. **Move to Clone Tab:** Import that WAV as your "Source Audio".
-3. **Lock It:** Use the **?? Lock Voice** button.
+3. **Lock It:** Use the **Lock Voice** button.
 4. **Result:** Now you can generate thousands of lines with that *exact* wizard voice, using the stability of the cloning engine.

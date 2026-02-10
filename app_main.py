@@ -188,6 +188,7 @@ class ModuleHub:
         # Official Repo for syncing
         self.repo_url = "https://api.github.com/repos/1verysimple-lab/Qwen3-Studio-Official/contents/modules"
         self.raw_base_url = "https://raw.githubusercontent.com/1verysimple-lab/Qwen3-Studio-Official/main/modules"
+        self.on_refresh = None # Callback for UI refresh
 
     def load_registry(self):
         if os.path.exists(self.registry_file):
@@ -195,7 +196,11 @@ class ModuleHub:
                 with open(self.registry_file, 'r') as f:
                     return json.load(f)
             except: pass
-        return {}
+        
+        # First-run logic: Enable Tutorial Plugin by default
+        self.registry = {"autoscript_plugin.py": False}
+        self.save_registry()
+        return self.registry
 
     def save_registry(self):
         try:
@@ -210,6 +215,7 @@ class ModuleHub:
     def toggle_module(self, filename, state):
         self.registry[filename] = state
         self.save_registry()
+        if self.on_refresh: self.on_refresh()
 
     def sync_from_github(self, callback=None):
         """Fetches the list of modules from GitHub and updates/downloads if needed."""
@@ -245,7 +251,11 @@ class ModuleHub:
                 
                 self.save_registry()
                 msg = f"Sync Complete. Found {len(files)} items, downloaded {len(newly_downloaded)} new modules."
-                if callback: callback("success", msg, newly_downloaded)
+                
+                if callback: 
+                    callback("success", msg, newly_downloaded)
+                elif self.on_refresh:
+                    self.on_refresh()
             except Exception as e:
                 if callback: callback("error", str(e), [])
 
@@ -531,13 +541,13 @@ Top P (Vocabulary)
 HELP_PLUGINS = """Plugins & Automation\n
 Qwen3 Studio is an extensible platform.
 
-1. 🤖 The Auto-Script Tab
-This is a demonstration of our plugin system. It allows the app to be controlled by external scripts to run automated sequences of voices and texts.
+1. The Auto-Script Tab (Plugin)
+This is a demonstration of our plugin system. It allows the app to be controlled by external scripts to run automated sequences of voices and texts. (Enable in the Modules tab).
 
-2. 🔌 Extending the App
+2. Extending the App
 You can add your own features by dropping Python scripts into the './modules/' folder. 
 
-3. ☁️ Integration Vision
+3. Integration Vision
 Plugins don't need a UI. They can be:
 • Watch Folders: Processing scripts dropped into a folder.
 • Local APIs: Allowing other apps to request audio via HTTP.
@@ -645,6 +655,8 @@ class QwenTTSApp:
         if not os.path.exists(self.modules_dir):
             os.makedirs(self.modules_dir, exist_ok=True)
         self.hub = ModuleHub(self.modules_dir)
+        self.loaded_plugins = set()
+        self._new_modules = set()
 
         # Config & Profiles - LOAD THIS FIRST
         self.app_config = self.load_app_config()
@@ -736,40 +748,6 @@ class QwenTTSApp:
 
         # Start System Monitors
         self._start_vram_monitor()
-        
-        # Check for Studio Updates
-        self.root.after(3000, self.check_for_updates)
-
-    def check_for_updates(self):
-        """Fetches the latest version.json from GitHub and compares with local APP_VERSION."""
-        def task():
-            try:
-                import requests
-                raw_url = "https://raw.githubusercontent.com/1verysimple-lab/Qwen3-Studio-Official/main/version.json"
-                r = requests.get(raw_url, timeout=10)
-                if r.status_code == 200:
-                    remote_data = r.json()
-                    remote_ver = remote_data.get("version", "0.0.0")
-                    
-                    # Version comparison (simple string check for now, but usually should be numeric)
-                    if remote_ver > APP_VERSION:
-                        msg = remote_data.get("message", f"A new version (v{remote_ver}) is available.")
-                        url = remote_data.get("download_url", "https://blues-lab.pro")
-                        
-                        def notify():
-                            if messagebox.askyesno("Update Available", 
-                                f"Current Version: v{APP_VERSION}\n"
-                                f"Latest Version: v{remote_ver}\n\n"
-                                f"{msg}\n\n"
-                                "Would you like to visit the download page?"):
-                                import webbrowser
-                                webbrowser.open(url)
-                        
-                        self.root.after(0, notify)
-            except:
-                pass # Silent fail for updates
-
-        threading.Thread(target=task, daemon=True).start()
 
     def setup_styles(self):
         self.colors = {
@@ -834,11 +812,11 @@ class QwenTTSApp:
         header.pack(fill=tk.X)
         
         # Section A: Branding & Support
-        brand_frame = tk.Frame(header, bg=self.colors["header_bg"])
-        brand_frame.pack(side=tk.LEFT, padx=(0, 20))
-        tk.Label(brand_frame, text="Qwen3 TTS Pro", font=("Segoe UI", 18, "bold"), bg=self.colors["header_bg"], fg=self.colors["fg"]).pack(anchor=tk.W)
+        self.brand_frame = tk.Frame(header, bg=self.colors["header_bg"])
+        self.brand_frame.pack(side=tk.LEFT, padx=(0, 20))
+        tk.Label(self.brand_frame, text="Qwen3 TTS Pro", font=("Segoe UI", 18, "bold"), bg=self.colors["header_bg"], fg=self.colors["fg"]).pack(anchor=tk.W)
         
-        support_row = tk.Frame(brand_frame, bg=self.colors["header_bg"])
+        support_row = tk.Frame(self.brand_frame, bg=self.colors["header_bg"])
         support_row.pack(anchor=tk.W, pady=(2,0))
         lbl_link = tk.Label(support_row, text="App by Blues", font=("Segoe UI", 8, "underline"), bg=self.colors["header_bg"], fg=self.colors["accent"], cursor="hand2")
         lbl_link.pack(side=tk.LEFT)
@@ -846,23 +824,15 @@ class QwenTTSApp:
         
         tk.Label(support_row, text=" | ", bg=self.colors["header_bg"], fg="#ccc").pack(side=tk.LEFT, padx=2)
         
-        lbl_site = tk.Label(support_row, text="🌐 App Page", font=("Segoe UI", 8, "underline"), bg=self.colors["header_bg"], fg=self.colors["accent"], cursor="hand2")
+        lbl_site = tk.Label(support_row, text="App Page", font=("Segoe UI", 8, "underline"), bg=self.colors["header_bg"], fg=self.colors["accent"], cursor="hand2")
         lbl_site.pack(side=tk.LEFT)
         lbl_site.bind("<Button-1>", lambda e: os.startfile("https://blues-lab.pro"))
 
         tk.Label(support_row, text=" | ", bg=self.colors["header_bg"], fg="#ccc").pack(side=tk.LEFT, padx=2)
         
-        lbl_coffee = tk.Label(support_row, text="☕ Support", font=("Segoe UI", 8, "bold"), bg=self.colors["header_bg"], fg="#e67e22", cursor="hand2")
+        lbl_coffee = tk.Label(support_row, text="Support", font=("Segoe UI", 8, "bold"), bg=self.colors["header_bg"], fg="#e67e22", cursor="hand2")
         lbl_coffee.pack(side=tk.LEFT)
         lbl_coffee.bind("<Button-1>", lambda e: self.show_support_modal())
-
-        # Tutorial Row
-        tut_row = tk.Frame(brand_frame, bg=self.colors["header_bg"])
-        tut_row.pack(anchor=tk.W, pady=(5,0))
-        self.btn_tut = tk.Button(tut_row, text="🎓 Generate Tutorial", command=self.start_tutorial_flow, 
-                            bg=self.colors["accent"], fg="white", font=("Segoe UI", 8, "bold"), 
-                            bd=0, padx=8, pady=2, cursor="hand2")
-        self.btn_tut.pack(side=tk.LEFT)
 
         # Section B: Engine Status
         engine_f = ttk.LabelFrame(header, text=" Engine Status ", padding=8)
@@ -882,7 +852,7 @@ class QwenTTSApp:
         self.lbl_last_time.pack(side=tk.LEFT)
         self.lbl_estimate = tk.Label(stat_bot, text="Est: --", font=("Segoe UI", 8, "italic"), fg="#888")
         self.lbl_estimate.pack(side=tk.LEFT, padx=10)
-        self.btn_log_stat = ttk.Button(stat_bot, text="📊 Log", state=tk.DISABLED, command=self.log_generation_stat, width=6)
+        self.btn_log_stat = ttk.Button(stat_bot, text="Log", state=tk.DISABLED, command=self.log_generation_stat, width=6)
         self.btn_log_stat.pack(side=tk.RIGHT)
 
         # Section C: Precision Settings
@@ -906,17 +876,17 @@ class QwenTTSApp:
             setattr(self, f"lbl_{var}_val", lbl_val)
 
         self.lock_sliders_var = tk.BooleanVar(value=False)
-        tk.Checkbutton(config_f, text="🔒 Lock Sliders", variable=self.lock_sliders_var, font=("Segoe UI", 8)).pack(anchor=tk.W)
+        tk.Checkbutton(config_f, text="Lock Sliders", variable=self.lock_sliders_var, font=("Segoe UI", 8)).pack(anchor=tk.W)
 
         # Section D: Automation Options
         auto_f = ttk.LabelFrame(header, text=" Automation ", padding=8)
         auto_f.pack(side=tk.LEFT, padx=5, fill=tk.Y)
         
         self.autoplay_var = tk.BooleanVar(value=self.app_config.get("autoplay", True))
-        ttk.Checkbutton(auto_f, text="⚡ Auto-Play", variable=self.autoplay_var, command=self.save_app_config).pack(anchor=tk.W)
+        ttk.Checkbutton(auto_f, text="Auto-Play", variable=self.autoplay_var, command=self.save_app_config).pack(anchor=tk.W)
         
         self.sound_on_ready_var = tk.BooleanVar(value=self.app_config.get("sound_on_ready", False))
-        cb_snd = ttk.Checkbutton(auto_f, text="🔔 Ready Sound", variable=self.sound_on_ready_var, command=self.save_app_config)
+        cb_snd = ttk.Checkbutton(auto_f, text="Ready Sound", variable=self.sound_on_ready_var, command=self.save_app_config)
         cb_snd.pack(anchor=tk.W, pady=(5,0))
         
         sound_name = os.path.basename(self.app_config.get("custom_notification_sound") or "Default Beep")
@@ -938,7 +908,7 @@ class QwenTTSApp:
         ttk.Button(sys_top, text="❓ Help", command=self.show_help_guide, width=7).pack(side=tk.LEFT, padx=2)
         
         self.btn_cancel = tk.Button(
-            sys_f, text="⛔ STOP ALL", 
+            sys_f, text="STOP ALL", 
             command=self.cancel_generation, 
             bg=self.colors["danger"], fg="white", 
             font=("Segoe UI", 9, "bold"),
@@ -972,6 +942,9 @@ class QwenTTSApp:
         self.tab_batch = ttk.Frame(self.notebook)
         self.notebook.add(self.tab_batch, text="Batch Studio")
 
+        self.tab_hub = ttk.Frame(self.notebook)
+        self.notebook.add(self.tab_hub, text="Modules")
+
         self.notebook.bind("<<NotebookTabChanged>>", self.on_tab_change)
 
         # Init Tab Content
@@ -980,6 +953,7 @@ class QwenTTSApp:
         self.setup_design_tab()
         self.setup_custom_tab()
         self.setup_batch_tab()
+        self.setup_hub_tab()
 
         # Open History by default
         self.root.after(500, self.setup_history_panel)
@@ -996,7 +970,8 @@ class QwenTTSApp:
             "Voice Design": ("design", "#d6eaf8", "Requires: Design Engine (Blue)"),
             "Voice Clone":  ("base",   "#e8daef", "Requires: Clone Engine (Purple)"),
             "Batch Studio": (None,     "#fcf3cf", "Multi-Engine Support (Auto-Switching)"),
-            "Transcript Helper": (None, "#e9ecef", "Utility Tool (No Engine Required)")
+            "Transcript Helper": (None, "#e9ecef", "Utility Tool (No Engine Required)"),
+            "Modules": (None, "#d1f2eb", "Plugin Manager (No Engine Required)")
         }
         
         req_engine, bg_color, hint = eng_map.get(tab_text, (None, "#e9ecef", "Ready"))
@@ -1007,23 +982,23 @@ class QwenTTSApp:
         # 4. Check Mismatch
         if req_engine:
             if self.current_model_type and self.current_model_type != req_engine:
-                self.status_var.set(f"⚠ {hint} - Current: {self.current_model_type.upper()}")
+                self.status_var.set(f"CAUTION: {hint} - Current: {self.current_model_type.upper()}")
             else:
-                self.status_var.set(f"✔ {hint}")
+                self.status_var.set(f"READY: {hint}")
         else:
             self.status_var.set(hint)
 
     def setup_playback_controls(self, parent):
         frame = ttk.Frame(parent)
         frame.pack(side=tk.LEFT)
-        self.btn_play = ttk.Button(frame, text="▶ Play", command=self.on_play_click, width=12)
+        self.btn_play = ttk.Button(frame, text="Play", command=self.on_play_click, width=12)
         self.btn_play.pack(side=tk.LEFT)
         self.btn_pause = ttk.Button(frame, text="Pause", command=self.on_pause_click, state=tk.DISABLED, width=8)
         self.btn_pause.pack(side=tk.LEFT, padx=2)
-        self.btn_stop = ttk.Button(frame, text="⏹ Stop", command=self.on_stop_click, state=tk.DISABLED, width=10)
+        self.btn_stop = ttk.Button(frame, text="Stop", command=self.on_stop_click, state=tk.DISABLED, width=10)
         self.btn_stop.pack(side=tk.LEFT, padx=2)
         ttk.Separator(frame, orient=tk.VERTICAL).pack(side=tk.LEFT, fill=tk.Y, padx=10)
-        ttk.Button(frame, text="💾 Save WAV", command=self.save_audio).pack(side=tk.LEFT)
+        ttk.Button(frame, text="Save WAV", command=self.save_audio).pack(side=tk.LEFT)
 
     # --- TAB SETUP METHODS ---
     def setup_custom_tab(self):
@@ -1084,15 +1059,15 @@ class QwenTTSApp:
         ttk.Label(style_f, text="| Save As:").pack(side=tk.LEFT, padx=5)
         self.new_style_name_custom = ttk.Entry(style_f, width=15)
         self.new_style_name_custom.pack(side=tk.LEFT)
-        ttk.Button(style_f, text="💾 Save", command=lambda: self.on_save_style("custom")).pack(side=tk.LEFT, padx=2)
-        ttk.Button(style_f, text="❌ Delete", command=lambda: self.on_delete_style("custom")).pack(side=tk.LEFT, padx=2)
+        ttk.Button(style_f, text="Save", command=lambda: self.on_save_style("custom")).pack(side=tk.LEFT, padx=2)
+        ttk.Button(style_f, text="Delete", command=lambda: self.on_delete_style("custom")).pack(side=tk.LEFT, padx=2)
         
         action_area = ttk.Frame(bot_f)
         action_area.pack(fill=tk.X)
-        self.btn_generate_custom = ttk.Button(action_area, text="▶ GENERATE AUDIO", style="Big.TButton", command=self.start_gen_custom)
+        self.btn_generate_custom = ttk.Button(action_area, text="GENERATE AUDIO", style="Big.TButton", command=self.start_gen_custom)
         self.btn_generate_custom.pack(side=tk.LEFT, padx=(0, 10))
         
-        ttk.Button(action_area, text="🎭 Generate Voice Set", command=lambda: self.open_voice_set_dialog("custom"), width=20).pack(side=tk.LEFT, padx=5)
+        ttk.Button(action_area, text="Generate Voice Set", command=lambda: self.open_voice_set_dialog("custom"), width=20).pack(side=tk.LEFT, padx=5)
         
         self.setup_playback_controls(action_area)
 
@@ -1117,12 +1092,12 @@ class QwenTTSApp:
         # Transport
         trans_f = ttk.Frame(ctrl_row)
         trans_f.pack(side=tk.LEFT)
-        self.btn_record = ttk.Button(trans_f, text="🔴 Record", command=self.toggle_recording, width=10)
+        self.btn_record = ttk.Button(trans_f, text="Record", command=self.toggle_recording, width=10)
         self.btn_record.pack(side=tk.LEFT, padx=2)
         ttk.Button(trans_f, text="⏪ 5s", command=lambda: self.helper_seek(-5), width=6).pack(side=tk.LEFT)
-        self.btn_helper_play = ttk.Button(trans_f, text="▶ Play", command=self.helper_toggle_play, width=10)
+        self.btn_helper_play = ttk.Button(trans_f, text="Play", command=self.helper_toggle_play, width=10)
         self.btn_helper_play.pack(side=tk.LEFT)
-        ttk.Button(trans_f, text="⏹ Stop", command=self.helper_stop_audio, width=10).pack(side=tk.LEFT)
+        ttk.Button(trans_f, text="Stop", command=self.helper_stop_audio, width=10).pack(side=tk.LEFT)
         ttk.Button(trans_f, text="5s ⏩", command=lambda: self.helper_seek(5), width=6).pack(side=tk.LEFT)
         self.lbl_helper_time = ttk.Label(trans_f, text="00:00 / 00:00", font=("Segoe UI", 9))
         self.lbl_helper_time.pack(side=tk.LEFT, padx=10)
@@ -1132,13 +1107,13 @@ class QwenTTSApp:
         file_f.pack(side=tk.RIGHT)
         self.loopback_var = tk.BooleanVar(value=False)
         ttk.Checkbutton(file_f, text="Sys Audio", variable=self.loopback_var).pack(side=tk.LEFT, padx=5)
-        ttk.Button(file_f, text="📂 Open", command=self.helper_load_audio).pack(side=tk.LEFT, padx=2)
-        self.btn_save_rec = ttk.Button(file_f, text="💾 Save WAV", command=self.save_recorded_audio, state=tk.DISABLED)
+        ttk.Button(file_f, text="Open", command=self.helper_load_audio).pack(side=tk.LEFT, padx=2)
+        self.btn_save_rec = ttk.Button(file_f, text="Save WAV", command=self.save_recorded_audio, state=tk.DISABLED)
         self.btn_save_rec.pack(side=tk.LEFT, padx=2)
         ttk.Separator(file_f, orient=tk.VERTICAL).pack(side=tk.LEFT, fill=tk.Y, padx=5)
-        self.btn_crop = ttk.Button(file_f, text="✂ Crop", command=self.crop_audio, state=tk.DISABLED, width=8)
+        self.btn_crop = ttk.Button(file_f, text="Crop", command=self.crop_audio, state=tk.DISABLED, width=8)
         self.btn_crop.pack(side=tk.LEFT, padx=2)
-        self.btn_undo = ttk.Button(file_f, text="↩ Undo", command=self.undo_audio, state=tk.DISABLED, width=8)
+        self.btn_undo = ttk.Button(file_f, text="Undo", command=self.undo_audio, state=tk.DISABLED, width=8)
         self.btn_undo.pack(side=tk.LEFT, padx=2)
         
         self.lbl_helper_file = ttk.Label(wb_f, text="No Audio Loaded", font=("Segoe UI", 9, "italic"), foreground="#666")
@@ -1154,7 +1129,7 @@ class QwenTTSApp:
         self.recipe_combo = ttk.Combobox(r_top, textvariable=self.recipe_var, state="readonly", values=sorted(list(self.voice_recipes.keys())), width=40)
         self.recipe_combo.pack(side=tk.LEFT, padx=10)
         self.recipe_combo.bind("<<ComboboxSelected>>", self.on_recipe_select)
-        ttk.Button(r_top, text="📖 Load Script", command=self.load_recipe_script).pack(side=tk.LEFT)
+        ttk.Button(r_top, text="Load Script", command=self.load_recipe_script).pack(side=tk.LEFT)
         self.lbl_recipe_instruct = tk.Label(recipe_f, text="Select a style above...", justify=tk.LEFT, bg="#e9ecef", relief=tk.FLAT, anchor="w", padx=10, pady=10, font=("Segoe UI", 10, "italic"))
         self.lbl_recipe_instruct.pack(fill=tk.X)
         
@@ -1163,7 +1138,7 @@ class QwenTTSApp:
         trans_f.grid(row=3, column=0, sticky="nsew", padx=15, pady=5)
         t_tools = ttk.Frame(trans_f)
         t_tools.pack(fill=tk.X, pady=(0, 5))
-        self.btn_whisper = ttk.Button(t_tools, text="👂 Audio -> Text", command=self.run_whisper_task)
+        self.btn_whisper = ttk.Button(t_tools, text="Audio -> Text", command=self.run_whisper_task)
         self.btn_whisper.pack(side=tk.LEFT)
         
         # Whisper Language Selector
@@ -1345,8 +1320,8 @@ class QwenTTSApp:
         ttk.Label(style_mgr_f, text="| Save As:").pack(side=tk.LEFT, padx=5)
         self.new_style_name_design = ttk.Entry(style_mgr_f, width=15)
         self.new_style_name_design.pack(side=tk.LEFT)
-        ttk.Button(style_mgr_f, text="💾 Save", command=lambda: self.on_save_style("design"), width=8).pack(side=tk.LEFT, padx=2)
-        ttk.Button(style_mgr_f, text="❌ Del", command=lambda: self.on_delete_style("design"), width=8).pack(side=tk.LEFT, padx=2)
+        ttk.Button(style_mgr_f, text="Save", command=lambda: self.on_save_style("design"), width=8).pack(side=tk.LEFT, padx=2)
+        ttk.Button(style_mgr_f, text="Del", command=lambda: self.on_delete_style("design"), width=8).pack(side=tk.LEFT, padx=2)
         
         self.update_style_combo()
         
@@ -1359,10 +1334,10 @@ class QwenTTSApp:
         # Actions
         bot_f = ttk.Frame(f, padding=15)
         bot_f.grid(row=4, column=0, sticky="ew")
-        self.btn_gen_design = ttk.Button(bot_f, text="▶ GENERATE DESIGN", style="Big.TButton", command=self.start_gen_design)
+        self.btn_gen_design = ttk.Button(bot_f, text="GENERATE DESIGN", style="Big.TButton", command=self.start_gen_design)
         self.btn_gen_design.pack(side=tk.LEFT, padx=(0, 10))
         
-        ttk.Button(bot_f, text="🎭 Generate Voice Set", command=lambda: self.open_voice_set_dialog("design"), width=20).pack(side=tk.LEFT, padx=5)
+        ttk.Button(bot_f, text="Generate Voice Set", command=lambda: self.open_voice_set_dialog("design"), width=20).pack(side=tk.LEFT, padx=5)
         
         self.setup_playback_controls(bot_f)
 
@@ -1434,7 +1409,14 @@ class QwenTTSApp:
     # --- HELPER & EDITOR METHODS (REFACTORED) ---
     def helper_load_audio(self):
         """Opens a file dialog to load audio into the helper tab."""
-        path = filedialog.askopenfilename(filetypes=[("Audio Files", "*.wav *.mp3 *.ogg *.flac")])
+        initial_dir = os.path.join(os.getcwd(), 'temp')
+        if not os.path.exists(initial_dir):
+            initial_dir = os.getcwd()
+            
+        path = filedialog.askopenfilename(
+            initialdir=initial_dir,
+            filetypes=[("Audio Files", "*.wav *.mp3 *.ogg *.flac")]
+        )
         if path:
             self.load_helper_audio_from_path(path)
 
@@ -1475,7 +1457,7 @@ class QwenTTSApp:
         sd.stop()
         self.helper_is_playing = False
         self.helper_current_frame = 0 
-        self.btn_helper_play.config(text="▶ Play")
+        self.btn_helper_play.config(text="Play")
         self.helper_update_time_label()
 
     def helper_seek(self, seconds: int):
@@ -1628,7 +1610,13 @@ class QwenTTSApp:
         self.helper_text_area.insert("1.0", text)
 
     def browse_batch_out(self):
-        d = filedialog.askdirectory()
+        initial_dir = os.path.join(os.getcwd(), 'tutorials', 'scripts')
+        if not os.path.exists(initial_dir):
+            initial_dir = os.path.join(os.getcwd(), 'tutorials')
+            if not os.path.exists(initial_dir):
+                initial_dir = os.getcwd()
+            
+        d = filedialog.askdirectory(initialdir=initial_dir)
         if d:
             self.batch_out_dir.set(d)
 
@@ -2444,48 +2432,35 @@ class QwenTTSApp:
         help_msg = "💡 HOW TO ENABLE MP3:\n1. Download 'libmp3lame-0.dll' (32-bit or 64-bit to match SoX).\n2. Place it DIRECTLY inside the './sox/' folder.\n3. Restart the app. MP3 export will unlock automatically."
         tk.Label(help_f, text=help_msg, justify="left", font=("Segoe UI", 8), bg="#fffde7", wraplength=480).pack()
 
-        # TAB 2: Module Hub
-        tab_hub = ttk.Frame(nb)
-        nb.add(tab_hub, text="🔌 Module Hub")
+    def setup_hub_tab(self):
+        """Builds the Module Manager interface inside the main notebook."""
+        f = tk.Frame(self.tab_hub, padx=30, pady=20)
+        f.pack(fill=tk.BOTH, expand=True)
         
-        hub_main = tk.Frame(tab_hub, padx=20, pady=10)
-        hub_main.pack(fill=tk.BOTH, expand=True)
+        header = tk.Frame(f)
+        header.pack(fill=tk.X, pady=(0, 20))
         
-        tk.Label(hub_main, text="Dynamic Module & Sync Manager", font=("Segoe UI", 11, "bold")).pack(anchor="w")
+        tk.Label(header, text="Module Manager & Extension Hub", font=("Segoe UI", 16, "bold"), fg=self.colors["accent"]).pack(side=tk.LEFT)
         
-        sync_btn = ttk.Button(hub_main, text="🔍 Check for new plugins", width=30)
-        sync_btn.pack(pady=10)
-        
-        # Action Buttons for Hub (MOVED TO TOP for visibility if list gets too long)
-        hub_btns = tk.Frame(hub_main)
-        hub_btns.pack(fill=tk.X, pady=(0, 10))
+        sync_btn = ttk.Button(header, text="Check for New Plugins", width=25)
+        sync_btn.pack(side=tk.RIGHT)
 
-        def hub_save():
-            self.hub.registry = self._pending_registry
-            self.hub.save_registry()
-            messagebox.showinfo("Saved", "Module configuration updated. Restart app to apply.")
-            d.destroy()
-            
-        def hub_cancel():
-            d.destroy()
-
-        tk.Button(hub_btns, text="💾 Save and Exit", command=hub_save, bg="#27ae60", fg="white", font=("Segoe UI", 9, "bold"), padx=10).pack(side=tk.RIGHT, padx=5)
-        tk.Button(hub_btns, text="Cancel", command=hub_cancel, font=("Segoe UI", 9), padx=10).pack(side=tk.RIGHT)
-
-        # Tracking states locally for the session
-        self._new_modules = set()
-        self._pending_registry = self.hub.registry.copy()
+        # Info Panel
+        info_f = tk.Frame(f, bg="#eef2f7", padx=15, pady=15)
+        info_f.pack(fill=tk.X, pady=(0, 20))
+        tk.Label(info_f, text="Dynamically extend Qwen3 Studio by enabling plugins below. Newly enabled plugins appear as new tabs immediately.", 
+                 font=("Segoe UI", 10, "italic"), bg="#eef2f7", fg="#555").pack(anchor="w")
 
         # Scrollable List Area
-        list_f = ttk.LabelFrame(hub_main, text=" Plugin Inventory ", padding=10)
+        list_f = ttk.LabelFrame(f, text=" Plugin Inventory ", padding=10)
         list_f.pack(fill=tk.BOTH, expand=True)
         
-        canvas = tk.Canvas(list_f, highlightthickness=0)
+        canvas = tk.Canvas(list_f, highlightthickness=0, bg="#ffffff")
         scroll = ttk.Scrollbar(list_f, orient="vertical", command=canvas.yview)
-        scroll_f = tk.Frame(canvas)
+        scroll_f = tk.Frame(canvas, bg="#ffffff")
         
         scroll_f.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
-        canvas.create_window((0, 0), window=scroll_f, anchor="nw", width=420)
+        canvas.create_window((0, 0), window=scroll_f, anchor="nw", width=1050)
         canvas.configure(yscrollcommand=scroll.set)
         canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scroll.pack(side=tk.RIGHT, fill=tk.Y)
@@ -2493,132 +2468,79 @@ class QwenTTSApp:
         def refresh_hub_list():
             for widget in scroll_f.winfo_children(): widget.destroy()
             
+            if not os.path.exists(self.modules_dir):
+                os.makedirs(self.modules_dir, exist_ok=True)
+                
             files = [f for f in os.listdir(self.modules_dir) if f.endswith(".py") and not f.startswith("__")]
             if not files:
-                tk.Label(scroll_f, text="No modules found.", font=("Segoe UI", 9, "italic")).pack(pady=10)
+                tk.Label(scroll_f, text="No modules found in ./modules/", font=("Segoe UI", 10, "italic"), bg="#ffffff").pack(pady=40)
                 return
                 
             for f_name in sorted(files):
-                is_enabled = self._pending_registry.get(f_name, True)
+                is_enabled = self.hub.is_enabled(f_name)
+                is_loaded = f_name in self.loaded_plugins
                 is_new = f_name in self._new_modules
                 
                 # Container row
-                row = tk.Frame(scroll_f, pady=1, bg="#f0f0f0")
-                row.pack(fill=tk.X, pady=2)
+                row = tk.Frame(scroll_f, pady=5, bg="#ffffff", bd=1, relief="flat")
+                row.pack(fill=tk.X, pady=2, padx=5)
                 
                 # Status Color
                 color = "#2ecc71" if is_enabled else "#e74c3c" # Green or Red
                 if is_new: color = "#f1c40f" # Yellow for new
                 
-                lbl_status = tk.Label(row, text="●", fg=color, bg="#f0f0f0", font=("Segoe UI", 12))
-                lbl_status.pack(side=tk.LEFT, padx=5)
+                lbl_status = tk.Label(row, text="●", fg=color, bg="#ffffff", font=("Segoe UI", 14))
+                lbl_status.pack(side=tk.LEFT, padx=10)
                 
-                btn_text = f"{f_name} [{'ACTIVE' if is_enabled else 'DISABLED'}]"
-                if is_new: btn_text += " [NEW!]"
+                display_text = f_name
+                if is_new: display_text += " [NEW!]"
+                if is_loaded and is_enabled: display_text += " (Loaded)"
                 
-                # Make the whole label a button to toggle
+                # Module Name & Toggle
                 def toggle(name=f_name):
-                    current = self._pending_registry.get(name, True)
-                    self._pending_registry[name] = not current
-                    refresh_hub_list()
+                    current = self.hub.is_enabled(name)
+                    self.hub.toggle_module(name, not current)
+                    if not current: # Just enabled
+                        self.load_external_modules()
+                    # Refresh is handled by toggle_module -> on_refresh
                 
-                btn = tk.Button(row, text=btn_text, font=("Segoe UI", 9), anchor="w", 
-                                relief=tk.FLAT, bg="#f0f0f0", command=toggle,
-                                activebackground="#dfe6e9")
+                btn_style = "TButton"
+                btn = tk.Button(row, text=display_text, font=("Segoe UI", 11, "bold" if is_enabled else "normal"), 
+                                anchor="w", relief=tk.FLAT, bg="#ffffff", command=toggle,
+                                activebackground="#f0f0f0", fg=self.colors["fg"] if is_enabled else "#95a5a6")
                 btn.pack(side=tk.LEFT, fill=tk.X, expand=True)
-                
+
                 # Valid Header Indicator
                 try:
-                    with open(os.path.join(self.modules_dir, f_name), 'r', encoding='utf-8') as f:
-                        if "def initialize(app):" in f.read():
-                            tk.Label(row, text="[Blues-Approved]", fg="#2980b9", font=("Segoe UI", 7), bg="#f0f0f0").pack(side=tk.RIGHT, padx=5)
+                    with open(os.path.join(self.modules_dir, f_name), 'r', encoding='utf-8') as mod_file:
+                        content = mod_file.read()
+                        if "def initialize(app):" in content:
+                            tk.Label(row, text="[Blues-Approved]", fg="#3498db", font=("Segoe UI", 8, "bold"), bg="#ffffff").pack(side=tk.RIGHT, padx=15)
                 except: pass
 
+                # Enable/Disable switch
+                switch_text = "DISABLE" if is_enabled else "ENABLE"
+                switch_color = "#e74c3c" if is_enabled else "#2ecc71"
+                tk.Button(row, text=switch_text, command=toggle, bg=switch_color, fg="white", 
+                          font=("Segoe UI", 8, "bold"), width=10, bd=0).pack(side=tk.RIGHT, padx=5)
+
+        self.hub.on_refresh = lambda: self.root.after(0, refresh_hub_list)
         refresh_hub_list()
         
         def run_sync():
-            sync_btn.config(state=tk.DISABLED, text="⌛ Checking GitHub...")
+            sync_btn.config(state=tk.DISABLED, text="Checking GitHub...")
             def on_sync_done(status, msg, new_files):
                 if status == "success":
                     self._new_modules.update(new_files)
-                    # Merge new files into pending as enabled
-                    for nf in new_files: 
-                        if nf not in self._pending_registry: self._pending_registry[nf] = True
                 
                 self.root.after(0, lambda: [
-                    sync_btn.config(state=tk.NORMAL, text="🔍 Check for new plugins"),
+                    sync_btn.config(state=tk.NORMAL, text="Check for New Plugins"),
                     refresh_hub_list(),
                     messagebox.showinfo("Sync", msg) if status == "success" else messagebox.showerror("Sync Error", msg)
                 ])
             self.hub.sync_from_github(on_sync_done)
             
         sync_btn.config(command=run_sync)
-
-    def start_tutorial_flow(self):
-        # 1. Select Language Dialog
-        d = tk.Toplevel(self.root)
-        d.title("Select Tutorial Language")
-        d.geometry("350x250")
-        d.resizable(False, False)
-        d.transient(self.root)
-        d.grab_set()
-        
-        try:
-            x = self.root.winfo_rootx() + (self.root.winfo_width()//2) - 175
-            y = self.root.winfo_rooty() + (self.root.winfo_height()//2) - 125
-            d.geometry(f"+{x}+{y}")
-        except: pass
-
-        tk.Label(d, text="🎓 Tutorial Setup", font=("Segoe UI", 12, "bold"), pady=15).pack()
-        tk.Label(d, text="Choose your preferred language:", font=("Segoe UI", 10)).pack(pady=(0, 10))
-        
-        lang_var = tk.StringVar(value="English")
-        opts = ["English", "Spanish", "Chinese"]
-        combo = ttk.Combobox(d, textvariable=lang_var, values=opts, state="readonly", width=20)
-        combo.pack(pady=5)
-        
-        def begin():
-            choice = lang_var.get()
-            d.destroy()
-            self._execute_tutorial_start(choice)
-
-        tk.Button(d, text="Begin Generation", command=begin, bg=self.colors["accent"], fg="white", font=("Segoe UI", 10, "bold"), pady=8).pack(fill=tk.X, padx=40, pady=20)
-
-    def _execute_tutorial_start(self, language):
-        # Map choice to suffix and model language key
-        lang_cfg = {
-            "English": ("", "English"),
-            "Spanish": ("_ES", "Spanish"),
-            "Chinese": ("_CN", "Chinese")
-        }
-        suffix, model_lang = lang_cfg.get(language, ("", "English"))
-        
-        fname = f"Tutorial_01_Welcome{suffix}.json"
-        fpath = os.path.join(BASE_DIR, "tutorials", fname)
-        
-        if not os.path.exists(fpath):
-            messagebox.showerror("Error", f"Tutorial file not found: {fname}")
-            return
-
-        try:
-            with open(fpath, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            
-            # Force the correct language for the engine
-            for block in data:
-                block["language"] = model_lang
-            
-            # Switch to Batch Tab
-            self.notebook.select(self.tab_batch)
-            
-            # Feed data to director
-            if hasattr(self, 'director'):
-                self.director.load_script_data(data, name=f"Tutorial Chapter 1 ({language})")
-                self.director.auto_switch_var.set(True)
-                self.root.after(500, self.director.start_scene_generation)
-                
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to start tutorial: {e}")
 
     def show_help_guide(self):
         if hasattr(self, 'help_window') and self.help_window is not None and self.help_window.winfo_exists():
@@ -3322,7 +3244,11 @@ class QwenTTSApp:
         return True
 
     def browse_audio(self): 
-        p = filedialog.askopenfilename()
+        initial_dir = os.path.join(os.getcwd(), 'temp')
+        if not os.path.exists(initial_dir):
+            initial_dir = os.getcwd()
+            
+        p = filedialog.askopenfilename(initialdir=initial_dir)
         if p:
             self.ref_audio_path.set(p)
 
@@ -3699,9 +3625,11 @@ class QwenTTSApp:
             sys.path.append(self.modules_dir)
         for item in os.listdir(self.modules_dir):
             if item.endswith(".py") and not item.startswith("__"):
+                # Skip if already loaded
+                if item in self.loaded_plugins: continue
+
                 # Use Hub to check if enabled
                 if not self.hub.is_enabled(item):
-                    print(f"Module '{item}' is disabled. Skipping.")
                     continue
 
                 try:
@@ -3712,6 +3640,7 @@ class QwenTTSApp:
                     spec.loader.exec_module(mod)
                     if hasattr(mod, "initialize"):
                         mod.initialize(self)
+                        self.loaded_plugins.add(item)
                         print(f"Module '{module_name}' loaded successfully.")
                 except Exception as e:
                     print(f"Failed to load module '{item}': {e}")

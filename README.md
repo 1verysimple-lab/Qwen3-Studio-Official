@@ -1,4 +1,4 @@
-# 🎙️ Qwen3-TTS Pro Suite v3.9.1
+# 🎙️ Qwen3-TTS Pro Suite v3.9.2
 
 **Local AI Voice Design, Cloning, and Batch Production**
 
@@ -30,12 +30,12 @@ To run the suite:
     *   🟢 **Custom Voice**: Use natural language instructions and style descriptors to command high-quality pre-trained personas.
     *   🔵 **Voice Design**: Create entirely new vocal identities from scratch using text descriptions.
     *   🟣 **Voice Clone**: Perfect digital replicas of any person from just a few seconds of reference audio.
-*   **🔌 Module Hub (New)**: A unified manager to synchronize plugins with the official GitHub repository and toggle features on/off dynamically.
+*   **Modules Manager (Primary Tab)**: A unified manager to synchronize plugins with the official GitHub repository and toggle features on/off dynamically with immediate loading.
 *   **Smart Director Architecture**: Includes an integrated **Batch Studio** (Non-Linear Editor) for sequencing complex multi-voice scripts and scenes.
 *   **VRAM Monitor**: Real-time GPU memory tracking integrated into the status bar for stability.
 *   **Dynamic Extension Support**: A modular plugin system allows you to add new features and automated scripting via the `modules/` folder. [Read the Plugin Guide (PLUGINS.md)](PLUGINS.md).
+*   **Smart Patch Update System**: The launcher now automatically detects and applies small patches, keeping your installation up-to-date without re-downloading the heavy engine.
 *   **Stability First**: Forced local path architecture ensures core components (SoX, Engines) are always where they need to be.
-*   **Auto-Managed Engines**: Missing models are detected and downloaded automatically from HuggingFace.
 *   **Prep Station**: Built-in **Whisper AI** for transcribing reference files and preparing data.
 
 ---
@@ -59,9 +59,9 @@ To run the suite:
    ```
 
 ### 3. Launch
-Always start the application via the **Smart Launcher** to ensure system integrity:
+Always start the application via the **Smart Launcher** to ensure system integrity and receive updates:
 ```bash
-python Pro_Studio_Launcher.py
+python app_launcher.py
 ```
 
 ---
@@ -93,34 +93,34 @@ python Pro_Studio_Launcher.py
 ## ⚖️ License
 This project is licensed under the Apache-2.0 License. AI models are subject to the original Qwen license terms.
 
-## ������ Project Structure
+## 📁 Project Structure
 
-### ������ Core Application
+### 🏗️ Core Application
 | File | Description |
 | :--- | :--- |
-| **`app_main.py`** | The main entry point for the Qwen3 Studio application (The "Pro" App). |
-| **`app_launcher.py`** | Handles environment setup and launches the main app. |
+| **`app_main.py`** | The main entry point for the Qwen3 Studio application. |
+| **`app_launcher.py`** | Handles environment setup, updates, and launches the main app. |
 | **`config_manager.py`** | Manages user settings and configuration (paths, defaults). |
 | **`batch_director.py`** | Logic for the "Podcast Mode" and batch processing. |
-| **`modules/`** | Contains core logic for TTS, Voice Cloning, and Audio Processing. |
+| **`modules/`** | Folder for dynamic plugins and extensions. |
 | **`qwen_tts/`** | Interface for the AI Model inference. |
 
-### ������️ Installer & Build System
+### 🛠️ Installer & Build System
 | File | Description |
 | :--- | :--- |
-| **`tiny_loader.py`** | Source code for the **Web Launcher**. Downloads the main app from Hugging Face. |
-| **`build_tiny.py`** | Script to compile `tiny_loader.py` into the ~15MB `Qwen3_Launcher.exe`. |
-| **`build_distribution.py`** | Script to build the full "Heavy" Pro App (2.7GB). |
-| **`deploy_payload.py`** | Utility to zip and upload the Pro App to Hugging Face. |
+| **`version.json`** | Remote manifest for the Smart Patch system. |
+| **`version.txt`** | Local version tracking file. |
+| **`build_tiny.py`** | Script to compile `app_launcher.py` into a lightweight setup EXE. |
+| **`build_distribution.py`** | Script to build the full standalone Pro App bundle. |
 | **`requirements.txt`** | Python dependencies required to run the source code. |
 
-### ������ Documentation & Assets
+### 📄 Documentation & Assets
 | File | Description |
 | :--- | :--- |
 | **`README.md`** | Main project overview and user instructions. |
 | **`GUIDE.md`** | Detailed user manual for Studio features. |
-| **`FEATURES.md`** | Marketing list of capabilities. |
-| **`tutorials/`** | JSON scripts used for the in-app interactive tutorial system. |
+| **`FEATURES.md`** | Functional specifications and capabilities. |
+| **`tutorials/`** | JSON source scripts for the interactive tutorial system. |
 | **`pq.ico`** | Application icon file. |
 
 *Built with ❤️ by Blues in Spain.*

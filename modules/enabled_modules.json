@@ -1,5 +1,6 @@
 {
     "text_parser_plugin.py": true,
     "tutorial_plugin.py": true,
-    "test_vibe_check.py": false
+    "test_vibe_check.py": false,
+    "autoscript_plugin.py": false
 }

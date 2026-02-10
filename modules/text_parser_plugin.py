@@ -10,7 +10,7 @@ def initialize(app):
     Includes text cleaning options and long-sentence refinement.
     """
     plugin_tab = ttk.Frame(app.notebook)
-    app.notebook.add(plugin_tab, text="📝 Text Parser")
+    app.notebook.add(plugin_tab, text="Text Parser")
 
     # --- UI Layout ---
     main_frame = ttk.Frame(plugin_tab, padding=20)
@@ -124,7 +124,7 @@ def initialize(app):
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to read file:\n{e}")
 
-    ttk.Button(btn_frame, text="📂 Open Text File", command=open_file, style="Big.TButton").pack(side=tk.LEFT, padx=(0, 10))
+    ttk.Button(btn_frame, text="Open Text File", command=open_file, style="Big.TButton").pack(side=tk.LEFT, padx=(0, 10))
 
     def show_refinement_dialog(long_sentences, on_confirm):
         """Allows manual split of sentences that exceed max_words."""
@@ -191,8 +191,8 @@ def initialize(app):
 
         btn_f = tk.Frame(d, pady=15)
         btn_f.pack(fill=tk.X)
-        ttk.Button(btn_f, text="⚡ Auto-Split All", command=auto_split).pack(side=tk.LEFT, padx=20)
-        ttk.Button(btn_f, text="✅ Apply Refined Splits", command=confirm).pack(side=tk.RIGHT, padx=20)
+        ttk.Button(btn_f, text="Auto-Split All", command=auto_split).pack(side=tk.LEFT, padx=20)
+        ttk.Button(btn_f, text="Apply Refined Splits", command=confirm).pack(side=tk.RIGHT, padx=20)
 
     def parse_and_send():
         raw_text = text_input.get("1.0", tk.END).strip()
@@ -207,7 +207,7 @@ def initialize(app):
         if remove_parens_var.get():
             cleaned_text = re.sub(r'\(.*?\)', '', cleaned_text)
         if clean_symbols_var.get():
-            cleaned_text = re.sub(r'[^\w\s.,!?'"-]', ' ', cleaned_text)
+            cleaned_text = re.sub(r"[^\w\s.,!?'\"-]", ' ', cleaned_text)
             cleaned_text = re.sub(r'\s+', ' ', cleaned_text).strip()
 
         if not cleaned_text:
@@ -395,8 +395,8 @@ def initialize(app):
                     d.destroy(); on_confirm(nested_refined)
 
                 btn_f = tk.Frame(d, pady=15); btn_f.pack(fill=tk.X)
-                ttk.Button(btn_f, text="⚡ Auto-Split All", command=auto).pack(side=tk.LEFT, padx=20)
-                ttk.Button(btn_f, text="✅ Apply Refined Splits", command=confirm).pack(side=tk.RIGHT, padx=20)
+                ttk.Button(btn_f, text="Auto-Split All", command=auto).pack(side=tk.LEFT, padx=20)
+                ttk.Button(btn_f, text="Apply Refined Splits", command=confirm).pack(side=tk.RIGHT, padx=20)
 
             show_refinement_dialog_v2(long_sentences, on_refined)
         else:
@@ -404,7 +404,7 @@ def initialize(app):
             # We need a dummy nested list that is empty
             proceed_with_blocks([])
 
-    ttk.Button(btn_frame, text="🎬 Send to Batch Studio", command=parse_and_send, style="Big.TButton").pack(side=tk.LEFT)
+    ttk.Button(btn_frame, text="Send to Batch Studio", command=parse_and_send, style="Big.TButton").pack(side=tk.LEFT)
 
     # Style for the big button
     s = ttk.Style()

@@ -17,10 +17,18 @@ ENGINE_ROOT = os.path.join(APP_DATA_ROOT, "Qwen3-TTS")
 # YOUR HUGGING FACE DIRECT LINK
 ENGINE_DOWNLOAD_URL = "https://huggingface.co/Bluesed/blues-qwen/resolve/main/blues-Qwen3-TTS.zip?download=true"
 
+# UPDATE MANIFEST URL
+VERSION_URL = "https://raw.githubusercontent.com/1verysimple-lab/Qwen3-Studio-Official/main/version.json"
+LOCAL_VERSION_FILE = "version.txt"
+
 class EngineInstaller(tk.Tk):
-    def __init__(self):
+    def __init__(self, mode="full", download_url=None, target_version=None):
         super().__init__()
-        self.title("Qwen3 Studio - Setup")
+        self.mode = mode
+        self.download_url = download_url or ENGINE_DOWNLOAD_URL
+        self.target_version = target_version
+        
+        self.title("Qwen3 Studio - Update Manager" if mode == "patch" else "Qwen3 Studio - Setup")
         self.geometry("480x320")
         self.resizable(False, False)
         self.success = False
@@ -33,8 +41,11 @@ class EngineInstaller(tk.Tk):
         style.theme_use('clam')
         
         # Header
-        tk.Label(self, text="Installing AI Engine", font=("Segoe UI", 16, "bold")).pack(pady=(25, 10))
-        tk.Label(self, text="Downloading high-fidelity models (4.5 GB).\nHosted on Hugging Face High-Speed Servers.", font=("Segoe UI", 10), fg="#555").pack(pady=5)
+        header_text = "Installing Updates" if mode == "patch" else "Installing AI Engine"
+        tk.Label(self, text=header_text, font=("Segoe UI", 16, "bold")).pack(pady=(25, 10))
+        
+        desc_text = f"Downloading patch for version {target_version}." if mode == "patch" else "Downloading high-fidelity models (4.5 GB).\nHosted on Hugging Face High-Speed Servers."
+        tk.Label(self, text=desc_text, font=("Segoe UI", 10), fg="#555").pack(pady=5)
 
         # Progress Bar
         self.progress = ttk.Progressbar(self, orient="horizontal", length=400, mode="determinate")
@@ -48,12 +59,12 @@ class EngineInstaller(tk.Tk):
         threading.Thread(target=self.start_installation, daemon=True).start()
 
     def start_installation(self):
-        temp_zip = os.path.join(APP_DATA_ROOT, "engine_temp.zip")
+        temp_zip = os.path.join(APP_DATA_ROOT, "update_temp.zip" if self.mode == "patch" else "engine_temp.zip")
         os.makedirs(APP_DATA_ROOT, exist_ok=True)
         
         try:
             self.update_status("Connecting to server...")
-            response = requests.get(ENGINE_DOWNLOAD_URL, stream=True)
+            response = requests.get(self.download_url, stream=True)
             response.raise_for_status()
             
             total_size = int(response.headers.get('content-length', 0))
@@ -68,33 +79,40 @@ class EngineInstaller(tk.Tk):
                     if total_size > 0:
                         percent = (downloaded / total_size) * 100
                         self.progress['value'] = percent
-                        # Show GB progress
-                        downloaded_gb = downloaded / (1024**3)
-                        total_gb = total_size / (1024**3)
-                        self.update_status(f"Downloading: {int(percent)}%  ({downloaded_gb:.2f} GB / {total_gb:.2f} GB)")
+                        
+                        if self.mode == "patch":
+                            self.update_status(f"Downloading Patch: {int(percent)}% ({downloaded//1024} KB / {total_size//1024} KB)")
+                        else:
+                            downloaded_gb = downloaded / (1024**3)
+                            total_gb = total_size / (1024**3)
+                            self.update_status(f"Downloading: {int(percent)}%  ({downloaded_gb:.2f} GB / {total_gb:.2f} GB)")
             
-            self.update_status("Extracting (This takes 1-2 mins)...")
+            self.update_status("Applying Patch..." if self.mode == "patch" else "Extracting (This takes 1-2 mins)...")
             self.progress['mode'] = 'indeterminate'
             self.progress.start(10)
             
             if not zipfile.is_zipfile(temp_zip):
                  raise ValueError("Downloaded file is corrupt.")
 
-            with zipfile.ZipFile(temp_zip, 'r') as zip_ref:
-                zip_ref.extractall(APP_DATA_ROOT)
+            # Target directory: Patch goes to current dir, Full goes to APP_DATA_ROOT
+            extract_path = os.getcwd() if self.mode == "patch" else APP_DATA_ROOT
             
-            self.update_status("Cleaning up...")
+            with zipfile.ZipFile(temp_zip, 'r') as zip_ref:
+                zip_ref.extractall(extract_path)
+            
+            self.update_status("Finalizing...")
             os.remove(temp_zip)
             
-            if os.path.exists(ENGINE_ROOT):
-                self.success = True
-                self.quit()
-            else:
-                messagebox.showerror("Structure Error", f"Folder '{ENGINE_ROOT}' not found after extraction.")
-                self.quit()
+            # Update local version file if successful
+            if self.mode == "patch" and self.target_version:
+                with open(LOCAL_VERSION_FILE, "w") as f:
+                    f.write(self.target_version)
+            
+            self.success = True
+            self.quit()
 
         except Exception as e:
-            messagebox.showerror("Installation Error", f"Failed: {str(e)}")
+            messagebox.showerror("Update Error" if self.mode == "patch" else "Installation Error", f"Failed: {str(e)}")
             if os.path.exists(temp_zip):
                 try: os.remove(temp_zip)
                 except: pass
@@ -103,15 +121,59 @@ class EngineInstaller(tk.Tk):
     def update_status(self, text):
         self.status_label.config(text=text)
 
+def check_for_updates():
+    """Checks GitHub for version.json and handles patching or full update prompts."""
+    # 1. Read local version
+    local_version = "0.0.0"
+    if os.path.exists(LOCAL_VERSION_FILE):
+        try:
+            with open(LOCAL_VERSION_FILE, "r") as f:
+                local_version = f.read().strip()
+        except: pass
+    
+    try:
+        # 2. Fetch Remote Manifest
+        response = requests.get(VERSION_URL, timeout=5)
+        response.raise_for_status()
+        manifest = response.json()
+        
+        remote_version = manifest.get("current_version", "0.0.0")
+        
+        if local_version == remote_version:
+            return # Up to date
+            
+        # 3. Decision Tree
+        v_local = [int(x) for x in local_version.split('.')]
+        v_remote = [int(x) for x in remote_version.split('.')]
+        
+        # Major Gap: First number mismatch
+        if v_remote[0] > v_local[0]:
+            msg = f"A major update (v{remote_version}) is available.\n\nPlease download the full application from:\n{manifest.get('full_url')}"
+            messagebox.showinfo("Major Update Available", msg)
+            return
+
+        # Small Gap: Minor or Patch mismatch
+        if v_remote > v_local:
+            if messagebox.askyesno("Update Available", f"A new patch (v{remote_version}) is available. Install now?"):
+                patcher = EngineInstaller(mode="patch", download_url=manifest.get("patch_url"), target_version=remote_version)
+                patcher.mainloop()
+                
+    except Exception as e:
+        print(f"Update check failed (Offline mode): {e}")
+        # Default to launching local version
+
 def main():
     # 1. Check if Engine Exists in AppData
     if not os.path.exists(ENGINE_ROOT):
-        installer = EngineInstaller()
+        installer = EngineInstaller(mode="full")
         installer.mainloop()
         if not installer.success:
             return # User closed window or failed
 
-    # 2. Launch Main App
+    # 2. Check for Updates
+    check_for_updates()
+
+    # 3. Launch Main App
     try:
         # We import app_main only AFTER the engine is confirmed
         import app_main

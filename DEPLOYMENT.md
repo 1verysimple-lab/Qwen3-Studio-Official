@@ -1,67 +1,62 @@
-ï»¿# í ½íº€ Professional Deployment Protocol (Smart Hybrid)
-**Status:** ACTIVE | **Method:** Stub Installer + Hugging Face Cloud
-**Version:** 1.0 (Production)
+# ðŸš€ Professional Deployment Protocol (Smart Hybrid)
+**Status:** ACTIVE | **Method:** Stub Installer + Hugging Face Cloud + Smart Patching
+**Version:** 1.1 (Production)
 
 ## 1. The Architecture
-We utilize a **Hybrid Deployment** strategy to bypass GitHub's file size limits and Google Drive's bandwidth quotas.
+We utilize a **Hybrid Deployment** strategy to bypass GitHub's file size limits and maintain a version-aware local environment.
 
-1.  **The "Stub" (The Installer):** A lightweight (~200MB) executable (`Qwen3_Studio_Setup.exe`). This contains the App Logic, UI, and Icons.
-2.  **The "Brain" (The Engine):** A massive (~4.5GB) archive (`blues-Qwen3-TTS.zip`) hosted on **Hugging Face**.
-
-**User Experience:**
-1.  User downloads small EXE.
-2.  User runs EXE.
-3.  App detects missing engine in `%LOCALAPPDATA%`.
-4.  App auto-downloads from Hugging Face (High Speed).
-5.  App launches seamlessly.
+1.  **The "Launcher" (The Hub):** A lightweight executable (`app_launcher.py`) that checks GitHub for a `version.json` manifest.
+2.  **The "Brain" (The Engine):** A massive (~4.5GB) archive hosted on **Hugging Face**.
+3.  **The "Smart Patch":** Small code updates (UI, logic fixes) are delivered as tiny ZIP files, allowing the launcher to update the app without re-downloading the engine.
 
 ---
 
-## 2. Hosting the Engine (One-Time Setup)
-*Current Host:* **Hugging Face** (Unlimited Bandwidth)
+## 2. Hosting & Manifest Setup
 
-1.  **Zip the Engine:** Compress your local `Qwen3-TTS` folder into `blues-Qwen3-TTS.zip`.
-2.  **Upload:** Upload to a public Hugging Face Model repository.
-3.  **Get Link:** Copy the download link.
-    * **CRITICAL:** Must use the `resolve` link format:
-    * `https://huggingface.co/USERNAME/MODEL/resolve/main/FILE.zip?download=true`
+### Hugging Face (Heavy Assets)
+1.  **Zip the Engine:** Compress your local `Qwen3-TTS` folder.
+2.  **Upload:** Use the `resolve` link format for direct downloads.
 
----
-
-## 3. The Code Configuration
-Ensure `app_launcher.py` and `app_main.py` are synchronized to the **AppData** standard.
-
-**A. app_launcher.py (The Installer)**
-* **Target:** `os.environ['LOCALAPPDATA'] + "/Qwen3Studio"`
-* **Source:** Your Hugging Face Link.
-* **Logic:** Download -> Extract -> Delete Zip -> Launch.
-
-**B. app_main.py (The App)**
-* **Engine Root:** Must point to `os.path.join(os.environ['LOCALAPPDATA'], "Qwen3Studio", "Qwen3-TTS")`.
-* **Instance Lock:** Must check `app.lock` in the Base Directory to prevent double-opening.
-
----
-
-## 4. The Build Process (Release Cycle)
-To release a new version of the App (Logic/UI) without forcing users to re-download the 4.5GB engine:
-
-1.  **Clean Workspace:**
-    * Delete `dist/`, `build/`, and `_internal/` folders.
-    * **IMPORTANT:** Ensure your local `Qwen3-TTS` folder is renamed or moved so it is **NOT** included in the build.
-2.  **Run Builder:**
-    ```powershell
-    python build_distribution.py
+### GitHub (Manifest & Patches)
+1.  **version.json**: This file on GitHub acts as the source of truth.
+    ```json
+    {
+      "current_version": "4.0.0",
+      "min_launcher_version": "1.1.0",
+      "patch_url": "link_to_small_zip",
+      "full_url": "link_to_heavy_engine"
+    }
     ```
-3.  **Verify Output:**
-    * Go to `Output/`.
-    * Check file size (Should be ~150-200MB).
-    * **Rename:** `Qwen3_Studio_Setup_vX.X.exe`.
-4.  **Publish:**
-    * Upload the EXE to GitHub Releases.
+2.  **version.txt**: A local file in the app directory that stores the currently installed version string.
+
+---
+
+## 3. The Release Cycle
+
+### To push a small Code Patch:
+1.  Zip only the changed `.py` files and new plugins.
+2.  Upload to Hugging Face or GitHub.
+3.  Update `version.json` on GitHub. Users' launchers will auto-apply the patch on next boot.
+
+### To push a major Engine Update:
+1.  Upload the full engine ZIP.
+2.  Update the `current_version` in `version.json` (incrementing the major number, e.g., 3.x to 4.x).
+3.  The launcher will prompt the user for a full download.
+
+---
+
+## 4. The Build Process
+To release a new standalone Launcher:
+
+1.  **Run Builder:**
+    ```powershell
+    python build_tiny.py
+    ```
+2.  **Verify Output:** Ensure the resulting EXE is small (~15-20MB).
 
 ---
 
 ## 5. Troubleshooting
-* **"Quota Exceeded":** Ensure you are using Hugging Face, not Google Drive.
-* **"Permission Denied":** Ensure the app is writing to `AppData`, NOT `Program Files`.
-* **"App Not Found":** Ensure `app_launcher.py` imports `app_main` directly, rather than using `subprocess` to call a file that doesn't exist in the frozen EXE.
+* **"Update Loop":** Ensure `version.txt` is updated ONLY after a successful ZIP extraction.
+* **"Permission Denied":** The app must have write access to its own folder to apply patches.
+* **"Offline Boot":** If the GitHub manifest is unreachable, the launcher defaults to the existing local version.

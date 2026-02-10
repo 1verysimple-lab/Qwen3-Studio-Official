@@ -7,8 +7,8 @@ The Qwen3-TTS Pro Suite is designed to be extensible. You can add entirely new f
 ## 🛠️ How it Works
 On startup, the application scans the `./modules/` folder. The **Module Hub** then checks the `enabled_modules.json` registry to determine which plugins should be initialized.
 
-### The Module Hub (Settings)
-Starting in v3.9.1, you can manage your plugins via the **Settings -> Module Hub** tab:
+### The Modules Manager (Main Tab)
+Starting in v3.9.2, you can manage your plugins via the **Modules** tab in the main application:
 *   **Synchronize**: Pulls the latest official plugins from the GitHub repository.
 *   **Toggle**: Enable or disable plugins without deleting the files.
 *   **Validation**: The Hub automatically verifies that the plugin contains the required `initialize(app)` header.
@@ -24,7 +24,7 @@ def initialize(app):
 
 ---
 
-## 🚀 Creating your first Plugin (Hello World)
+## Creating your first Plugin (Hello World)
 
 Create a file named `hello_plugin.py` in the `modules/` folder:
 
@@ -35,7 +35,7 @@ from tkinter import ttk
 def initialize(app):
     # 1. Add a new tab to the main window
     plugin_tab = ttk.Frame(app.notebook)
-    app.notebook.add(plugin_tab, text="👋 Hello")
+    app.notebook.add(plugin_tab, text="Hello")
 
     # 2. Add some UI
     label = tk.Label(plugin_tab, text="Hello from my Plugin!", font=("Segoe UI", 12))
@@ -53,8 +53,8 @@ def initialize(app):
 
 ---
 
-## 🤖 The "Auto-Script" Tab
-The "Auto-Script" tab visible in the application is a **demonstration plugin** (located in `./modules/tutorial_plugin.py`). It serves two purposes:
+## The "Auto-Script" Tab
+The "Auto-Script" tab visible in the application is a **demonstration plugin** (located in `./modules/autoscript_plugin.py`). It serves two purposes:
 1. It shows users how an automated workflow looks.
 2. It provides developers with a reference implementation for controlling the engine via scripts.
 
