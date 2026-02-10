@@ -1,6 +1,5 @@
 {
-  "current_version": "3.9.2",
-  "min_launcher_version": "1.1.0",
-  "patch_url": "https://huggingface.co/Bluesed/blues-qwen/resolve/main/patch_3.9.2.zip?download=true",
-  "full_url": "https://huggingface.co/Bluesed/blues-qwen/resolve/main/Qwen3_Studio_Setup.exe?download=true"
+  "current_version": "4.0.0",
+  "patch_url": "https://huggingface.co/Bluesed/blues-qwen/resolve/main/patch_4.0.zip?download=true",
+  "full_url": "https://github.com/1verysimple-lab/Qwen3-Studio-Official/releases/latest"
 }
