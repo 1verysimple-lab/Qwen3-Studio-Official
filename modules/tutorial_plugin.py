@@ -5,6 +5,7 @@ import time
 import os
 import json
 import shutil
+import sys
 
 def initialize(app):
     """
@@ -62,7 +63,13 @@ def initialize(app):
         suffix, model_lang = lang_cfg.get(language, ("", "English"))
         
         # Determine paths relative to the application root
-        base_dir = os.path.dirname(app.modules_dir)
+        if getattr(sys, 'frozen', False):
+            # Running in a bundle (.exe)
+            # Look for tutorials NEXT to the .exe, not inside the temp folder
+            base_dir = os.path.dirname(sys.executable)
+        else:
+            # Running in normal Python environment
+            base_dir = os.path.dirname(app.modules_dir)
         source_fname = f"Tutorial_01_Welcome{suffix}.json"
         source_fpath = os.path.join(base_dir, "tutorials", source_fname)
         
@@ -78,9 +85,10 @@ def initialize(app):
 
             # Copy tutorial JSONs to the new destination for the user to keep
             tutorial_src_dir = os.path.join(base_dir, "tutorials")
-            for item in os.listdir(tutorial_src_dir):
-                if item.endswith(".json"):
-                    shutil.copy2(os.path.join(tutorial_src_dir, item), os.path.join(final_output_path, item))
+            if not os.path.exists(tutorial_src_dir):
+                messagebox.showerror("Error", "The 'tutorials/' folder must be in the same directory as the application.")
+                return
+            shutil.copytree(tutorial_src_dir, final_output_path, dirs_exist_ok=True)
 
             with open(source_fpath, 'r', encoding='utf-8') as f:
                 data = json.load(f)

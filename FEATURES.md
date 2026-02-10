@@ -1,4 +1,4 @@
-# 🎙️ Qwen3-TTS Pro Suite: Functional Specification (v3.9.2)
+# 🎙️ Qwen3-TTS Pro Suite: Functional Specification (v4.0.0)
 
 This document outlines the full functional capabilities of the **Qwen3-TTS Pro Suite**, organized by the logical creative workflow.
 
@@ -13,11 +13,13 @@ The application balances local stability with power-user flexibility:
 *   **Smart Downloader**: Integrated HuggingFace hub downloader fetches missing assets on-demand.
 *   **VRAM Monitor**: Real-time monitoring of GPU memory usage with color-coded safety indicators.
 *   **Smart Patch Update System**: Version-aware launcher handles small code updates and full engine migrations seamlessly.
+*   **Persistent Settings**: User settings and module states are now stored in APPDATA for robust persistence across sessions and updates.
 
 ### 🔌 Modules Manager (Extension System)
 The "Triple Pavilion" architecture for module management:
 *   **GitHub Synchronization**: A surgical sync engine via GitHub REST API to pull the latest official plugins without full git overhead.
 *   **Registry Management**: A persistence layer (`enabled_modules.json`) to toggle modules on/off.
+*   **Default Tutorial**: The `tutorial_plugin.py` is now enabled by default for all new installations.
 *   **Dynamic Plugin Architecture**: Supports both UI-based tabs and Headless background services.
 *   **Blues-Approved Headers**: Security check to verify plugin validity before initialization.
 

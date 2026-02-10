@@ -285,7 +285,7 @@ The **Script Helper** tab is a specialized tool for turning long documents into 
 *   **Cleaning Logic**: Automatically removes square brackets `[ ]` or parentheses `( )` often found in scripts.
 *   **Manual Refinement**: If a sentence is too long, the helper will prompt you to split it manually before sending it to the Batch Studio.
 
-## 6. Modules Manager (v3.9.2)
+## 6. Modules Manager (v4.0.0)
 
 Found as a dedicated tab in the main window, the Modules Manager is your gateway to extending the Studio.
 *   **Check for new plugins**: Synchronizes with the official GitHub repository to find new creative tools.

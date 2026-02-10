@@ -108,6 +108,7 @@ class EngineInstaller(tk.Tk):
                 with open(LOCAL_VERSION_FILE, "w") as f:
                     f.write(self.target_version)
             
+            messagebox.showinfo("Installation Complete", "Qwen3 Studio Engine installed successfully!")
             self.success = True
             self.quit()
 
@@ -120,6 +121,9 @@ class EngineInstaller(tk.Tk):
 
     def update_status(self, text):
         self.status_label.config(text=text)
+
+def version_to_tuple(v):
+    return tuple(map(int, (v.split("."))))
 
 def check_for_updates():
     """Checks GitHub for version.json and handles patching or full update prompts."""
@@ -142,9 +146,9 @@ def check_for_updates():
         if local_version == remote_version:
             return # Up to date
             
-        # 3. Decision Tree
-        v_local = [int(x) for x in local_version.split('.')]
-        v_remote = [int(x) for x in remote_version.split('.')]
+        # 3. Decision Tree using tuple comparison
+        v_local = version_to_tuple(local_version)
+        v_remote = version_to_tuple(remote_version)
         
         # Major Gap: First number mismatch
         if v_remote[0] > v_local[0]:
@@ -163,6 +167,21 @@ def check_for_updates():
         # Default to launching local version
 
 def main():
+    # 0. Extract embedded tutorials folder if running as a frozen executable
+    if getattr(sys, 'frozen', False):
+        try:
+            # Source is inside the MEIPASS (temp folder where PyInstaller extracts its bundled files)
+            embedded_tutorials_src = os.path.join(sys._MEIPASS, 'tutorials')
+            # Destination is next to the executable
+            target_tutorials_dest = os.path.join(os.path.dirname(sys.executable), 'tutorials')
+
+            if os.path.exists(embedded_tutorials_src) and not os.path.exists(target_tutorials_dest):
+                shutil.copytree(embedded_tutorials_src, target_tutorials_dest, dirs_exist_ok=True)
+        except Exception as e:
+            # Log or print the error for debugging, but don't stop the launch
+            print(f"Error extracting embedded tutorials: {e}")
+            pass
+
     # 1. Check if Engine Exists in AppData
     if not os.path.exists(ENGINE_ROOT):
         installer = EngineInstaller(mode="full")

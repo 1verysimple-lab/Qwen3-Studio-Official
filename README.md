@@ -1,4 +1,4 @@
-# 🎙️ Qwen3-TTS Pro Suite v3.9.2
+# 🎙️ Qwen3-TTS Pro Suite v4.0.0
 
 **Local AI Voice Design, Cloning, and Batch Production**
 
@@ -35,6 +35,8 @@ To run the suite:
 *   **VRAM Monitor**: Real-time GPU memory tracking integrated into the status bar for stability.
 *   **Dynamic Extension Support**: A modular plugin system allows you to add new features and automated scripting via the `modules/` folder. [Read the Plugin Guide (PLUGINS.md)](PLUGINS.md).
 *   **Smart Patch Update System**: The launcher now automatically detects and applies small patches, keeping your installation up-to-date without re-downloading the heavy engine.
+*   **Persistent Settings**: User settings and module states are now securely stored in your local APPDATA directory, ensuring your preferences are remembered across sessions and application updates.
+*   **Tutorials Always On**: The interactive tutorial plugin is now enabled by default for new installations, guiding you through the suite's features from the start.
 *   **Stability First**: Forced local path architecture ensures core components (SoX, Engines) are always where they need to be.
 *   **Prep Station**: Built-in **Whisper AI** for transcribing reference files and preparing data.
 
@@ -53,7 +55,12 @@ To run the suite:
    git clone https://github.com/1verysimple-lab/Qwen3-TTS.git
    cd Qwen3-TTS
    ```
-2. Install dependencies:
+2. **For NVIDIA GPU users (especially RTX series):** To ensure optimal CUDA compatibility and prevent "kernel image" errors, it is highly recommended to manually install PyTorch with the universal NVIDIA build *before* running `pip install -r requirements.txt`.
+   ```bash
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+   ```
+   Then proceed with the general dependency installation:
+3. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```

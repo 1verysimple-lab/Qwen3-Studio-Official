@@ -28,7 +28,7 @@ ENGINE_ROOT = ""
 sox_path = ""
 VERSION_FILE = ""
 CONFIG_FILE = ""
-APP_VERSION = "3.9.2"
+APP_VERSION = "4.0.0"
 MODEL_CUSTOM = ""
 MODEL_BASE = ""
 MODEL_DESIGN = ""
@@ -182,10 +182,13 @@ class GenerationEstimator:
 class ModuleHub:
     """Handles synchronization with GitHub and managing enabled/disabled states."""
     def __init__(self, modules_dir):
-        self.modules_dir = modules_dir
-        self.registry_file = os.path.join(modules_dir, "enabled_modules.json")
+        self.modules_dir = modules_dir 
+        # Create persistent path in APPDATA for compiled app stability
+        app_data = os.path.join(os.getenv('APPDATA'), "BluesQwenStudio")
+        os.makedirs(app_data, exist_ok=True)
+        self.registry_file = os.path.join(app_data, "module_registry.json")
+        
         self.registry = self.load_registry()
-        # Official Repo for syncing
         self.repo_url = "https://api.github.com/repos/1verysimple-lab/Qwen3-Studio-Official/contents/modules"
         self.raw_base_url = "https://raw.githubusercontent.com/1verysimple-lab/Qwen3-Studio-Official/main/modules"
         self.on_refresh = None # Callback for UI refresh
@@ -2032,6 +2035,9 @@ class QwenTTSApp:
         else: self.start_recording()
 
     def start_recording(self):
+        # Ensure 'temp' directory exists in the current working directory for recordings
+        recording_temp_dir = os.path.join(os.getcwd(), 'temp')
+        os.makedirs(recording_temp_dir, exist_ok=True)
         self.helper_stop_audio()
         self.recorded_frames = []
         self.is_recording = True
@@ -3173,23 +3179,44 @@ class QwenTTSApp:
 
             print(f"Loading {mtype} engine into VRAM...")
             
-            # 3. Robust Loading
-            if Qwen3TTSModel:
-                self.model = Qwen3TTSModel.from_pretrained(
-                    p, 
-                    device_map="auto", 
-                    torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
-                )
-            else:
-                time.sleep(1)
-                
+    # 3. Robust Loading with Hardware Fallback (V4.0 Universal)
+            try:
+                if Qwen3TTSModel:
+                    # Attempt GPU loading with your specific settings
+                    self.model = Qwen3TTSModel.from_pretrained(
+                        p, 
+                        device_map="auto", 
+                        torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
+                    )
+                else:
+                    time.sleep(1)
+            except RuntimeError as e:
+                # Catch "no kernel image" errors for your girlfriend's 8GB rig
+                if "kernel image" in str(e).lower() or "cuda" in str(e).lower():
+                    print(f"CUDA Hardware Mismatch: {e}. Falling back to CPU...")
+                    self.model = Qwen3TTSModel.from_pretrained(
+                        p,
+                        device_map={"": "cpu"},
+                        torch_dtype=torch.float32
+                    )
+                    self.root.after(0, lambda: messagebox.showwarning(
+                        "Hardware Notice", "GPU mismatch detected. Running in CPU mode for stability."))
+                else:
+                    raise e
+            
+                    raise e
+            
             self.current_model_type = mtype
             self.root.after(0, lambda: self.on_model_loaded(on_success))
+
         except Exception as e:
             err_msg = str(e)
             print(f"Model Load Failed: {err_msg}")
-            self.root.after(0, lambda: [self.set_busy(False, "Load Failed"), messagebox.showerror("Error", err_msg), self._lock_interface(False)])
-
+            self.root.after(0, lambda: [
+                self.set_busy(False, "Load Failed"),
+                messagebox.showerror("Error", err_msg),
+                self._lock_interface(False)
+            ])
     def on_model_loaded(self, on_success=None):
         mode_colors = {
             "custom": "#27ae60", # Green

@@ -9,6 +9,9 @@ __pycache__/
 dist/
 build/
 *.spec
+temp_outputs/
+saved_assets/
+generation_stats.json
 
 # Local app data
 module_registry.json

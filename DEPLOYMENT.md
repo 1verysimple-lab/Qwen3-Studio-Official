@@ -1,6 +1,6 @@
 # 🚀 Professional Deployment Protocol (Smart Hybrid)
 **Status:** ACTIVE | **Method:** Stub Installer + Hugging Face Cloud + Smart Patching
-**Version:** 1.1 (Production)
+**Version:** 4.0.0 (Production)
 
 ## 1. The Architecture
 We utilize a **Hybrid Deployment** strategy to bypass GitHub's file size limits and maintain a version-aware local environment.
