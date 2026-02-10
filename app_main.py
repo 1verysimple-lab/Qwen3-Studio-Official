@@ -191,15 +191,21 @@ class ModuleHub:
         self.on_refresh = None # Callback for UI refresh
 
     def load_registry(self):
+        """Loads module states and enforces essential defaults."""
+        defaults = {"tutorial_plugin.py": True, "autoscript_plugin.py": False}
         if os.path.exists(self.registry_file):
             try:
-                with open(self.registry_file, 'r') as f:
-                    return json.load(f)
-            except: pass
-        
-        # First-run logic: Enable Tutorial Plugin by default
-        self.registry = {"autoscript_plugin.py": False}
-        self.save_registry()
+                with open(self.registry_file, "r") as f:
+                    self.registry = json.load(f)
+                # Ensure the tutorial is always there even in old registry files
+                if "tutorial_plugin.py" not in self.registry:
+                    self.registry["tutorial_plugin.py"] = True
+                    self.save_registry()
+            except:
+                self.registry = defaults
+        else:
+            self.registry = defaults
+            self.save_registry()
         return self.registry
 
     def save_registry(self):
@@ -212,9 +218,10 @@ class ModuleHub:
         # Default to True if not in registry
         return self.registry.get(filename, True)
 
-    def toggle_module(self, filename, state):
-        self.registry[filename] = state
-        self.save_registry()
+    def toggle_module(self, module_name, state):
+        """Saves the state immediately to cure the 'amnesia' bug."""
+        self.registry[module_name] = state
+        self.save_registry() # Critical: Burn the choice into the JSON file
         if self.on_refresh: self.on_refresh()
 
     def sync_from_github(self, callback=None):
