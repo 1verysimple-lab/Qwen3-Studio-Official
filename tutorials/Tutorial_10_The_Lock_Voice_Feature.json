@@ -1,0 +1,26 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The 'Lock Voice' feature is one of the most important workflow improvements for voice cloning. It saves you a significant amount of time."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Normally, every time you click 'Clone Voice', the engine has to re-analyze your source audio file from scratch. This is computationally expensive."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "When you click 'Lock Voice', the engine performs this analysis once and then stores the resulting vocal data in memory."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "For every subsequent generation with that voice, the engine uses this cached data, which is dramatically faster than re-analyzing the file."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The button will change to 'Unlock Voice' when a voice is cached. You can click it again to clear the cached data and load a new reference file."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "This feature is essential when working in the Batch Studio, which we will cover next. Please load chapter eleven."
+    }
+]

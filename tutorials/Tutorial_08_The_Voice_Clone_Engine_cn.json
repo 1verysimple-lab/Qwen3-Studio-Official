@@ -1,0 +1,26 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "欢迎来到语音克隆引擎，标记为紫色。这也许是这个套件中最强大的工具，让你能够复制特定人物的声音。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "首先，你必须提供一个源语音。这是一个包含你希望克隆的声音的短音频文件。我们将在下一章讨论什么样的源文件是好的。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "为了获得最高质量的克隆，你还应该提供参考音频中所说话语的文字记录。‘转录’按钮可以帮助你完成这个任务。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "如果你没有文字记录，你可以勾选‘忽略文本’框。引擎将只关注声音的声学特性，但结果可能不那么准确。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "一旦你的源音频和文字记录准备好了，你就可以在‘目标文本’框中输入任何新文本，引擎将用克隆的声音生成它。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "现在让我们讨论一个获得好结果的关键步骤：准备你的音频。请加载第九章。"
+    }
+]

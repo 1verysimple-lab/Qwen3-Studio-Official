@@ -1,0 +1,22 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Has llegado al final de esta visita guiada. Ahora posees el conocimiento fundamental para dirigir los tres motores creativos, gestionar escenas complejas y producir audio de alta calidad."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Recuerda que la IA es un socio creativo. Los mejores resultados a menudo provienen de la experimentación. No tengas miedo de probar descripciones o instrucciones inusuales."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Si alguna vez necesitas un repaso, la nueva Guía de Ayuda está disponible desde el enlace en la esquina superior izquierda de la ventana principal. Contiene una versión de texto completa de todo lo que hemos discutido."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "El mundo del audio es ahora tuyo para crear. Este estudio es simplemente un conjunto de herramientas; la visión es solo tuya."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Gracias por acompañarme. ¡Feliz dirección!"
+    }
+]

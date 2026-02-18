@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "指导AI语音就像指导人类演员一样。关键是要清晰简洁。让我们专注于编写有效的指令。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "您的指令应侧重于表演和情感。从最重要的方面开始。例如，‘愤怒地大喊’是一个强烈而明确的起点。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "您可以使用更多描述词来增加细微差别。例如，‘愤怒地大喊，声音沙哑而紧张’。模型会尝试结合这些想法。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "但是，要避免矛盾的指令。像‘在安静的耳语中大喊’这样的提示会使模型混淆，并可能导致音质不佳。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "模型也能理解节奏。使用像‘说得很快’或‘带有漫长而戏剧性的停顿’这样的短语可以显著改变语音的节奏。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "最好的学习方法是进行实验。帮助指南中的“音调配方”是获取强大指令灵感的绝佳来源。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "接下来，我们将转到语音设计引擎，在那里你可以创建全新的角色。请加载第六章。"
+    }
+]

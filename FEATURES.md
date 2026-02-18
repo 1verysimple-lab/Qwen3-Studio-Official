@@ -1,4 +1,4 @@
-# 🎙️ Qwen3-TTS Pro Suite: Functional Specification (v4.0.0)
+# 🎙️ Qwen3-TTS Pro Suite: Functional Specification (v4.1.0)
 
 This document outlines the full functional capabilities of the **Qwen3-TTS Pro Suite**, organized by the logical creative workflow.
 

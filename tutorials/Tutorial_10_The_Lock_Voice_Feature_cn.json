@@ -1,0 +1,26 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "‘锁定声音’功能是语音克隆最重要的工作流程改进之一。它为你节省了大量的时间。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "通常情况下，每次你点击‘克隆声音’，引擎都必须从头开始重新分析你的源音频文件。这在计算上是昂贵的。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "当你点击‘锁定声音’时，引擎会执行一次这个分析，然后将得到的声学数据存储在内存中。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "对于该声音的每一次后续生成，引擎都会使用这个缓存的数据，这比重新分析文件要快得多。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "当一个声音被缓存后，按钮会变成‘解锁声音’。你可以再次点击它来清除缓存的数据并加载一个新的参考文件。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "这个功能在批量工作室工作时是必不可少的，我们接下来会讲到。请加载第十一章。"
+    }
+]

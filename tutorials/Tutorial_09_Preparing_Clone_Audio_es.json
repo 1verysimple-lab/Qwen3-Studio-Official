@@ -1,0 +1,26 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "La calidad de tu clon de voz depende directamente de la calidad de tu audio de origen. Si entra basura, sale basura."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Tu archivo de audio de origen debe estar lo más limpio posible. Esto significa sin música de fondo, sin ruido y sin otras personas hablando."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "La duración ideal es de entre tres y diez segundos. Menos de tres segundos puede no proporcionar suficientes datos, y más de quince segundos a veces puede introducir inestabilidad."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "El locutor debe hablar en un tono normal y neutro. Las actuaciones muy emocionales con gritos o susurros pueden dar como resultado un clon de baja calidad que es difícil de dirigir más tarde."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Puedes usar la pestaña del Asistente de Transcripción para grabar tu propia voz o para recortar un archivo de audio más largo y obtener una muestra perfecta y limpia."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Una vez que tengas una muestra de alta calidad, puedes usar una función para acelerar mucho tu flujo de trabajo. Exploremos eso a continuación. Por favor, carga el capítulo diez."
+    }
+]

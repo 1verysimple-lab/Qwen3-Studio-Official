@@ -6,6 +6,7 @@ from tkinter import ttk, messagebox
 import requests
 import zipfile
 import time
+import shutil
 
 # =========================================================================
 # ⚙️ CONFIGURATION

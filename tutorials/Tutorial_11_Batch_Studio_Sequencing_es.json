@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Bienvenido al Estudio de Lotes. Este es tu editor no lineal para producción de audio, diseñado para producir escenas complejas con múltiples líneas y voces."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Puedes añadir diferentes bloques de guion usando los botones en la parte inferior. Cada bloque se puede configurar de forma independiente, con su propio motor, voz y texto."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Por ejemplo, podrías tener el primer bloque con una línea de Vivian del motor Personalizado, y el segundo bloque con una línea de una voz que clonaste."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "La casilla 'Cambio Automático' es la clave para la automatización. Cuando está marcada, la aplicación cargará automáticamente el modelo de IA correcto para cada bloque en tu secuencia cuando ejecutes la escena."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Para proyectos muy grandes, puedes hacer clic en el encabezado de cualquier bloque para colapsarlo. Esto ayuda a mantener tu espacio de trabajo limpio y manejable."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Puedes guardar y cargar tu escena completa en cualquier momento usando el menú de archivo, lo que te permite trabajar en grandes proyectos durante múltiples sesiones."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "A continuación, discutiremos el proceso de revisión y exportación dentro del Estudio de Lotes. Por favor, carga el capítulo doce."
+    }
+]

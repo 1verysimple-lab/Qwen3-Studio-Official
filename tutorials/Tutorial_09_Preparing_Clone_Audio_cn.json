@@ -1,0 +1,26 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "你的语音克隆质量直接取决于你的源音频质量。垃圾进，垃圾出。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "你的源音频文件应该尽可能干净。这意味着没有背景音乐，没有噪音，也没有其他人在说话。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "理想的长度是三到十秒之间。少于三秒可能无法提供足够的数据，而超过十五秒有时会引入不稳定性。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "说话者应该以正常、中性的语调说话。带有大喊或耳语的高度情绪化的表演可能会导致克隆质量差，以后很难指导。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "你可以使用转录助手选项卡来录制你自己的声音，或者将一个较长的音频文件修剪成一个完美的、干净的样本。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "一旦你有了一个高质量的样本，你就可以使用一个功能来大大加快你的工作流程。我们接下来就来探索这个。请加载第十章。"
+    }
+]

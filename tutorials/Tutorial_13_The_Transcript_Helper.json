@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The Transcript Helper tab is your preparation station. This is where you can record, import, edit, and transcribe the audio needed for high-quality voice cloning."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "You can load an existing audio file using the 'Open' button, or you can record a new one directly in the app using the 'Record' button."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Once audio is loaded, its waveform will appear. You can left-click on the waveform to set a start point, and right-click to set an end point. The 'Crop' button will then trim the audio to your selection."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The 'Audio to Text' button is a powerful feature. It uses the integrated Whisper A I to listen to your loaded audio and automatically generate a transcript for it."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "This is the ideal workflow for preparing a voice clone: load your reference audio, click 'Audio to Text' to get an accurate transcript, and then 'Send All to Voice Clone Tab'."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "You can also save your work as a reusable Profile. This bundles the audio and transcript together, which you can load into the Voice Clone tab at any time."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Now for our final lessons: a closer look at the pro-level settings. Please load chapter fourteen."
+    }
+]

@@ -1,0 +1,26 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The Voice Design engine, marked in blue, is where you can invent new speakers. In this tab, you are not directing a pre-trained actor; you are creating one from imagination."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "This process uses two distinct prompts. The first is the Voice Description. This describes the physical, consistent qualities of the speaker."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Think of attributes like age, gender, accent, and vocal texture. For example, 'An elderly male with a deep, gravelly voice and a British accent'."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The second prompt is the Style Instruction, which works just like it does in the Custom Voice tab. This defines the speaker's current emotional state and performance."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The A I combines these two pieces of information to generate a unique voice. The results can be surprising, so feel free to experiment with creative combinations."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "In our next chapter, we will focus on the art of writing effective descriptions for this engine. Please load chapter seven."
+    }
+]

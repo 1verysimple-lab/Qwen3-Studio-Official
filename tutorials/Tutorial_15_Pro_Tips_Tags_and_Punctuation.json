@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Beyond the main controls, you can direct a performance using tags and punctuation directly within your script."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The engine understands special tags for human sounds. For example, writing the word laughter in square brackets will cause the model to laugh."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Other useful tags include 'breath', 'sigh', 'gasp', and 'clears throat'. For these to work reliably, you should always place spaces around the brackets."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Punctuation is also a powerful tool for controlling rhythm. The A I will naturally pause at commas and periods."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "If you want to create a longer, more dramatic pause in a monologue, simply insert a line break, or an empty line, in the script."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The model will interpret that empty line as a direction to pause, giving your scene a more natural, human feel."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "We have reached the end of our lessons. Please load the final chapter for some concluding words."
+    }
+]

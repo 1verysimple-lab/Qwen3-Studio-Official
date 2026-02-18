@@ -1,0 +1,22 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "You have reached the end of this guided tour. You now possess the foundational knowledge to direct all three creative engines, manage complex scenes, and produce high-quality audio."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Remember that A I is a creative partner. The best results often come from experimentation. Do not be afraid to try unusual descriptions or instructions."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "If you ever need a refresher, the new Help Guide is available from the link in the top-left of the main window. It contains a full text version of everything we have discussed."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The world of audio is now yours to create. This studio is merely a set of tools; the vision is yours alone."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Thank you for joining me. Happy directing!"
+    }
+]

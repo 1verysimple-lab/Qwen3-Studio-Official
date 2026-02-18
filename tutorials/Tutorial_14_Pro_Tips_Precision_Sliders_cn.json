@@ -1,0 +1,34 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "让我们仔细看看精度滑块。这两个控件，温度和Top P，是你微调AI性能的主要工具。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "温度控制声音的创造力或随机性。把它想象成一个能量水平。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "低温，低于零点五，会产生非常稳定、一致，有时甚至是机械的交付。这对于中性叙述或修复听起来不稳定的声音很有用。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "高温，高于一点零，会产生非常戏剧化和情绪化的表演。用它来大喊或强烈耳语，但要注意这会增加音频出现故障的风险。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "大多数自然听起来的语音的推荐范围在零点六到零点九之间。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "另一方面，Top P控制AI考虑的可能声音的范围。较低的值会导致更清晰、更集中的发音，而较高的值则允许更多样化和更具个性的语调。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "你可以锁定滑块，以防止在加载具有不同保存值的配置文件时更改它们。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "在我们的下一章中，我们将介绍脚本内标签和标点的使用。请加载第十五章。"
+    }
+]

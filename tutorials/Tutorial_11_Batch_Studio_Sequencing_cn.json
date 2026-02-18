@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "欢迎来到批量工作室。这是你的音频制作非线性编辑器，专为制作包含多行和多声音的复杂场景而设计。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "你可以使用底部的按钮添加不同的脚本块。每个块都可以独立配置，拥有自己的引擎、声音和文本。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "例如，你可以让第一个块是来自自定义引擎中Vivian的一行，第二个块是来自你克隆的声音的一行。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "‘自动切换’复选框是实现自动化的关键。勾选后，当你运行场景时，应用程序将自动为序列中的每个块加载正确的AI模型。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "对于非常大的项目，你可以点击任何块的标题来折叠它。这有助于保持你的工作空间整洁有序。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "你可以随时使用文件菜单保存和加载你的整个场景，让你可以在多个会话中处理大型项目。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "接下来，我们将讨论批量工作室内的审查和导出过程。请加载第十二章。"
+    }
+]

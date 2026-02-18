@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "在批量工作室中运行一个场景后，每个块都会有一个新的音频录音，等待你的审查。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "每个块上的状态图标表示其状态。一个黄色的问号表示该录音是一个需要审查的新草稿。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "你可以通过点击其块上的播放按钮来预览任何录音。如果你对表演满意，点击黄色图标以批准它。它会变成一个绿色的复选标记。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "已批准的绿色块在下次运行场景时不会被重新生成，这可以节省时间。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "如果你对某个录音不满意，可以右键单击该图标以拒绝它。它会变成一个红色的感叹号。被拒绝的块将在下一次运行时被重新生成。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "一旦你批准了场景中的所有录音，你就可以使用‘导出已批准’按钮将所有获得绿灯的音频文件保存到一个有组织的文件夹中。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "接下来，让我们看看准备我们源音频的工具包。请加载第十三章。"
+    }
+]

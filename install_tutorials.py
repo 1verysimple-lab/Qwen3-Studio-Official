@@ -1,5 +1,6 @@
 import os
 import json
+import shutil
 
 # Define the target directory
 TARGET_DIR = "tutorials"

@@ -1,0 +1,26 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "El motor de Diseño de Voz, marcado en azul, es donde puedes inventar nuevos locutores. En esta pestaña, no estás dirigiendo a un actor pre-entrenado; estás creando uno desde la imaginación."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Este proceso utiliza dos prompts distintos. El primero es la Descripción de la Voz. Esto describe las cualidades físicas y consistentes del locutor."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Piensa en atributos como edad, género, acento y textura vocal. Por ejemplo, 'Un hombre mayor con una voz profunda y áspera y acento británico'."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "El segundo prompt es la Instrucción de Estilo, que funciona igual que en la pestaña de Voz Personalizada. Esto define el estado emocional y la actuación actual del locutor."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "La IA combina estas dos piezas de información para generar una voz única. Los resultados pueden ser sorprendentes, así que siéntete libre de experimentar con combinaciones creativas."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "En nuestro próximo capítulo, nos centraremos en el arte de escribir descripciones efectivas para este motor. Por favor, carga el capítulo siete."
+    }
+]

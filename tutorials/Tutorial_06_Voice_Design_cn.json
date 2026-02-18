@@ -1,0 +1,26 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "语音设计引擎，标记为蓝色，是你发明新说话者的地方。在这个选项卡中，你不是在指导一个预先训练好的演员；你是在从想象中创造一个。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "这个过程使用两个不同的提示。第一个是语音描述。这描述了说话者身体上的、一致的品质。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "可以想象年龄、性别、口音和声音质感等属性。例如，‘一个声音深沉、沙哑、带有英国口音的老年男性’。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "第二个提示是风格指令，它的作用与在自定义语音选项卡中的作用完全相同。这定义了说话者当前的情感状态和表现。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "人工智能将这两条信息结合起来，生成一个独特的声音。结果可能会令人惊讶，所以请随意尝试创造性的组合。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "在我们的下一章中，我们将专注于为这个引擎编写有效描述的艺术。请加载第七章。"
+    }
+]

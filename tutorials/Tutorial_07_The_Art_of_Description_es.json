@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Escribir una buena descripción de voz es como esculpir con palabras. Cuanto más específica y evocadora sea tu descripción, más única será la voz resultante."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Comienza con los fundamentos: edad y género. Por ejemplo, 'Una mujer joven adulta', o 'Un hombre anciano'."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "A continuación, añade textura y tono. Palabras como 'rasposa', 'susurrante', 'grave', 'suave', 'profunda' o 'aguda' son muy efectivas."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "También puedes especificar un acento. El modelo entiende muchos acentos regionales, como 'británico', 'del sur de Estados Unidos' o 'escocés'."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Combinemos estas ideas. Una descripción como 'Una mujer de mediana edad con una voz suave y clara y un acento americano estándar' es una base sólida para un narrador profesional."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "En contraste, una descripción como 'Una criatura ancestral con una voz profunda, distorsionada y gutural' producirá algo mucho más fantástico."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Ahora que puedes crear voces, aprendamos a replicarlas. Por favor, carga el capítulo ocho para explorar el motor de Clonación de Voz."
+    }
+]

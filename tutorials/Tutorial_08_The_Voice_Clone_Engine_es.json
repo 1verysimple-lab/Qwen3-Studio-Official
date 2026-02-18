@@ -1,0 +1,26 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Bienvenido al motor de Clonación de Voz, marcado en morado. Esta es quizás la herramienta más poderosa de la suite, permitiéndote replicar la voz de una persona específica."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Para comenzar, debes proporcionar una Voz de Origen. Este es un archivo de audio corto que contiene la voz que deseas clonar. Discutiremos qué hace un buen archivo de origen en el próximo capítulo."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Para obtener un clon de la más alta calidad, también debes proporcionar una transcripción de las palabras habladas en el audio de referencia. El botón 'Transcribir' puede ayudarte con esto."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Si no tienes una transcripción, puedes marcar la casilla 'Ignorar Texto'. El motor se centrará únicamente en las propiedades acústicas de la voz, pero el resultado puede ser menos preciso."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Una vez que tu audio de origen y tu transcripción estén listos, puedes escribir cualquier texto nuevo en el cuadro 'Texto de Destino' y el motor lo generará con la voz clonada."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Discutamos ahora un paso crítico para obtener buenos resultados: preparar tu audio. Por favor, carga el capítulo nueve."
+    }
+]

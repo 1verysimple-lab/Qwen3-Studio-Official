@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Dirigir una voz de IA es como dirigir a un actor humano. La clave es ser claro y conciso. Centrémonos en escribir instrucciones efectivas."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Tu instrucción debe centrarse en la actuación y la emoción. Comienza con el aspecto más importante. Por ejemplo, 'Enojado y gritando' es un punto de partida fuerte y claro."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Puedes añadir matices con más descriptores. Por ejemplo, 'Enojado y gritando, con una voz áspera y forzada'. El modelo intentará combinar estas ideas."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Sin embargo, evita instrucciones contradictorias. Un prompt como 'gritando en un susurro silencioso' confundirá al modelo y puede resultar en un audio de baja calidad."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "El modelo también entiende el ritmo. Usar frases como 'hablando muy rápido' o 'con pausas largas y dramáticas' puede alterar significativamente el ritmo del habla."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "La mejor manera de aprender es experimentando. Las 'Recetas de Tono' en la guía de ayuda son una excelente fuente de inspiración para instrucciones potentes."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "A continuación, pasaremos al motor de Diseño de Voz, donde podrás crear personajes completamente nuevos. Por favor, carga el capítulo seis."
+    }
+]

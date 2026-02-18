@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "写一个好的声音描述就像用文字雕刻。你的描述越具体、越能唤起共鸣，你得到的声音就越独特。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "从基本要素开始：年龄和性别。例如，‘一个年轻的成年女性’，或‘一个年长的男人’。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "接下来，添加质感和音高。像‘沙哑’、‘气声’、‘粗糙’、‘平滑’、‘深沉’或‘高亢’这样的词非常有效。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "你也可以指定口音。该模型能理解许多地区口音，如‘英国口音’、‘美国南方口音’或‘苏格兰口音’。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "让我们把这些想法结合起来。像‘一个声音平滑、清晰、带有标准美国口音的中年妇女’这样的描述是专业叙述者的坚实基础。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "相比之下，像‘一个声音深沉、扭曲、咆哮的远古生物’这样的描述会产生更加奇幻的效果。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "既然你能创造声音了，让我们学习如何复制它们。请加载第八章来探索语音克隆引擎。"
+    }
+]

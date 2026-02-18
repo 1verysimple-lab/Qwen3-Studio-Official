@@ -1,0 +1,8 @@
+{
+  "app_name": "Qwen3Studio",
+  "app_version": "4.1.0",
+  "hf_repo_id": "Bluesed/QWEN_STUDIO",
+  "engine_repo_id": "Bluesed/blues-qwen",
+  "app_bundle_name": "Qwen3Studio_v4.1.0.zip",
+  "engine_bundle_name": "blues-Qwen3-TTS.zip"
+}

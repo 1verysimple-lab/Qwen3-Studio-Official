@@ -194,11 +194,12 @@
         "ASMR": "Soft whisper, extremely close to mic, mouth sounds, slow and gentle, relaxing.",
         "Dying Breath": "Weak, fading voice, long pauses, shallow breathing, barely audible."
     },
-    "temp": 0.1,
-    "top_p": 1.0,
+    "temp": 1.2454545454545456,
+    "top_p": 0.26363636363636367,
     "autoplay": true,
     "sound_on_ready": true,
     "last_out_dir": "",
     "custom_notification_sound": "C:\\Users\\1very\\source\\cloneMe\\saved_assets\\233949_20260209-110832_Cln_Engineloaded.wav",
+    "mic_device": "Default",
     "engine_root": "C:/Users/1very/source/cloneMe/_internal/engine"
 }

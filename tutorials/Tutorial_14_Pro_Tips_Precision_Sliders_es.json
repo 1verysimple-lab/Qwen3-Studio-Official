@@ -1,0 +1,34 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Echemos un vistazo más de cerca a los Controles Deslizantes de Precisión. Estos dos controles, Temperatura y Top P, son tus herramientas principales para afinar una actuación de IA."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "La temperatura controla la creatividad o aleatoriedad de la voz. Piénsalo como un nivel de energía."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Una temperatura baja, por debajo de cero punto cinco, resulta en una entrega muy estable, consistente y a veces robótica. Esto es útil para narraciones neutras o para arreglar una voz que suena inestable."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Una temperatura alta, por encima de uno punto cero, resulta en una actuación muy dramática y emocional. Úsalo para gritar o susurrar intensamente, pero ten en cuenta que aumenta el riesgo de fallos en el audio."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "El rango recomendado para el habla más natural es entre cero punto seis y cero punto nueve."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Top P, por otro lado, controla el rango de sonidos posibles que la IA considera. Un valor más bajo conduce a una pronunciación más clara y enfocada, mientras que un valor más alto permite una entonación más rica en matices y carácter."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Puedes bloquear los controles deslizantes para evitar que se cambien cuando cargas un perfil que tiene valores guardados diferentes."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "En nuestro próximo capítulo, cubriremos el uso de etiquetas en el guion y la puntuación. Por favor, carga el capítulo quince."
+    }
+]

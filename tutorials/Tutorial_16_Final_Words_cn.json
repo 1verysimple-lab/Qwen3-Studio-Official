@@ -1,0 +1,22 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "你已经到达了这次导览的终点。你现在拥有指导所有三个创意引擎、管理复杂场景和制作高质量音频的基础知识。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "请记住，AI是一个创意伙伴。最好的结果往往来自实验。不要害怕尝试不寻常的描述或指令。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "如果你需要复习，新的帮助指南可从主窗口左上角的链接获得。它包含我们讨论过的所有内容的全文本版本。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "音频的世界现在由你来创造。这个工作室仅仅是一套工具；愿景完全由你决定。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "感谢你的参与。祝你指导愉快！"
+    }
+]

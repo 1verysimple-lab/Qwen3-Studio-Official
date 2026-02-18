@@ -1,0 +1,26 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Welcome to the Voice Clone engine, marked in purple. This is perhaps the most powerful tool in the suite, allowing you to replicate a specific person's voice."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "To begin, you must provide a Source Voice. This is a short audio file containing the voice you wish to clone. We will discuss what makes a good source file in the next chapter."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "For the highest quality clone, you should also provide a transcript of the words spoken in the reference audio. The 'Transcribe' button can help with this."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "If you do not have a transcript, you can check the 'Ignore Text' box. The engine will focus only on the acoustic properties of the voice, but the result may be less accurate."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Once your source audio and transcript are ready, you can type any new text into the 'Target Text' box and the engine will generate it in the cloned voice."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Let's now discuss a critical step for good results: preparing your audio. Please load chapter nine."
+    }
+]

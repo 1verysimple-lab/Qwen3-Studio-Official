@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Más allá de los controles principales, puedes dirigir una actuación usando etiquetas y puntuación directamente dentro de tu guion."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "El motor entiende etiquetas especiales para sonidos humanos. Por ejemplo, escribir la palabra 'risa' entre corchetes hará que el modelo se ría."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Otras etiquetas útiles incluyen 'respiración', 'suspiro', 'jadeo' y 'aclara la garganta'. Para que funcionen de manera fiable, siempre debes colocar espacios alrededor de los corchetes."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "La puntuación también es una herramienta poderosa para controlar el ritmo. La IA hará una pausa natural en las comas y los puntos."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Si quieres crear una pausa más larga y dramática en un monólogo, simplemente inserta un salto de línea, o una línea vacía, en el guion."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "El modelo interpretará esa línea vacía como una dirección para hacer una pausa, dándole a tu escena una sensación más natural y humana."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Hemos llegado al final de nuestras lecciones. Por favor, carga el capítulo final para unas palabras de conclusión."
+    }
+]

@@ -1,0 +1,26 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "La función 'Bloquear Voz' es una de las mejoras de flujo de trabajo más importantes para la clonación de voz. Te ahorra una cantidad significativa de tiempo."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Normalmente, cada vez que haces clic en 'Clonar Voz', el motor tiene que volver a analizar tu archivo de audio de origen desde cero. Esto es computacionalmente costoso."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Cuando haces clic en 'Bloquear Voz', el motor realiza este análisis una vez y luego almacena los datos vocales resultantes en la memoria."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Para cada generación posterior con esa voz, el motor utiliza estos datos en caché, lo cual es dramáticamente más rápido que volver a analizar el archivo."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "El botón cambiará a 'Desbloquear Voz' cuando una voz está en caché. Puedes hacer clic de nuevo para borrar los datos en caché y cargar un nuevo archivo de referencia."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Esta función es esencial cuando se trabaja en el Estudio de Lotes, que cubriremos a continuación. Por favor, carga el capítulo once."
+    }
+]

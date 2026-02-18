@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "La pestaña Asistente de Transcripción es tu estación de preparación. Aquí es donde puedes grabar, importar, editar y transcribir el audio necesario para una clonación de voz de alta calidad."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Puedes cargar un archivo de audio existente usando el botón 'Abrir', o puedes grabar uno nuevo directamente en la aplicación usando el botón 'Grabar'."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Una vez que se carga el audio, aparecerá su forma de onda. Puedes hacer clic izquierdo en la forma de onda para establecer un punto de inicio, y clic derecho para establecer un punto final. El botón 'Recortar' luego ajustará el audio a tu selección."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "El botón 'Audio a Texto' es una función poderosa. Utiliza el motor de IA Whisper integrado para escuchar tu archivo de audio cargado y generar automáticamente una transcripción para él."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Este es el flujo de trabajo ideal para preparar un clon de voz: carga tu audio de referencia, haz clic en 'Audio a Texto' para obtener una transcripción precisa y luego 'Enviar Todo a la Pestaña de Clonación de Voz'."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "También puedes guardar tu trabajo como un Perfil reutilizable. Esto empaqueta el audio y la transcripción juntos, que puedes cargar en la pestaña de Clonación de Voz en cualquier momento."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
+        "text": "Ahora, para nuestras lecciones finales: una mirada más cercana a la configuración de nivel profesional. Por favor, carga el capítulo catorce."
+    }
+]

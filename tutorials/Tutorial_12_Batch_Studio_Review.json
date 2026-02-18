@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "After running a scene in the Batch Studio, each block will have a new audio take, ready for your review."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The status icon on each block indicates its state. A yellow question mark means the take is a new draft that needs review."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "You can preview any take by clicking the play button on its block. If you are happy with the performance, click the yellow icon to approve it. It will turn into a green check mark."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Approved, green blocks will not be re-generated the next time you run the scene, which saves time."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "If you are not satisfied with a take, you can right-click the icon to reject it. It will turn into a red exclamation point. Rejected blocks will be re-generated on the next run."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Once you have approved all the takes in your scene, you can use the 'Export Approved' button to save all the green-lit audio files into a single, organized folder."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Next, let's look at the toolkit for preparing our source audio. Please load chapter thirteen."
+    }
+]

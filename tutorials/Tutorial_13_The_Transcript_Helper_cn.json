@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "转录助手选项卡是你的准备站。在这里，你可以录制、导入、编辑和转录高质量语音克隆所需的音频。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "你可以使用‘打开’按钮加载现有的音频文件，也可以使用‘录制’按钮直接在应用程序中录制新的音频。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "加载音频后，其波形将会出现。你可以在波形上左键单击设置起点，右键单击设置终点。然后‘裁剪’按钮会将音频修剪到你选择的范围。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "‘音频到文本’按钮是一个强大的功能。它使用集成的Whisper AI引擎来听你加载的音频文件，并自动为其生成文字记录。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "这是准备语音克隆的理想工作流程：加载你的参考音频，点击‘音频到文本’以获得准确的文字记录，然后‘全部发送到语音克隆选项卡’。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "你也可以将你的工作保存为一个可重复使用的配置文件。这将音频和文字记录捆绑在一起，你可以随时加载到语音克隆选项卡中。"
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
+        "text": "现在是我们的最后课程：更深入地了解专业级设置。请加载第十四章。"
+    }
+]

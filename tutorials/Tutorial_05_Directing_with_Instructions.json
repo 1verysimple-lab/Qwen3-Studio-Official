@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Directing an A I voice is like directing a human actor. The key is to be clear and concise. Let's focus on writing effective instructions."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Your instruction should focus on performance and emotion. Start with the most important aspect. For example, 'Angry and shouting' is a strong, clear starting point."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "You can add nuance with more descriptors. For instance, 'Angry and shouting, with a raspy, strained voice'. The model will attempt to combine these ideas."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "However, avoid contradictory instructions. A prompt like 'shouting in a quiet whisper' will confuse the model and may result in poor quality audio."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The model also understands pacing. Using phrases like 'speaking very quickly' or 'with long, dramatic pauses' can significantly alter the rhythm of the speech."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The best way to learn is by experimenting. The 'Tone Recipes' in the help guide are an excellent source of inspiration for powerful instructions."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Next, we will move to the Voice Design engine, where you can create entirely new characters. Please load chapter six."
+    }
+]

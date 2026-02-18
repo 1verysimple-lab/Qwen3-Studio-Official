@@ -1,0 +1,26 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The quality of your voice clone is directly dependent on the quality of your source audio. Garbage in, garbage out."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Your source audio file should be as clean as possible. This means no background music, no noise, and no other people speaking."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The ideal length is between three and ten seconds. Less than three seconds may not provide enough data, and more than fifteen seconds can sometimes introduce instability."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The speaker should be talking in a normal, neutral tone. Highly emotional performances with shouting or whispering can make for a poor quality clone that is difficult to direct later."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "You can use the Transcript Helper tab to record your own voice or to trim a longer audio file down to a perfect, clean sample."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Once you have a high-quality sample, you can use a feature to make your workflow much faster. Let's explore that next. Please load chapter ten."
+    }
+]

@@ -7,6 +7,7 @@ import threading
 import os
 import time
 import json
+import shutil
 
 # --- CONSTANTS ---
 PRESETS = [
@@ -84,16 +85,45 @@ class ScriptBlock(tk.Frame):
         self.generated_audio = None
         self.sample_rate = 24000
         self.status = "pending"
-        
+        self.is_collapsed = False
+
         # --- UI LAYOUT ---
         # Engine Indicator Strip (Left side)
         self.engine_strip = tk.Frame(self, width=6, bg="#bdc3c7")
         self.engine_strip.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 5))
-        
+
+        # ── COLLAPSED BAR (shown when collapsed) ─────────────────────────────
+        self.collapsed_bar = tk.Frame(self, bg="white")
+        # Not packed by default — only shown in collapsed state
+
+        self.status_light_col = tk.Canvas(self.collapsed_bar, width=16, height=16,
+                                          bg="white", highlightthickness=0, cursor="hand2")
+        self.status_light_col.pack(side=tk.LEFT, padx=(0, 5))
+        self.status_light_col.bind("<Button-1>", self.toggle_manual_status)
+        self.status_light_col.bind("<Button-3>", self.reject_status)
+        ToolTip(self.status_light_col, "L-Click: Approve (Green)\nR-Click: Reject (Red)\nYellow = Review")
+
+        self.lbl_col_speaker = tk.Label(self.collapsed_bar, text="", bg="white",
+                                        fg="#444", font=("Segoe UI", 8, "bold"), anchor="w")
+        self.lbl_col_speaker.pack(side=tk.LEFT, padx=(0, 8))
+
+        self.lbl_col_preview = tk.Label(self.collapsed_bar, text="", bg="white",
+                                        fg="#888", font=("Segoe UI", 8, "italic"), anchor="w")
+        self.lbl_col_preview.pack(side=tk.LEFT, fill=tk.X, expand=True)
+
+        tk.Button(self.collapsed_bar, text="▼", command=self.toggle_collapse,
+                  bg="white", fg="#7f8c8d", bd=0, cursor="hand2",
+                  font=("Arial", 8, "bold")).pack(side=tk.RIGHT, padx=(4, 0))
+        # ─────────────────────────────────────────────────────────────────────
+
+        # ── EXPANDED CONTENT ─────────────────────────────────────────────────
+        self.expanded_content = tk.Frame(self, bg="white")
+        self.expanded_content.pack(fill=tk.X)
+
         # Top Row: Controls
-        top_f = tk.Frame(self, bg="white")
+        top_f = tk.Frame(self.expanded_content, bg="white")
         top_f.pack(fill=tk.X, pady=(0, 5))
-        
+
         # Status Indicator
         self.status_light = tk.Canvas(top_f, width=24, height=24, bg="white", highlightthickness=0, cursor="hand2")
         self.status_light.pack(side=tk.LEFT, padx=(0, 5))
@@ -101,28 +131,27 @@ class ScriptBlock(tk.Frame):
         self.status_light.bind("<Button-1>", self.toggle_manual_status)
         self.status_light.bind("<Button-3>", self.reject_status)
         ToolTip(self.status_light, "L-Click: Approve (Green)\nR-Click: Reject (Red)\nYellow = Review")
-        
+
         # Speaker Selector
         tk.Label(top_f, text="Speaker:", bg="white", font=("Segoe UI", 8)).pack(side=tk.LEFT)
         self.speaker_var = tk.StringVar()
-        
-        # Values depend on type
+
         spk_values = available_speakers if block_type == "standard" else self.app.voice_configs.keys()
-        
+
         self.cb_speaker = ttk.Combobox(top_f, textvariable=self.speaker_var, values=list(spk_values), state="readonly", width=15)
         self.cb_speaker.pack(side=tk.LEFT, padx=5)
-        self.cb_speaker.bind("<<ComboboxSelected>>", self.update_engine_indicator)
+        self.cb_speaker.bind("<<ComboboxSelected>>", self._on_speaker_changed)
         if list(spk_values): self.cb_speaker.current(0)
-        
+
         # Style Selector (Only for Standard)
         self.style_var = tk.StringVar()
         self.lbl_style = tk.Label(top_f, text="Style:", bg="white", font=("Segoe UI", 8))
         self.cb_style = ttk.Combobox(top_f, textvariable=self.style_var, values=available_styles, state="readonly", width=15)
-        
+
         if block_type == "standard":
             self.lbl_style.pack(side=tk.LEFT)
             self.cb_style.pack(side=tk.LEFT, padx=5)
-        
+
         # Language Selector
         tk.Label(top_f, text="Lang:", bg="white", font=("Segoe UI", 8)).pack(side=tk.LEFT)
         self.lang_var = tk.StringVar(value="English")
@@ -136,7 +165,7 @@ class ScriptBlock(tk.Frame):
         self.sc_temp = ttk.Scale(top_f, from_=0.1, to=1.5, variable=self.temp_var, orient=tk.HORIZONTAL, length=60)
         self.sc_temp.pack(side=tk.LEFT, padx=2)
         self.lbl_temp.pack(side=tk.LEFT)
-        
+
         tk.Label(top_f, text="P:", bg="white", font=("Segoe UI", 8)).pack(side=tk.LEFT, padx=(5, 0))
         self.top_p_var = tk.DoubleVar(value=0.8)
         self.lbl_p = tk.Label(top_f, text="0.8", bg="white", font=("Consolas", 8), width=3)
@@ -148,31 +177,69 @@ class ScriptBlock(tk.Frame):
         self.temp_var.trace_add("write", lambda *a: self.lbl_temp.config(text=f"{self.temp_var.get():.1f}"))
         self.top_p_var.trace_add("write", lambda *a: self.lbl_p.config(text=f"{self.top_p_var.get():.1f}"))
 
+        # Collapse Button (▲ collapse, inside expanded top row)
+        tk.Button(top_f, text="▲", command=self.toggle_collapse,
+                  bg="white", fg="#7f8c8d", bd=0, cursor="hand2",
+                  font=("Arial", 9, "bold")).pack(side=tk.RIGHT, padx=(0, 2))
+
         # Delete Button
-        tk.Button(top_f, text="✕", command=lambda: self.delete_callback(self), 
+        tk.Button(top_f, text="✕", command=lambda: self.delete_callback(self),
                   bg="white", fg="#e74c3c", bd=0, cursor="hand2", font=("Arial", 10, "bold")).pack(side=tk.RIGHT)
 
         # Text Input
-        self.text_input = tk.Text(self, height=3, width=60, font=("Segoe UI", 10), wrap=tk.WORD, bg="#f8f9fa")
+        self.text_input = tk.Text(self.expanded_content, height=3, width=60, font=("Segoe UI", 10), wrap=tk.WORD, bg="#f8f9fa")
         self.text_input.pack(fill=tk.X)
         self.text_input.bind("<KeyRelease>", self.update_word_count)
-        
+
         # Bottom Row
-        bot_f = tk.Frame(self, bg="white")
-        bot_f.pack(fill=tk.X, pady=(5, 0))
-        
-        self.lbl_word_count = tk.Label(bot_f, text="0 words", bg="white", fg="grey", font=("Segoe UI", 8))
+        self.bot_f = tk.Frame(self.expanded_content, bg="white")
+        self.bot_f.pack(fill=tk.X, pady=(5, 0))
+
+        self.lbl_word_count = tk.Label(self.bot_f, text="0 words", bg="white", fg="grey", font=("Segoe UI", 8))
         self.lbl_word_count.pack(side=tk.LEFT)
-        
-        self.btn_play = ttk.Button(bot_f, text="▶ Play", command=self.play_audio, state=tk.DISABLED, width=8)
+
+        self.btn_play = ttk.Button(self.bot_f, text="▶ Play", command=self.play_audio, state=tk.DISABLED, width=8)
         self.btn_play.pack(side=tk.RIGHT)
-        
-        self.btn_stop = ttk.Button(bot_f, text="⏹", command=self.stop_audio, state=tk.DISABLED, width=4)
+
+        self.btn_stop = ttk.Button(self.bot_f, text="⏹", command=self.stop_audio, state=tk.DISABLED, width=4)
         self.btn_stop.pack(side=tk.RIGHT, padx=2)
-        
+        # ─────────────────────────────────────────────────────────────────────
+
         self.chk_retry_var = tk.BooleanVar(value=True)
-        
         self.update_engine_indicator()
+
+    def _on_speaker_changed(self, event=None):
+        self.update_engine_indicator(event)
+        if self.is_collapsed:
+            self._refresh_collapsed_bar()
+
+    def toggle_collapse(self):
+        self.is_collapsed = not self.is_collapsed
+        if self.is_collapsed:
+            self._refresh_collapsed_bar()
+            self.expanded_content.pack_forget()
+            self.collapsed_bar.pack(fill=tk.X)
+            self.config(pady=2)
+        else:
+            self.collapsed_bar.pack_forget()
+            self.expanded_content.pack(fill=tk.X)
+            self.config(pady=5)
+
+    def _refresh_collapsed_bar(self):
+        """Populate the thin collapsed bar with current data."""
+        speaker = self.speaker_var.get()
+        text = self.text_input.get("1.0", tk.END).strip()
+        preview = (text[:50] + "…") if len(text) > 50 else (text if text else "(no text)")
+        self.lbl_col_speaker.config(text=f"🎙 {speaker}")
+        self.lbl_col_preview.config(text=preview)
+        # Draw small status dot
+        c = self.status_light_col
+        c.delete("all")
+        color = STATUS_COLORS.get(self.status, STATUS_COLORS["pending"])
+        c.create_oval(1, 1, 15, 15, fill=color, outline="")
+        syms = {"success": "✔", "review": "?", "failed": "!", "busy": "⏳", "pending": "•", "queued": "•"}
+        fg = "black" if self.status == "review" else "white"
+        c.create_text(8, 8, text=syms.get(self.status, "•"), fill=fg, font=("Arial", 7, "bold"))
 
     def update_engine_indicator(self, event=None, load_defaults=True):
         spk = self.speaker_var.get()
@@ -231,6 +298,8 @@ class ScriptBlock(tk.Frame):
     def set_status(self, status):
         self.status = status
         self.draw_status_icon(status)
+        if self.is_collapsed:
+            self._refresh_collapsed_bar()
         
         if status in ["success", "review"]:
             if self.generated_audio is not None:

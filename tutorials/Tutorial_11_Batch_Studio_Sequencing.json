@@ -1,0 +1,30 @@
+[
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Welcome to the Batch Studio. This is your non-linear editor for audio, designed for producing complex scenes with multiple lines and voices."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "You can add different script blocks using the buttons at the bottom. Each block can be configured independently, with its own engine, voice, and text."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "For example, you could have the first block be a line from Vivian in the Custom engine, and the second block be a line from a voice you cloned."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "The 'Auto-Switch' checkbox is the key to automation. When checked, the application will automatically load the correct A I model for each block in your sequence when you run the scene."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "For very large projects, you can click on the header of any block to collapse it. This helps keep your workspace clean and manageable."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "You can save and load your entire scene at any time using the file menu, allowing you to work on large projects over multiple sessions."
+    },
+    {
+        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
+        "text": "Next, we will discuss the review and export process within the Batch Studio. Please load chapter twelve."
+    }
+]

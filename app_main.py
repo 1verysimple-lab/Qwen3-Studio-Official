@@ -12,14 +12,22 @@ import shutil
 import msvcrt
 import importlib.util
 from typing import Optional, Dict, Any, List
+import sys
+import os
 
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 try:
     import winsound
 except ImportError:
     winsound = None
-
-import sys
-import os
 
 # --- GLOBALS ---
 BASE_DIR = ""
@@ -28,7 +36,7 @@ ENGINE_ROOT = ""
 sox_path = ""
 VERSION_FILE = ""
 CONFIG_FILE = ""
-APP_VERSION = "4.0.0"
+APP_VERSION = "4.1.0"
 MODEL_CUSTOM = ""
 MODEL_BASE = ""
 MODEL_DESIGN = ""
@@ -126,67 +134,14 @@ DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"
 STATS_FILE = "generation_stats.json"
 MAX_WAVEFORM_POINTS = 2000  # UI optimization
 
-class GenerationEstimator:
-    def __init__(self):
-        self.stats = []
-        self.load_stats()
-
-    def load_stats(self):
-        if os.path.exists(STATS_FILE):
-            try:
-                with open(STATS_FILE, 'r') as f:
-                    self.stats = json.load(f)
-            except:
-                self.stats = []
-
-    def save_stats(self):
-        try:
-            with open(STATS_FILE, 'w') as f:
-                json.dump(self.stats, f)
-        except:
-            pass
-
-    def add_entry(self, char_count, duration):
-        self.stats.append({"chars": char_count, "time": duration})
-        self.save_stats()
-
-    def estimate(self, char_count):
-        if len(self.stats) < 3:
-            return 0.0
-        
-        try:
-            # Power Law: Time = a * (Chars ^ b)
-            # Log transform: ln(Time) = ln(a) + b * ln(Chars)
-            # This is now a linear regression in log-log space
-            x = [np.log(max(1, s["chars"])) for s in self.stats]
-            y = [np.log(max(0.1, s["time"])) for s in self.stats]
-            
-            n = len(x)
-            sum_x = sum(x)
-            sum_y = sum(y)
-            sum_xy = sum(xi * yi for xi, yi in zip(x, y))
-            sum_xx = sum(xi**2 for xi in x)
-            
-            denom = (n * sum_xx - sum_x**2)
-            if denom == 0: return 0.0
-            
-            b = (n * sum_xy - sum_x * sum_y) / denom
-            ln_a = (sum_y - b * sum_x) / n
-            a = np.exp(ln_a)
-            
-            est = a * (char_count ** b)
-            return max(0.0, est)
-        except:
-            return 0.0
-
 class ModuleHub:
     """Handles synchronization with GitHub and managing enabled/disabled states."""
     def __init__(self, modules_dir):
         self.modules_dir = modules_dir 
         # Create persistent path in APPDATA for compiled app stability
-        app_data = os.path.join(os.getenv('APPDATA'), "BluesQwenStudio")
+        app_data = os.path.join(os.getenv('APPDATA'), "Qwen3Studio")
         os.makedirs(app_data, exist_ok=True)
-        self.registry_file = os.path.join(app_data, "module_registry.json")
+        self.registry_file = os.path.join(app_data, "enabled_modules.json")
         
         self.registry = self.load_registry()
         self.repo_url = "https://api.github.com/repos/1verysimple-lab/Qwen3-Studio-Official/contents/modules"
@@ -195,7 +150,7 @@ class ModuleHub:
 
     def load_registry(self):
         """Loads module states and enforces essential defaults."""
-        defaults = {"tutorial_plugin.py": True, "autoscript_plugin.py": False}
+        defaults = {"tutorial_plugin.py": True, "autoscript_plugin.py": False, "peak_meter_plugin.py": True}
         if os.path.exists(self.registry_file):
             try:
                 with open(self.registry_file, "r") as f:
@@ -240,11 +195,12 @@ class ModuleHub:
                     return
 
                 files = r.json()
+                # Filter for valid python plugins only
+                py_files = [f for f in files if isinstance(f, dict) and f.get('name', '').endswith('.py') and not f.get('name', '').startswith('__')]
                 newly_downloaded = []
                 
-                for f in files:
+                for f in py_files:
                     name = f['name']
-                    if not name.endswith(".py"): continue
                     
                     target_path = os.path.join(self.modules_dir, name)
                     
@@ -260,7 +216,8 @@ class ModuleHub:
                                 self.registry[name] = True
                 
                 self.save_registry()
-                msg = f"Sync Complete. Found {len(files)} items, downloaded {len(newly_downloaded)} new modules."
+                # Correctly report the number of *plugins* found
+                msg = f"Sync Complete. Found {len(py_files)} plugins, downloaded {len(newly_downloaded)} new modules."
                 
                 if callback: 
                     callback("success", msg, newly_downloaded)
@@ -430,14 +387,7 @@ STYLE_DEMO_SCRIPTS = {
 # Fallback script for unknown styles
 GENERIC_SCRIPT = "I wonder if I made the right choice. It felt right at the time."
 
-# --- HELP CONTENT ---
-TUTORIAL_CHAPTER_1 = [
-    {"speaker": "Ryan", "style": "News Anchor", "language": "English", "temp": 0.6, "top_p": 0.5, "text": "Hi, I am Ryan. I am a built-in voice, and you just generated me! Welcome to your new creative suite."},
-    {"speaker": "Ryan", "style": "News Anchor", "language": "English", "temp": 0.6, "top_p": 0.5, "text": "Take a look at the Session History panel on the right. You will see my takes appearing there in real-time."},
-    {"speaker": "Ryan", "style": "News Anchor", "language": "English", "temp": 0.6, "top_p": 0.5, "text": "In that history list, you can replay, delete, or even convert files to M P 3. Every line you make is automatically logged there."},
-    {"speaker": "Ryan", "style": "News Anchor", "language": "English", "temp": 0.8, "top_p": 0.8, "text": "It's now your turn to try. Click the 'Clear All' button in the toolbar above, then load 'Tutorial_02_UI_Overview' from the tutorials folder, and click 'Run Scene' to see how to navigate the app."}
-]
-
+# --- HELP CONTENT (UPDATED) ---
 HELP_ENGINES = """The 3 Creative Engines\n
 This suite uses three distinct AI models, each color-coded for clarity:
 
@@ -451,8 +401,8 @@ Zero-shot generation. Create entirely new people by describing them.
 The Replica engine. Mimics a specific voice based on reference audio.
 
 🔧 System Configuration:
-• Paths: You can move the 'sox' folder or 'Qwen3-TTS' library and update their locations via the ⚙ button in the top right.
-• MP3 Support: To enable MP3 conversion, copy 'libmp3lame-0.dll' into your SoX folder. If missing, the app will only export WAV or OGG."""
+• Audio Backend: The app uses the included 'sox' folder for most audio tasks like normalization.
+• MP3 Support: For MP3 conversion, the app will first try to use FFmpeg if it is installed and in your system's PATH. If not found, it will fall back to SoX, which requires the 'libmp3lame-0.dll' to be placed inside the 'sox' folder."""
 
 HELP_PERSONAS = """Preset Speaker Personas (Custom Engine)\n
 The pre-trained speakers have 'Native' languages where they sound most natural, but all can speak any supported language.
@@ -499,7 +449,8 @@ HELP_BATCH = """Batch Studio: The Production Line\n
    • Yellow (?): Newly generated, needs review.
    • Green (✔): Approved. Won't be re-generated.
    • Red (!): Rejected. Will be re-generated on next run.
-4. Save/Load: Save your entire scene script as a JSON file to work on it later."""
+4. Collapsible Blocks: For large scripts, click the triangle next to the status of any block to collapse or expand it, keeping your workspace tidy.
+5. Save/Load: Save your entire scene script as a JSON file to work on it later."""
 
 HELP_DESC = """Field A: Voice Description (The Body)\n
 What does the person physically sound like?
@@ -531,13 +482,6 @@ HELP_TIPS = """Pro-Tips for Better Generation\n
 3. Language Accent: Use the 'Lang' selector to force accents. English text + German Language = English with a German accent.
 4. Reset Engine: If generation gets stuck or crashes, use the '🔄 Reset' button in the header."""
 
-HELP_ESTIMATOR = """Performance Estimator\n
-The app learns your hardware's speed:
-1. After generating, click '📊 Log' in the header.
-2. This saves the script length and time taken.
-3. New scripts will show an 'Est: ~Xs' prediction.
-More logs = More accuracy."""
-
 HELP_SLIDERS = """The Precision Sliders\n
 Temperature (Creativity)
 • 0.1 - 0.5: Stable, news-anchor style. Good for long texts.
@@ -549,15 +493,17 @@ Top P (Vocabulary)
 • 0.8 - 1.0: Diverse, better for rhythmic flow and character."""
 
 HELP_PLUGINS = """Plugins & Automation\n
-Qwen3 Studio is an extensible platform.
+Qwen3 Studio is an extensible platform. You can manage your plugins in the "Modules" tab.
 
-1. The Auto-Script Tab (Plugin)
-This is a demonstration of our plugin system. It allows the app to be controlled by external scripts to run automated sequences of voices and texts. (Enable in the Modules tab).
+Core Plugins:
+• Tutorial Plugin: Provides the interactive, multi-chapter tutorial experience.
+• Peak Meter Plugin: Adds the '📶 VU' button to the header, which opens a floating peak meter to monitor audio levels and prevent clipping.
+• Autoscript Plugin (Disabled by default): A demo showing how the app can be controlled by external scripts for automation.
 
-2. Extending the App
-You can add your own features by dropping Python scripts into the './modules/' folder. 
+Extending the App:
+You can add your own features by dropping Python scripts into the './modules/' folder. The app will automatically detect and load them.
 
-3. Integration Vision
+Integration Vision:
 Plugins don't need a UI. They can be:
 • Watch Folders: Processing scripts dropped into a folder.
 • Local APIs: Allowing other apps to request audio via HTTP.
@@ -604,7 +550,7 @@ class CreateToolTip(object):
         self.waittime = 500
         self.wraplength = 300
         self.widget = widget
-        self.text = text
+        self.text = text # Fix: Assign the text parameter to an instance variable
         self.widget.bind("<Enter>", self.enter)
         self.widget.bind("<Leave>", self.leave)
         self.id = None
@@ -685,9 +631,6 @@ class QwenTTSApp:
                     "top_p": data.get("top_p", 0.8)
                 }
         
-        self.estimator = GenerationEstimator()
-        self.last_run_stats = None 
-
         self.setup_styles()
 
         self.model = None
@@ -719,8 +662,31 @@ class QwenTTSApp:
         self.recording_stream = None
         self.recorded_frames = []
         self.recording_start_time = 0
-        self.loopback_var = None 
+        self.mic_devices = {}
+        self.mic_device_var = tk.StringVar(value=self.app_config.get("mic_device", "Default"))
         
+        # Tutorial Data
+        self.CHAPTERS = {
+            "Chapter 1: Welcome": "Tutorial_01_Welcome",
+            "Chapter 2: UI Overview": "Tutorial_02_UI_Overview",
+            "Chapter 3: Custom Mastery": "Tutorial_03_CustomMastery",
+            "Chapter 4: Voice Designer": "Tutorial_04_VoiceDesigner",
+            "Chapter 5: Directing with Instructions": "Tutorial_05_Directing_with_Instructions",
+            "Chapter 6: Voice Design": "Tutorial_06_Voice_Design",
+            "Chapter 7: The Art of Description": "Tutorial_07_The_Art_of_Description",
+            "Chapter 8: The Voice Clone Engine": "Tutorial_08_The_Voice_Clone_Engine",
+            "Chapter 9: Preparing Clone Audio": "Tutorial_09_Preparing_Clone_Audio",
+            "Chapter 10: The Lock Voice Feature": "Tutorial_10_The_Lock_Voice_Feature",
+            "Chapter 11: Batch Studio Sequencing": "Tutorial_11_Batch_Studio_Sequencing",
+            "Chapter 12: Batch Studio Review": "Tutorial_12_Batch_Studio_Review",
+            "Chapter 13: The Transcript Helper": "Tutorial_13_The_Transcript_Helper",
+            "Chapter 14: Pro Tips Precision Sliders": "Tutorial_14_Pro_Tips_Precision_Sliders",
+            "Chapter 15: Pro Tips Tags and Punctuation": "Tutorial_15_Pro_Tips_Tags_and_Punctuation",
+            "Chapter 16: Final Words": "Tutorial_16_Final_Words",
+        }
+        self.tutorial_lang_var = tk.StringVar(value="English")
+        self.tutorial_chapter_var = tk.StringVar(value="Chapter 1: Welcome")
+
         # Merge Recipes into Design Profiles
         for name, data in self.voice_recipes.items():
             self.design_profiles[name] = {
@@ -734,17 +700,18 @@ class QwenTTSApp:
         # UI Construction
         self.root.configure(bg=self.colors["bg"])
         self.setup_ui()
+        self.populate_mic_list()
         if windnd: self.setup_dnd()
         self.populate_default_styles()
         self.save_app_config()
 
         # Startup
         self.set_busy(True, "Initializing Engine...")
-        target_tab = self.tab_clone if start_mode == "base" else self.tab_custom
-        self.notebook.select(target_tab)
+        start_tab_index = 1 if self.hub.is_enabled('tutorial_plugin.py') else 0
+        self.notebook.select(self.notebook.tabs()[start_tab_index])
         
         # Initial Model Load
-        self.switch_model(start_mode)
+        self.switch_model("custom") # Start with custom
         
         # Start helper loop (idling)
         self._update_helper_timer()
@@ -787,7 +754,7 @@ class QwenTTSApp:
         
         # Notebook
         style.configure("TNotebook", background=c["bg"], tabposition='n', borderwidth=0)
-        style.configure("TNotebook.Tab", font=("Segoe UI", 10, "bold"), padding=[20, 8], 
+        style.configure("TNotebook.Tab", font=("Segoe UI", 9, "bold"), padding=[14, 7], 
                         background="#dfe6e9", foreground="#7f8c8d")
         style.map("TNotebook.Tab", 
             background=[("selected", c["panel_bg"]), ("active", "#b2bec3")], 
@@ -818,13 +785,13 @@ class QwenTTSApp:
 
     def setup_ui(self):
         # 1. Header
-        header = tk.Frame(self.root, bg=self.colors["header_bg"], padx=15, pady=10)
+        header = tk.Frame(self.root, bg=self.colors["header_bg"], padx=15, pady=8)
         header.pack(fill=tk.X)
         
         # Section A: Branding & Support
         self.brand_frame = tk.Frame(header, bg=self.colors["header_bg"])
         self.brand_frame.pack(side=tk.LEFT, padx=(0, 20))
-        tk.Label(self.brand_frame, text="Qwen3 TTS Pro", font=("Segoe UI", 18, "bold"), bg=self.colors["header_bg"], fg=self.colors["fg"]).pack(anchor=tk.W)
+        tk.Label(self.brand_frame, text="Qwen3 TTS Pro", font=("Segoe UI", 16, "bold"), bg=self.colors["header_bg"], fg=self.colors["fg"]).pack(anchor=tk.W)
         
         support_row = tk.Frame(self.brand_frame, bg=self.colors["header_bg"])
         support_row.pack(anchor=tk.W, pady=(2,0))
@@ -832,13 +799,13 @@ class QwenTTSApp:
         lbl_link.pack(side=tk.LEFT)
         lbl_link.bind("<Button-1>", lambda e: os.startfile("https://blues-lab.pro"))
         
-        tk.Label(support_row, text=" | ", bg=self.colors["header_bg"], fg="#ccc").pack(side=tk.LEFT, padx=2)
-        
-        lbl_site = tk.Label(support_row, text="App Page", font=("Segoe UI", 8, "underline"), bg=self.colors["header_bg"], fg=self.colors["accent"], cursor="hand2")
-        lbl_site.pack(side=tk.LEFT)
-        lbl_site.bind("<Button-1>", lambda e: os.startfile("https://blues-lab.pro"))
+        tk.Label(support_row, text=" | ", bg=self.colors["header_bg"], fg="#ccc").pack(side=tk.LEFT, padx=5)
 
-        tk.Label(support_row, text=" | ", bg=self.colors["header_bg"], fg="#ccc").pack(side=tk.LEFT, padx=2)
+        lbl_help = tk.Label(support_row, text="❓ Help", font=("Segoe UI", 8, "underline"), bg=self.colors["header_bg"], fg=self.colors["accent"], cursor="hand2")
+        lbl_help.pack(side=tk.LEFT)
+        lbl_help.bind("<Button-1>", lambda e: self.show_help_guide())
+
+        tk.Label(support_row, text=" | ", bg=self.colors["header_bg"], fg="#ccc").pack(side=tk.LEFT, padx=5)
         
         lbl_coffee = tk.Label(support_row, text="Support", font=("Segoe UI", 8, "bold"), bg=self.colors["header_bg"], fg="#e67e22", cursor="hand2")
         lbl_coffee.pack(side=tk.LEFT)
@@ -853,34 +820,39 @@ class QwenTTSApp:
         self.status_icon = StatusIndicator(status_top, size=14) 
         self.status_icon.pack(side=tk.LEFT, padx=(0, 5))
         self.lbl_active_model = tk.Label(status_top, text="Initializing...", font=("Segoe UI", 9, "bold"), fg="#555")
-        self.lbl_active_model.pack(side=tk.LEFT)
+        self.lbl_active_model.pack(side=tk.LEFT, expand=True, fill=tk.X)
+        
+        ttk.Button(status_top, text="⚙", command=self.show_settings_dialog, width=3).pack(side=tk.RIGHT)
         ttk.Button(status_top, text="🔄 Reset", command=self.force_reset_model, width=8).pack(side=tk.RIGHT, padx=5)
         
+        self.btn_cancel = tk.Button(
+            status_top, text="STOP", 
+            command=self.cancel_generation, 
+            bg=self.colors["danger"], fg="white", 
+            font=("Segoe UI", 8, "bold"),
+            activebackground="#c0392b", activeforeground="white",
+            relief="raised", bd=1, pady=0, width=6
+        )
+        self.btn_cancel.pack(side=tk.RIGHT, padx=5)
+
         stat_bot = tk.Frame(engine_f)
         stat_bot.pack(fill=tk.X, pady=(5,0))
         self.lbl_last_time = tk.Label(stat_bot, text="Time: --", font=("Segoe UI", 8), fg=self.colors["accent"])
         self.lbl_last_time.pack(side=tk.LEFT)
-        self.lbl_estimate = tk.Label(stat_bot, text="Est: --", font=("Segoe UI", 8, "italic"), fg="#888")
-        self.lbl_estimate.pack(side=tk.LEFT, padx=10)
-        self.btn_log_stat = ttk.Button(stat_bot, text="Log", state=tk.DISABLED, command=self.log_generation_stat, width=6)
-        self.btn_log_stat.pack(side=tk.RIGHT)
 
         # Section C: Precision Settings
         config_f = ttk.LabelFrame(header, text=" Precision ", padding=8)
         config_f.pack(side=tk.LEFT, padx=5, fill=tk.Y)
         
-        # Sliders
         for label, var, tip in [("Temp", "temp", TIP_TEMP), ("Top P", "top_p", TIP_TOP_P)]:
             row = tk.Frame(config_f)
             row.pack(fill=tk.X)
             tk.Label(row, text=label, width=5, anchor=tk.W, font=("Segoe UI", 8, "bold")).pack(side=tk.LEFT)
             val_var = tk.DoubleVar(value=self.app_config.get(var, 0.8))
             setattr(self, f"{var}_var", val_var)
-            
             s = ttk.Scale(row, from_=0.1, to=1.5 if var=="temp" else 1.0, variable=val_var, orient=tk.HORIZONTAL, length=120, command=self.update_precision_labels)
             s.pack(side=tk.LEFT, padx=5)
             CreateToolTip(s, tip)
-            
             lbl_val = tk.Label(row, text="0.8", width=20, anchor=tk.W, font=("Consolas", 8), fg="#555")
             lbl_val.pack(side=tk.LEFT)
             setattr(self, f"lbl_{var}_val", lbl_val)
@@ -907,57 +879,56 @@ class QwenTTSApp:
 
         self.update_precision_labels()
 
-        # Section E: System Controls
-        sys_f = ttk.LabelFrame(header, text=" System ", padding=8)
-        sys_f.pack(side=tk.RIGHT, padx=5)
-        
-        sys_top = tk.Frame(sys_f)
-        sys_top.pack(fill=tk.X)
-        ttk.Button(sys_top, text="⚙", command=self.show_settings_dialog, width=3).pack(side=tk.LEFT)
-        ttk.Button(sys_top, text="📜 History", command=self.setup_history_panel, width=9).pack(side=tk.LEFT, padx=2)
-        ttk.Button(sys_top, text="❓ Help", command=self.show_help_guide, width=7).pack(side=tk.LEFT, padx=2)
-        
-        self.btn_cancel = tk.Button(
-            sys_f, text="STOP ALL", 
-            command=self.cancel_generation, 
-            bg=self.colors["danger"], fg="white", 
+        # Section E: Right-side Action Buttons
+        right_area = tk.Frame(header, bg=self.colors["header_bg"])
+        right_area.pack(side=tk.RIGHT, padx=5, fill=tk.Y)
+
+        self.btn_history = tk.Button(
+            right_area, text="📜 History", 
+            command=self.setup_history_panel, 
+            bg=self.colors["accent"], fg="white",
             font=("Segoe UI", 9, "bold"),
-            activebackground="#c0392b", activeforeground="white",
-            relief="raised", bd=2, pady=2
+            activebackground=self.colors["accent_hover"], activeforeground="white",
+            relief="raised", bd=2
         )
-        self.btn_cancel.pack(fill=tk.X, pady=(5,0))
+        self.btn_history.pack(fill=tk.BOTH, expand=True, ipady=4)
+
+        self.vu_button_container = tk.Frame(right_area, height=30)
+        self.vu_button_container.pack(fill=tk.X, expand=True, pady=(5,0))
+        self.vu_button_container.pack_propagate(False) # Prevent child from shrinking the container
 
         # 2. Status Bar (Packed Bottom FIRST so it sticks)
         self.status_var = tk.StringVar(value="Ready")
-        self.lbl_status = tk.Label(self.root, textvariable=self.status_var, relief=tk.SUNKEN, anchor=tk.W, padx=10, pady=5, bg="#e9ecef", font=("Segoe UI", 9))
+        self.lbl_status = tk.Label(self.root, textvariable=self.status_var, relief=tk.FLAT, anchor=tk.W, padx=12, pady=6, bg="#dfe6e9", font=("Segoe UI", 9))
         self.lbl_status.pack(side=tk.BOTTOM, fill=tk.X)
 
         # 3. Notebook (Fills remaining space)
         self.notebook = ttk.Notebook(self.root)
-        self.notebook.pack(fill=tk.BOTH, expand=True, padx=20, pady=(10, 0))
+        self.notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=(8, 0))
         
         # Tabs
+        self.tab_tutorial = ttk.Frame(self.notebook)
         self.tab_helper = ttk.Frame(self.notebook)
-        self.notebook.add(self.tab_helper, text="Transcript Helper")
-        
         self.tab_clone = ttk.Frame(self.notebook)
-        self.notebook.add(self.tab_clone, text="Voice Clone")
-        
         self.tab_design = ttk.Frame(self.notebook)
-        self.notebook.add(self.tab_design, text="Voice Design")
-        
         self.tab_custom = ttk.Frame(self.notebook)
-        self.notebook.add(self.tab_custom, text="Custom Voice")
-        
         self.tab_batch = ttk.Frame(self.notebook)
-        self.notebook.add(self.tab_batch, text="Batch Studio")
-
         self.tab_hub = ttk.Frame(self.notebook)
-        self.notebook.add(self.tab_hub, text="Modules")
+        
+        if self.hub.is_enabled('tutorial_plugin.py'):
+            self.notebook.add(self.tab_tutorial, text="🎓 Tutorial")
+        self.notebook.add(self.tab_helper, text="📝 Transcript")
+        self.notebook.add(self.tab_clone, text="🎙 Voice Clone")
+        self.notebook.add(self.tab_design, text="🎨 Voice Design")
+        self.notebook.add(self.tab_custom, text="⭐ Custom Voice")
+        self.notebook.add(self.tab_batch, text="🎬 Batch Studio")
+        self.notebook.add(self.tab_hub, text="🧩 Modules")
 
         self.notebook.bind("<<NotebookTabChanged>>", self.on_tab_change)
 
         # Init Tab Content
+        if self.hub.is_enabled('tutorial_plugin.py'):
+            self.setup_tutorial_tab()
         self.setup_helper_tab()
         self.setup_clone_tab()
         self.setup_design_tab()
@@ -970,18 +941,21 @@ class QwenTTSApp:
 
     def on_tab_change(self, event):
         # 1. Identify Tab
-        tab_id = self.notebook.index(self.notebook.select())
-        tab_text = self.notebook.tab(tab_id, "text")
-        
+        try:
+            tab_id = self.notebook.index(self.notebook.select())
+            tab_text = self.notebook.tab(tab_id, "text")
+        except tk.TclError:
+            return # Tab is being destroyed
+
         # 2. Define Engine Mappings & Colors
-        # Green=Custom, Blue=Design, Purple=Base(Clone)
         eng_map = {
-            "Custom Voice": ("custom", "#d5f5e3", "Requires: Custom Engine (Green)"),
-            "Voice Design": ("design", "#d6eaf8", "Requires: Design Engine (Blue)"),
-            "Voice Clone":  ("base",   "#e8daef", "Requires: Clone Engine (Purple)"),
-            "Batch Studio": (None,     "#fcf3cf", "Multi-Engine Support (Auto-Switching)"),
-            "Transcript Helper": (None, "#e9ecef", "Utility Tool (No Engine Required)"),
-            "Modules": (None, "#d1f2eb", "Plugin Manager (No Engine Required)")
+            "🎓 Tutorial": (None,     "#e9ecef", "Interactive Learning Environment"),
+            "⭐ Custom Voice": ("custom", "#d5f5e3", "Requires: Custom Engine (Green)"),
+            "🎨 Voice Design": ("design", "#d6eaf8", "Requires: Design Engine (Blue)"),
+            "🎙 Voice Clone":  ("base",   "#e8daef", "Requires: Clone Engine (Purple)"),
+            "🎬 Batch Studio": (None,     "#fcf3cf", "Multi-Engine Support (Auto-Switching)"),
+            "📝 Transcript": (None, "#e9ecef", "Utility Tool (No Engine Required)"),
+            "🧩 Modules": (None, "#d1f2eb", "Plugin Manager (No Engine Required)")
         }
         
         req_engine, bg_color, hint = eng_map.get(tab_text, (None, "#e9ecef", "Ready"))
@@ -1011,12 +985,91 @@ class QwenTTSApp:
         ttk.Button(frame, text="Save WAV", command=self.save_audio).pack(side=tk.LEFT)
 
     # --- TAB SETUP METHODS ---
+    def setup_tutorial_tab(self):
+        f = self.tab_tutorial
+        f.columnconfigure(0, weight=1)
+
+        header = ttk.Frame(f, padding=(20, 10))
+        header.grid(row=0, column=0, sticky="ew")
+        ttk.Label(header, text="🎓 Interactive Tutorial", style="HelperHeader.TLabel").pack(anchor="w")
+        ttk.Label(header, text="Learn the app by loading pre-made scripts into the Batch Studio.",
+                  font=("Segoe UI", 10), background=self.colors["bg"]).pack(anchor="w", pady=(2, 10))
+        
+        # Controls Frame
+        ctrl_f = ttk.LabelFrame(f, text="Select a Lesson", padding=20)
+        ctrl_f.grid(row=1, column=0, sticky="ew", padx=20, pady=10)
+        ctrl_f.columnconfigure(1, weight=1)
+
+        # Language Selector
+        ttk.Label(ctrl_f, text="Language:").grid(row=0, column=0, sticky="w", padx=(0, 10))
+        lang_combo = ttk.Combobox(ctrl_f, textvariable=self.tutorial_lang_var, 
+                                  values=["English", "Spanish", "Chinese"], 
+                                  state="readonly", width=15)
+        lang_combo.grid(row=0, column=1, sticky="w")
+
+        # Chapter Selector
+        ttk.Label(ctrl_f, text="Chapter:").grid(row=1, column=0, sticky="w", padx=(0, 10), pady=(10,0))
+        chapter_combo = ttk.Combobox(ctrl_f, textvariable=self.tutorial_chapter_var, 
+                                     values=list(self.CHAPTERS.keys()),
+                                     state="readonly")
+        chapter_combo.grid(row=1, column=1, sticky="ew", pady=(10,0))
+
+        # Load Button
+        load_btn = ttk.Button(ctrl_f, text="Load Tutorial Script", style="Big.TButton", 
+                              command=self.load_tutorial_script)
+        load_btn.grid(row=2, column=0, columnspan=2, sticky="ew", pady=(20, 0))
+
+    def load_tutorial_script(self):
+        lang = self.tutorial_lang_var.get()
+        chapter_key = self.tutorial_chapter_var.get()
+        
+        base_filename = self.CHAPTERS.get(chapter_key)
+        if not base_filename:
+            messagebox.showerror("Error", "Invalid chapter selected.")
+            return
+
+        lang_suffix_map = {"English": "", "Spanish": "_ES", "Chinese": "_CN"}
+        model_lang_map = {"English": "English", "Spanish": "Spanish", "Chinese": "Chinese"}
+        
+        suffix = lang_suffix_map.get(lang, "")
+        model_lang = model_lang_map.get(lang, "English")
+
+        filename = f"{base_filename}{suffix}.json"
+        filepath = os.path.join(BASE_DIR, "tutorials", filename)
+
+        if not os.path.exists(filepath):
+            messagebox.showerror("File Not Found", f"Could not find the tutorial file:\n{filepath}\n\nPlease ensure the 'tutorials' folder is intact.")
+            return
+            
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            # Force the correct language for the engine blocks
+            for block in data:
+                block["language"] = model_lang
+            
+            # Switch to Batch Tab
+            self.notebook.select(self.tab_batch)
+            
+            # Load data into the director
+            if hasattr(self, 'director'):
+                self.director.load_script_data(data, name=f"{chapter_key} ({lang})")
+                self.status_var.set(f"Loaded Tutorial: {chapter_key}")
+            else:
+                 messagebox.showerror("Error", "Batch Director not found.")
+                 
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to load tutorial script:\n{e}")
+
     def setup_custom_tab(self):
         f = self.tab_custom
-        f.columnconfigure(0, weight=1); f.rowconfigure(1, weight=1)
-        
+        f.columnconfigure(0, weight=1); f.rowconfigure(2, weight=1)
+
+        ttk.Label(f, text="Custom Voice — Generate with built-in speaker presets", style="HelperHeader.TLabel").grid(row=0, column=0, sticky="w", padx=15, pady=(10, 0))
+
         top_f = ttk.Frame(f, padding=15)
-        top_f.grid(row=0, column=0, sticky="ew")
+        top_f.grid(row=1, column=0, sticky="ew")
         
         ttk.Label(top_f, text="Language:").pack(side=tk.LEFT)
         self.lang_var_custom = tk.StringVar(value="English")
@@ -1041,15 +1094,15 @@ class QwenTTSApp:
         
         ttk.Button(top_f, text="📖 Load Demo", command=self.load_custom_demo_script).pack(side=tk.LEFT, padx=5)
 
-        mid_f = ttk.LabelFrame(f, text="Text to Speak (Fills Space)", padding=10)
-        mid_f.grid(row=1, column=0, sticky="nsew", padx=15, pady=5)
+        mid_f = ttk.LabelFrame(f, text="Text to Speak", padding=10)
+        mid_f.grid(row=2, column=0, sticky="nsew", padx=15, pady=5)
         self.text_input_custom = scrolledtext.ScrolledText(mid_f, font=("Segoe UI", 11), wrap=tk.WORD)
         self.text_input_custom.pack(fill=tk.BOTH, expand=True)
         self.text_input_custom.insert("1.0", "Welcome to the new Qwen interface.")
         
         bot_f = ttk.Frame(f, padding=15)
-        bot_f.grid(row=2, column=0, sticky="ew")
-        
+        bot_f.grid(row=3, column=0, sticky="ew")
+
         instr_f = ttk.Frame(bot_f)
         instr_f.pack(fill=tk.X, pady=(0, 10))
         ttk.Label(instr_f, text="Instruction (Style/Pace):").pack(side=tk.LEFT)
@@ -1083,15 +1136,32 @@ class QwenTTSApp:
 
     def setup_helper_tab(self):
         f = self.tab_helper
-        f.columnconfigure(0, weight=1); f.rowconfigure(3, weight=1)
+        f.columnconfigure(0, weight=1)
+        f.rowconfigure(3, weight=1) # Give weight to the text editor row
         
         ttk.Label(f, text="Step 1: Prep Audio & Transcript", style="HelperHeader.TLabel").grid(row=0, column=0, sticky="w", padx=15, pady=(10,0))
 
         # Audio Workbench
-        wb_f = ttk.LabelFrame(f, text="Audio Workbench", padding=10)
+        wb_f = ttk.LabelFrame(f, text="", padding=10) # Title is now manual
         wb_f.grid(row=1, column=0, sticky="ew", padx=15, pady=5)
         
-        self.wave_canvas = tk.Canvas(wb_f, height=120, bg="#222", highlightthickness=0)
+        # -- NEW HEADER ROW --
+        wb_header_f = ttk.Frame(wb_f)
+        wb_header_f.pack(fill=tk.X, pady=(0, 5))
+
+        ttk.Label(wb_header_f, text="Audio Workbench", style="TLabelframe.Label").pack(side=tk.LEFT)
+        
+        # -- Microphone widgets moved here, packed to the right --
+        mic_f = ttk.Frame(wb_header_f)
+        mic_f.pack(side=tk.RIGHT)
+        ttk.Label(mic_f, text="Microphone:", font=("Segoe UI", 9)).pack(side=tk.LEFT, padx=(0,5))
+        self.mic_combo = ttk.Combobox(mic_f, textvariable=self.mic_device_var, state="readonly")
+        self.mic_combo.pack(side=tk.LEFT, padx=(0, 5))
+        self.mic_combo.bind("<<ComboboxSelected>>", lambda e: self.save_app_config())
+        ttk.Button(mic_f, text="🔄", command=self.populate_mic_list, width=3).pack(side=tk.LEFT)
+
+        # -- Original content of the workbench --
+        self.wave_canvas = tk.Canvas(wb_f, height=100, bg="#222", highlightthickness=0) # Slightly reduced height
         self.wave_canvas.pack(fill=tk.X, pady=5)
         self.wave_canvas.bind("<Button-1>", self.on_wave_click)
         self.wave_canvas.bind("<Button-3>", self.on_wave_click)
@@ -1115,8 +1185,8 @@ class QwenTTSApp:
         # File Ops
         file_f = ttk.Frame(ctrl_row)
         file_f.pack(side=tk.RIGHT)
-        self.loopback_var = tk.BooleanVar(value=False)
-        ttk.Checkbutton(file_f, text="Sys Audio", variable=self.loopback_var).pack(side=tk.LEFT, padx=5)
+        self.lbl_helper_file = ttk.Label(file_f, text="No Audio Loaded", font=("Segoe UI", 8, "italic"), foreground="#666")
+        self.lbl_helper_file.pack(side=tk.TOP, anchor=tk.E, padx=2)
         ttk.Button(file_f, text="Open", command=self.helper_load_audio).pack(side=tk.LEFT, padx=2)
         self.btn_save_rec = ttk.Button(file_f, text="Save WAV", command=self.save_recorded_audio, state=tk.DISABLED)
         self.btn_save_rec.pack(side=tk.LEFT, padx=2)
@@ -1125,9 +1195,6 @@ class QwenTTSApp:
         self.btn_crop.pack(side=tk.LEFT, padx=2)
         self.btn_undo = ttk.Button(file_f, text="Undo", command=self.undo_audio, state=tk.DISABLED, width=8)
         self.btn_undo.pack(side=tk.LEFT, padx=2)
-        
-        self.lbl_helper_file = ttk.Label(wb_f, text="No Audio Loaded", font=("Segoe UI", 9, "italic"), foreground="#666")
-        self.lbl_helper_file.pack(anchor=tk.W)
         
         # Recipes
         recipe_f = ttk.LabelFrame(f, text="Voice Coach", padding=10)
@@ -1144,14 +1211,16 @@ class QwenTTSApp:
         self.lbl_recipe_instruct.pack(fill=tk.X)
         
         # Transcript Editor
-        trans_f = ttk.LabelFrame(f, text="Transcript Editor", padding=10)
-        trans_f.grid(row=3, column=0, sticky="nsew", padx=15, pady=5)
-        t_tools = ttk.Frame(trans_f)
-        t_tools.pack(fill=tk.X, pady=(0, 5))
+        trans_editor_f = ttk.LabelFrame(f, text="Transcript Editor", padding=10)
+        trans_editor_f.grid(row=3, column=0, sticky="nsew", padx=15, pady=5)
+        trans_editor_f.columnconfigure(0, weight=1)
+        trans_editor_f.rowconfigure(1, weight=1)
+
+        t_tools = ttk.Frame(trans_editor_f)
+        t_tools.grid(row=0, column=0, sticky="ew", pady=(0,5))
         self.btn_whisper = ttk.Button(t_tools, text="Audio -> Text", command=self.run_whisper_task)
         self.btn_whisper.pack(side=tk.LEFT)
         
-        # Whisper Language Selector
         self.lbl_whisper_lang = ttk.Label(t_tools, text="Lang:")
         self.lbl_whisper_lang.pack(side=tk.LEFT, padx=(10, 2))
         
@@ -1161,12 +1230,13 @@ class QwenTTSApp:
         self.whisper_lang_combo.bind("<<ComboboxSelected>>", self.on_whisper_lang_change)
 
         ttk.Button(t_tools, text="Clean Timestamps", command=self.on_clean_script_click).pack(side=tk.LEFT, padx=5)
-        self.helper_text_area = scrolledtext.ScrolledText(trans_f, font=("Segoe UI", 11), wrap=tk.WORD)
-        self.helper_text_area.pack(fill=tk.BOTH, expand=True)
+        
+        self.helper_text_area = scrolledtext.ScrolledText(trans_editor_f, font=("Segoe UI", 11), wrap=tk.WORD)
+        self.helper_text_area.grid(row=1, column=0, sticky="nsew")
         
         # Profile Management
         final_f = ttk.Frame(f, padding=15)
-        final_f.grid(row=4, column=0, sticky="ew")
+        final_f.grid(row=4, column=0, sticky="ew", pady=(10,0))
         
         prof_area = ttk.Frame(final_f)
         prof_area.pack(side=tk.LEFT)
@@ -1270,11 +1340,13 @@ class QwenTTSApp:
 
     def setup_design_tab(self):
         f = self.tab_design
-        f.columnconfigure(0, weight=1); f.rowconfigure(3, weight=1)
-        
+        f.columnconfigure(0, weight=1); f.rowconfigure(4, weight=1)
+
+        ttk.Label(f, text="Voice Design — Create voices from description", style="HelperHeader.TLabel").grid(row=0, column=0, sticky="w", padx=15, pady=(10, 0))
+
         # Profiles
         prof_f = ttk.Frame(f, padding=15)
-        prof_f.grid(row=0, column=0, sticky="ew")
+        prof_f.grid(row=1, column=0, sticky="ew")
         ttk.Label(prof_f, text="Design Profile:").pack(side=tk.LEFT)
         self.des_profile_var = tk.StringVar()
         self.des_profile_combo = ttk.Combobox(prof_f, textvariable=self.des_profile_var, state="readonly", width=30)
@@ -1294,7 +1366,7 @@ class QwenTTSApp:
         
         # Description
         desc_f = ttk.Frame(f, padding=(15, 5))
-        desc_f.grid(row=1, column=0, sticky="ew")
+        desc_f.grid(row=2, column=0, sticky="ew")
         d_head = ttk.Frame(desc_f)
         d_head.pack(fill=tk.X)
         ttk.Label(d_head, text="Voice Description", font=("Segoe UI", 10, "bold")).pack(side=tk.LEFT)
@@ -1307,7 +1379,7 @@ class QwenTTSApp:
         
         # Instruction
         instr_f = ttk.Frame(f, padding=(15, 5))
-        instr_f.grid(row=2, column=0, sticky="ew")
+        instr_f.grid(row=3, column=0, sticky="ew")
         i_head = ttk.Frame(instr_f)
         i_head.pack(fill=tk.X)
         ttk.Label(i_head, text="Style Instruction", font=("Segoe UI", 10, "bold")).pack(side=tk.LEFT)
@@ -1337,13 +1409,13 @@ class QwenTTSApp:
         
         # Target Text
         tgt_f = ttk.LabelFrame(f, text="Text to Speak", padding=10)
-        tgt_f.grid(row=3, column=0, sticky="nsew", padx=15, pady=5)
+        tgt_f.grid(row=4, column=0, sticky="nsew", padx=15, pady=5)
         self.txt_design_target = scrolledtext.ScrolledText(tgt_f, font=("Segoe UI", 11), wrap=tk.WORD)
         self.txt_design_target.pack(fill=tk.BOTH, expand=True)
         
         # Actions
         bot_f = ttk.Frame(f, padding=15)
-        bot_f.grid(row=4, column=0, sticky="ew")
+        bot_f.grid(row=5, column=0, sticky="ew")
         self.btn_gen_design = ttk.Button(bot_f, text="GENERATE DESIGN", style="Big.TButton", command=self.start_gen_design)
         self.btn_gen_design.pack(side=tk.LEFT, padx=(0, 10))
         
@@ -1378,7 +1450,8 @@ class QwenTTSApp:
             "temp": 0.8, "top_p": 0.8, 
             "autoplay": True, "sound_on_ready": False, 
             "last_out_dir": "",
-            "custom_notification_sound": None
+            "custom_notification_sound": None,
+            "mic_device": "Default"
         }
         if os.path.exists(CONFIG_FILE):
             try:
@@ -1393,7 +1466,8 @@ class QwenTTSApp:
             "temp": self.temp_var.get(), 
             "top_p": self.top_p_var.get(), 
             "autoplay": self.autoplay_var.get(),
-            "sound_on_ready": self.sound_on_ready_var.get()
+            "sound_on_ready": self.sound_on_ready_var.get(),
+            "mic_device": self.mic_device_var.get()
         })
         try:
             with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
@@ -1416,6 +1490,74 @@ class QwenTTSApp:
         self.lbl_temp_val.config(text=f"{t:.1f} ({t_desc})")
         self.lbl_top_p_val.config(text=f"{p:.1f} ({p_desc})")
 
+    def populate_mic_list(self):
+        """Finds, scores, and filters audio input devices to provide a clean list."""
+        try:
+            devices = sd.query_devices()
+            hostapis = sd.query_hostapis()
+            
+            candidates = []
+            default_input_idx = sd.default.device[0]
+
+            for i, device in enumerate(devices):
+                if device['max_input_channels'] == 0:
+                    continue
+
+                name = device['name']
+                score = 0
+                
+                # Clean up name
+                try:
+                    # Remove the host API in parentheses, e.g., " (Windows WASAPI)"
+                    api_name = hostapis[device['hostapi']]['name']
+                    if name.endswith(f" ({api_name})"):
+                        name = name[:-len(f" ({api_name})")].strip()
+                except:
+                    pass # Couldn't parse, use original name
+
+                # Score the device
+                lower_name = name.lower()
+                if 'loopback' in lower_name or 'stereo mix' in lower_name or 'what u hear' in lower_name:
+                    score += 100
+                    name += " (System Audio)"
+                if i == default_input_idx:
+                    score += 50
+                # WASAPI is generally preferred on Windows
+                if 'wasapi' in hostapis[device['hostapi']]['name'].lower():
+                    score += 10
+                
+                candidates.append({'id': i, 'name': name, 'score': score})
+
+            # De-duplicate: keep the best-scoring device for each name
+            best_devices = {}
+            for c in candidates:
+                if c['name'] not in best_devices or c['score'] > best_devices[c['name']]['score']:
+                    best_devices[c['name']] = c
+
+            # Sort the unique devices by score
+            sorted_devices = sorted(best_devices.values(), key=lambda x: x['score'], reverse=True)
+            
+            # Final list for the UI
+            self.mic_devices = {"Default": None}
+            final_names = ["Default"]
+            for d in sorted_devices:
+                self.mic_devices[d['name']] = d['id']
+                final_names.append(d['name'])
+            
+            self.mic_combo['values'] = final_names
+            if self.mic_device_var.get() not in self.mic_devices:
+                self.mic_device_var.set("Default")
+            
+            # Dynamically set width
+            if final_names:
+                max_len = max(len(name) for name in final_names)
+                self.mic_combo['width'] = max_len + 2
+
+        except Exception as e:
+            print(f"Could not query audio devices: {e}")
+            self.mic_combo['values'] = ["Default"]
+            self.mic_device_var.set("Default")
+
     # --- HELPER & EDITOR METHODS (REFACTORED) ---
     def helper_load_audio(self):
         """Opens a file dialog to load audio into the helper tab."""
@@ -1429,7 +1571,6 @@ class QwenTTSApp:
         )
         if path:
             self.load_helper_audio_from_path(path)
-
     def load_helper_audio_from_path(self, path: str):
         """Loads audio data from a specific path."""
         try:
@@ -2047,27 +2188,44 @@ class QwenTTSApp:
         self.recording_start_time = time.time()
         self._update_recording_timer()
         
-        def cb(i, f, t, s): self.recorded_frames.append(i.copy())
+        def cb(indata, frames, time_info, status):
+            if status:
+                print(f"Recording status: {status}")
+            self.recorded_frames.append(indata.copy())
+        
         try:
-            stream_kwargs = {'channels': 1, 'callback': cb, 'samplerate': 44100}
-            if self.loopback_var.get():
-                wasapi = next((d for d in sd.query_hostapis() if 'WASAPI' in d['name']), None)
-                if not wasapi: raise Exception("WASAPI not found.")
-                dev = next((d for d in sd.query_devices() if d['hostapi'] == wasapi['index'] and d['max_output_channels'] > 0), None)
-                if not dev: raise Exception("No loopback device.")
-                stream_kwargs.update({'device': dev['index'], 'channels': 2, 'loopback': True})
-            
-            self.recording_stream = sd.InputStream(**stream_kwargs)
-            self.recording_stream.start()
-        except Exception as e: 
-            messagebox.showerror("Rec Error", str(e))
-            self.stop_recording()
+            device_name = self.mic_device_var.get()
+            device_id = self.mic_devices.get(device_name)
 
+            self.recording_stream = sd.InputStream(
+                device=device_id,
+                channels=1, 
+                callback=cb, 
+                samplerate=44100
+            )
+            self.recording_stream.start()
+        except Exception as e:
+            messagebox.showerror("Recording Error", f"Failed to start recording:\n{str(e)}\n\nPlease check:\n1. Microphone is connected\n2. Microphone permissions are enabled\n3. No other app is using the microphone")
+            self.stop_recording()
     def stop_recording(self):
-        if self.recording_stream: self.recording_stream.stop(); self.recording_stream.close()
+        if self.recording_stream:
+            try:
+                self.recording_stream.stop()
+                self.recording_stream.close()
+            except Exception as e:
+                print(f"Error closing recording stream: {e}")
+            
         self.is_recording = False
         self.btn_record.config(text="🔴 Record", style="TButton")
         
+        if not self.recorded_frames:
+            # Check if any audio was actually captured.
+            messagebox.showwarning(
+                "Recording Error",
+                "No audio was recorded. Please check that your microphone is connected and that the application has permission to use it."
+            )
+            return
+
         if self.recorded_frames:
             self.helper_audio_data = np.concatenate(self.recorded_frames, axis=0)
             self.btn_save_rec.config(state=tk.NORMAL)
@@ -2104,13 +2262,27 @@ class QwenTTSApp:
             self.root.after(100, self._update_recording_timer)
 
     def save_recorded_audio(self):
+        """Save the recorded audio with proper path handling."""
         if self.helper_audio_data is None:
+            messagebox.showwarning("No Recording", "No audio to save.")
             return
-        p = filedialog.asksaveasfilename(defaultextension=".wav", filetypes=[("WAV files", "*.wav")])
-        if p: 
-            sf.write(p, self.helper_audio_data, 44100)
-            self.helper_file_path = p
-            self.lbl_helper_file.config(text=os.path.basename(p))
+
+        # Ensure saved_assets folder exists
+        os.makedirs(self.assets_dir, exist_ok=True)
+        
+        from datetime import datetime
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        filename = f"{timestamp}_Rec_Recording.wav"
+        filepath = os.path.join(self.assets_dir, filename)
+        
+        try:
+            sf.write(filepath, self.helper_audio_data, 44100)
+            
+            messagebox.showinfo("Saved", f"Recording saved to:\n{filepath}")
+            self.refresh_history_list()
+            
+        except Exception as e:
+            messagebox.showerror("Save Failed", f"Could not save recording:\n{e}")
 
     def _ensure_permanent_asset(self, path):
         """Moves a file from temp to assets folder if needed to prevent deletion."""
@@ -2340,7 +2512,7 @@ class QwenTTSApp:
             self.ref_text_input.delete("1.0", tk.END)
             self.ref_text_input.insert("1.0", self.helper_text_area.get("1.0", tk.END).strip())
             self.notebook.select(self.tab_clone)
-            self.status_var.set("Sent audio and transcript to Voice Clone tab.")
+            self.status_var.set(f"Sent audio and transcript to Voice Clone tab.")
         else:
             messagebox.showwarning("No Audio", "Please load or record (and save) audio first.")
 
@@ -2366,84 +2538,35 @@ class QwenTTSApp:
 
     def show_settings_dialog(self):
         d = tk.Toplevel(self.root)
-        d.title("System Status & Settings")
-        d.geometry("550x600") # Increased height slightly more
+        d.title("System Status")
+        d.geometry("500x150")
         d.resizable(False, False)
         try:
-            x = self.root.winfo_rootx() + (self.root.winfo_width()//2) - 275
-            y = self.root.winfo_rooty() + (self.root.winfo_height()//2) - 300
+            x = self.root.winfo_rootx() + (self.root.winfo_width()//2) - 250
+            y = self.root.winfo_rooty() + (self.root.winfo_height()//2) - 75
             d.geometry(f"+{x}+{y}")
         except: pass
 
-        # Save Button (Packed BOTTOM first so it's always visible)
-        def save():
-            self.save_app_config()
-            messagebox.showinfo("Saved", "System status verified and configuration updated.")
-            d.destroy()
+        main_frame = ttk.Frame(d, padding=20)
+        main_frame.pack(fill=tk.BOTH, expand=True)
 
-        btn_save = tk.Button(d, text="💾 Close & Apply Changes", command=save, bg=self.colors["accent"], fg="white", font=("Segoe UI", 10, "bold"), pady=8)
-        btn_save.pack(side=tk.BOTTOM, fill=tk.X, padx=50, pady=20)
+        ttk.Label(main_frame, text="System Status", font=("Segoe UI", 12, "bold")).pack(pady=(0, 15))
 
-        nb = ttk.Notebook(d)
-        nb.pack(fill=tk.BOTH, expand=True, padx=10, pady=(10, 0))
-
-        # TAB 1: System Architecture
-        tab_sys = ttk.Frame(nb)
-        nb.add(tab_sys, text="System Architecture")
+        # SoX Status
+        sox_f = ttk.Frame(main_frame)
+        sox_f.pack(fill=tk.X)
+        ttk.Label(sox_f, text="SoX Audio Utility:", font=("Segoe UI", 10, "bold")).pack(side=tk.LEFT)
         
-        tk.Label(tab_sys, text="System Architecture (Stable Mode)", font=("Segoe UI", 12, "bold"), pady=15).pack()
+        sox_found = os.path.exists(os.path.join(sox_path, "sox.exe"))
+        status_text = "✅ Loaded Successfully" if sox_found else "❌ NOT FOUND"
+        status_color = self.colors["success"] if sox_found else self.colors["danger"]
         
-        f = tk.Frame(tab_sys, padx=20)
-        f.pack(fill=tk.BOTH, expand=True)
+        tk.Label(sox_f, text=status_text, fg=status_color, font=("Segoe UI", 10, "bold")).pack(side=tk.LEFT, padx=10)
 
-        # Sox Path (ReadOnly)
-        tk.Label(f, text="SoX Path (Forced):", anchor="w", font=("Segoe UI", 9, "bold")).pack(fill=tk.X)
-        sox_f = tk.Frame(f)
-        sox_f.pack(fill=tk.X, pady=(0, 15))
-        ttk.Entry(sox_f, textvariable=tk.StringVar(value=sox_path), state="readonly").pack(side=tk.LEFT, fill=tk.X, expand=True)
-        lbl_sox_stat = tk.Label(sox_f, text="✅ FOUND" if os.path.exists(os.path.join(sox_path, "sox.exe")) else "❌ MISSING", 
-                               fg="#27ae60" if os.path.exists(os.path.join(sox_path, "sox.exe")) else "#e74c3c", font=("Segoe UI", 8, "bold"))
-        lbl_sox_stat.pack(side=tk.LEFT, padx=5)
+        path_label = ttk.Label(main_frame, text=f"Path: {sox_path}", font=("Consolas", 9), foreground="grey", wraplength=450, justify=tk.LEFT)
+        path_label.pack(anchor="w", pady=(5,0))
 
-        # Engine Path
-        tk.Label(f, text="AI Engine Root:", anchor="w", font=("Segoe UI", 9, "bold")).pack(fill=tk.X)
-        qwen_f = tk.Frame(f)
-        qwen_f.pack(fill=tk.X, pady=(0, 15))
-        self.engine_path_var = tk.StringVar(value=ENGINE_ROOT)
-        ttk.Entry(qwen_f, textvariable=self.engine_path_var, state="readonly").pack(side=tk.LEFT, fill=tk.X, expand=True)
-        
-        def browse_engine():
-            d = filedialog.askdirectory(title="Select Engine Root Folder")
-            if d:
-                self.engine_path_var.set(d)
-                self.app_config["engine_root"] = d
-                messagebox.showinfo("Path Changed", "Engine path updated. Please restart the app for changes to take full effect.")
-
-        ttk.Button(qwen_f, text="Browse...", command=browse_engine).pack(side=tk.LEFT, padx=5)
-        
-        lbl_eng_stat = tk.Label(qwen_f, text="✅ ACTIVE" if os.path.exists(ENGINE_ROOT) else "📁 AUTO", 
-                               fg="#27ae60" if os.path.exists(ENGINE_ROOT) else "#f39c12", font=("Segoe UI", 8, "bold"))
-        lbl_eng_stat.pack(side=tk.LEFT, padx=5)
-
-        # MP3 DLL Logic
-        tk.Label(f, text="MP3 Support (libmp3lame-0.dll):", anchor="w", font=("Segoe UI", 9, "bold")).pack(fill=tk.X)
-        
-        # Check if it's already in the SoX folder
-        bundled_dll = os.path.join(sox_path, "libmp3lame-0.dll")
-        dll_exists = os.path.exists(bundled_dll)
-        
-        dll_f = tk.Frame(f)
-        dll_f.pack(fill=tk.X, pady=(0, 5))
-        
-        dll_status_text = "✅ ACTIVE: DLL found in SoX folder." if dll_exists else "❌ INACTIVE: DLL not found in ./sox/"
-        dll_status_color = "#27ae60" if dll_exists else "#e67e22"
-        tk.Label(dll_f, text=dll_status_text, fg=dll_status_color, font=("Segoe UI", 9, "italic")).pack(side=tk.LEFT)
-
-        # MP3 Help Text
-        help_f = tk.Frame(f, bg="#fffde7", padx=10, pady=10, bd=1, relief="solid")
-        help_f.pack(fill="x", pady=5)
-        help_msg = "💡 HOW TO ENABLE MP3:\n1. Download 'libmp3lame-0.dll' (32-bit or 64-bit to match SoX).\n2. Place it DIRECTLY inside the './sox/' folder.\n3. Restart the app. MP3 export will unlock automatically."
-        tk.Label(help_f, text=help_msg, justify="left", font=("Segoe UI", 8), bg="#fffde7", wraplength=480).pack()
+        ttk.Button(main_frame, text="Close", command=d.destroy).pack(side=tk.BOTTOM, pady=(15,0))
 
     def setup_hub_tab(self):
         """Builds the Module Manager interface inside the main notebook."""
@@ -2479,17 +2602,28 @@ class QwenTTSApp:
         scroll.pack(side=tk.RIGHT, fill=tk.Y)
         
         def refresh_hub_list():
+            try:
+                dir_contents = os.listdir(self.modules_dir)
+            except Exception as e:
+                dir_contents = [f"ERROR: {e}"]
+
             for widget in scroll_f.winfo_children(): widget.destroy()
             
             if not os.path.exists(self.modules_dir):
                 os.makedirs(self.modules_dir, exist_ok=True)
+                tk.Label(scroll_f, text=f"Modules folder created at:\n{self.modules_dir}\n(Add .py plugin files here)", font=("Segoe UI", 10, "italic"), bg="#ffffff").pack(pady=40)
+                return
                 
-            files = [f for f in os.listdir(self.modules_dir) if f.endswith(".py") and not f.startswith("__")]
+            files = [f for f in dir_contents if f.endswith(".py") and not f.startswith("__")]
             if not files:
                 tk.Label(scroll_f, text="No modules found in ./modules/", font=("Segoe UI", 10, "italic"), bg="#ffffff").pack(pady=40)
                 return
                 
             for f_name in sorted(files):
+                # Safeguard: Never show the module manager plugin in its own list.
+                if f_name == "autoscript_plugin.py":
+                    continue
+                    
                 is_enabled = self.hub.is_enabled(f_name)
                 is_loaded = f_name in self.loaded_plugins
                 is_new = f_name in self._new_modules
@@ -2562,33 +2696,85 @@ class QwenTTSApp:
             
         self.help_window = tk.Toplevel(self.root)
         self.help_window.title("The Director's Guide")
-        self.help_window.geometry("600x700")
+        self.help_window.geometry("800x600")
         try:
-            self.help_window.iconbitmap("app_icon.ico")
+            icon_path = os.path.join(BASE_DIR, "pq.ico")
+            if os.path.exists(icon_path):
+                self.help_window.iconbitmap(icon_path)
         except: pass
-        
-        notebook = ttk.Notebook(self.help_window)
-        notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
-        
-        def add_tab(title, content):
-            f = ttk.Frame(notebook)
-            notebook.add(f, text=title)
-            t = scrolledtext.ScrolledText(f, font=("Segoe UI", 10), wrap=tk.WORD, padx=15, pady=15)
-            t.pack(fill=tk.BOTH, expand=True)
-            t.insert("1.0", content)
-            t.config(state=tk.DISABLED)
 
-        add_tab("🚀 Engines", HELP_ENGINES)
-        add_tab("👥 Personas", HELP_PERSONAS)
-        add_tab("📋 Batch Studio", HELP_BATCH)
-        add_tab("💡 Pro-Tips", HELP_TIPS)
-        add_tab("🎨 Voice Design", HELP_DESC + "\n\n" + HELP_INSTR)
-        add_tab("🔄 Cloning", HELP_LOCK)
-        add_tab("🏷️ Tags & SFX", HELP_TAGS)
-        add_tab("🍳 Tone Recipes", HELP_RECIPES)
-        add_tab("🎚️ Sliders", HELP_SLIDERS)
-        add_tab("🔌 Plugins", HELP_PLUGINS)
-        add_tab("📊 Estimator", HELP_ESTIMATOR)
+        # Paned Window for resizable sections
+        main_pane = ttk.PanedWindow(self.help_window, orient=tk.HORIZONTAL)
+        main_pane.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # Left side: Treeview for topics
+        tree_frame = ttk.Frame(main_pane, width=250)
+        tree = ttk.Treeview(tree_frame, show="tree", selectmode="browse")
+        tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        
+        # Scrollbar for Treeview
+        tree_scroll = ttk.Scrollbar(tree_frame, orient="vertical", command=tree.yview)
+        tree_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        tree.configure(yscrollcommand=tree_scroll.set)
+
+        main_pane.add(tree_frame, weight=1)
+
+        # Right side: ScrolledText for content
+        text_frame = ttk.Frame(main_pane)
+        content_text = scrolledtext.ScrolledText(text_frame, font=("Segoe UI", 10), wrap=tk.WORD, padx=15, pady=10, bd=0)
+        content_text.pack(fill=tk.BOTH, expand=True)
+        content_text.configure(state="disabled")
+
+        main_pane.add(text_frame, weight=3)
+
+        # Data structure for help topics
+        help_topics = {
+            "Getting Started": {
+                "Engines": HELP_ENGINES,
+                "Personas": HELP_PERSONAS,
+                "Pro-Tips": HELP_TIPS
+            },
+            "Core Features": {
+                "Voice Design": HELP_DESC + "\n\n" + HELP_INSTR,
+                "Cloning": HELP_LOCK,
+                "Batch Studio": HELP_BATCH,
+                "Sliders": HELP_SLIDERS,
+                "Action Tags": HELP_TAGS
+            },
+            "Advanced": {
+                "Plugins & Modules": HELP_PLUGINS,
+                "Tone Recipes": HELP_RECIPES
+            }
+        }
+        
+        # Populate Treeview
+        for category, topics in help_topics.items():
+            cat_id = tree.insert("", "end", text=f" {category}", open=True)
+            for topic, content in topics.items():
+                tree.insert(cat_id, "end", text=f"  {topic}", values=(content,))
+
+        def on_topic_select(event):
+            selected_item = tree.focus()
+            if selected_item:
+                values = tree.item(selected_item, "values")
+                if values:
+                    content_text.configure(state="normal")
+                    content_text.delete("1.0", tk.END)
+                    content_text.insert("1.0", values[0])
+                    content_text.configure(state="disabled")
+
+        tree.bind("<<TreeviewSelect>>", on_topic_select)
+        
+        # Select first item by default
+        try:
+            first_item = tree.get_children()[0]
+            if first_item:
+                first_topic = tree.get_children(first_item)[0]
+                tree.selection_set(first_topic)
+                tree.focus(first_topic)
+        except IndexError:
+            # Handle case where there are no topics
+            pass
 
     def show_support_modal(self):
         modal = tk.Toplevel(self.root)
@@ -2967,7 +3153,7 @@ class QwenTTSApp:
             if filename in self.selected_history_files:
                 self.selected_history_files.remove(filename)
                 if filename in self.history_item_widgets:
-                    w = self.history_item_widgets[filename]
+                    w = self.history_item_widgets[f]
                     w.config(bg="white")
                     for c in w.winfo_children(): c.config(bg="white")
             else:
@@ -3204,8 +3390,6 @@ class QwenTTSApp:
                 else:
                     raise e
             
-                    raise e
-            
             self.current_model_type = mtype
             self.root.after(0, lambda: self.on_model_loaded(on_success))
 
@@ -3309,25 +3493,9 @@ class QwenTTSApp:
     def insert_batch_pipe(self):
         self.batch_text.insert(tk.INSERT, " | ")
 
-    def log_generation_stat(self):
-        if self.last_run_stats:
-            c, t = self.last_run_stats
-            self.estimator.add_entry(c, t)
-            self.btn_log_stat.config(state=tk.DISABLED, text="Saved ✓")
-            self.root.after(2000, lambda: self.btn_log_stat.config(text="📊 Add to Stats"))
-            self.monitor_script_health() # Refresh estimate
-
     def monitor_script_health(self, event=None):
         text = self.target_text_input.get("1.0", tk.END).strip()
         
-        # Update Estimate
-        char_count = len(text)
-        est_time = self.estimator.estimate(char_count)
-        if est_time > 0:
-            self.lbl_estimate.config(text=f"Est: ~{est_time:.1f}s")
-        else:
-            self.lbl_estimate.config(text="Est: --")
-
         if not text:
             self.lbl_script_health.config(text="Max Segment: 0 words", fg="grey")
             return
@@ -3567,9 +3735,14 @@ class QwenTTSApp:
         self.set_busy(False, f"{mode} Complete ({duration:.2f}s)")
         if self.lbl_last_time:
             self.lbl_last_time.config(text=f"Time: {duration:.2f}s")
-        if char_count > 0:
-            self.last_run_stats = (char_count, duration)
-            self.btn_log_stat.config(state=tk.NORMAL, text="📊 Add to Stats")
+        
+        # Write the last generation time to a file
+        try:
+            with open("last_generation_time.txt", "w", encoding="utf-8") as f:
+                f.write(f"Last generation took: {duration:.2f} seconds.")
+        except Exception as e:
+            print(f"Failed to write last generation time: {e}")
+
         self._lock_interface(False)
         if on_complete:
             on_complete({
@@ -3651,6 +3824,14 @@ class QwenTTSApp:
         threading.Thread(target=_task, daemon=True).start()
     def load_external_modules(self):
         """Scans the 'modules' folder and initializes any plugins found."""
+        # This is where the original tutorial button was.
+        # By moving the logic to the main app, we can just let this run.
+        # The new tutorial tab will be created if the plugin is enabled.
+        if self.hub.is_enabled('tutorial_plugin.py'):
+            # The button is now part of the main UI, so we just need to ensure it's visible.
+            # And its command points to the new tab.
+            pass
+
         if not os.path.exists(self.modules_dir):
             os.makedirs(self.modules_dir, exist_ok=True)
             return
@@ -3668,6 +3849,8 @@ class QwenTTSApp:
 
                 try:
                     module_name = item[:-3]
+                    if module_name == 'tutorial_plugin': # Don't re-initialize this
+                        continue
                     module_path = os.path.join(self.modules_dir, item)
                     spec = importlib.util.spec_from_file_location(module_name, module_path)
                     mod = importlib.util.module_from_spec(spec)
