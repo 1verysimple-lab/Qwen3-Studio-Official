@@ -2,43 +2,57 @@
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "欢迎来到第2章：导航面板。我是 Ryan。让我们看看应用的布局。",
-        "temp": 0.5,
-        "top_p": 0.7
+        "text": "第二章：导航面板。我是Ryan，我将是你的导游。让我们从上到下地浏览一下布局。",
+        "temp": 0.6,
+        "top_p": 0.8
     },
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "最顶部是 Header。在这里你可以找到 Precision Sliders。Temperature 控制我的创造力，而 Top P 控制我的词汇广度。",
-        "temp": 0.5,
-        "top_p": 0.7
+        "text": "最上面是标题栏。左边是应用程序的名称和版本。右边是精确度滑块：温度和Top P。这两个旋钮是塑造任何声音的主要工具。我们稍后会详细介绍它们。",
+        "temp": 0.6,
+        "top_p": 0.8
     },
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "右上角的 Stop 按钮是你的安全开关。如果引擎感觉卡住或变慢，请使用模型名称旁边的 'Reset' 按钮清除内存。",
-        "temp": 0.5,
-        "top_p": 0.7
+        "text": "滑块旁边是种子字段。这是一个你可以输入的数字，以使生成完全可复现。如果留空，应用程序会选择一个随机种子，然后写回，以便你以后可以重用该确切的录音。",
+        "temp": 0.6,
+        "top_p": 0.8
     },
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "在标题下方是 Tabs。我们有五个工作站：Transcript Helper、Voice Clone、Voice Design、Custom Voice，以及我们现在所在的：Batch Studio。",
-        "temp": 0.5,
-        "top_p": 0.7
+        "text": "标题栏中还有停止按钮，可以立即停止任何活动中的生成，以及重置按钮，可以从内存中清除模型。如果引擎在长时间会话后变慢或开始产生奇怪的音频，请使用重置。",
+        "temp": 0.6,
+        "top_p": 0.8
     },
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "最后，看窗口底部。彩色的 Status Bar 总是会告诉你当前加载了哪个引擎，并会在你处于错误的标签页时警告你。",
-        "temp": 0.5,
-        "top_p": 0.7
+        "text": "标题栏下方是选项卡。绿色选项卡是自定义语音。蓝色选项卡是语音设计。紫色选项卡是语音克隆。然后是转录助手、批量工作室和模块管理器。",
+        "temp": 0.6,
+        "top_p": 0.8
     },
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "现在轮到你尝试了。加载 'Tutorial_03_CustomMastery' 并点击 'Run Scene' 来探索 Custom Voice 预设。",
-        "temp": 0.5,
-        "top_p": 0.7
+        "text": "如果你启用了插件，你可能还会看到额外的选项卡。例如，样式和配置文件管理器会增加一个用于组织你的样式和语音设计的选项卡。你加载此脚本的教程选项卡也是一个插件。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "窗口的最底部是状态栏。它会显示当前加载了哪个引擎，并在你尝试使用活动模型的错误选项卡生成时向你发出警告。在开始长时间的批量运行之前，请务必查看状态栏。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "准备好后，请转到教程选项卡并加载第三章：自定义精通，然后运行它以探索您的内置语音列表。",
+        "temp": 0.6,
+        "top_p": 0.8
     }
 ]

@@ -1,4 +1,4 @@
-# 🎙️ Qwen3-TTS Pro Suite v4.1.0
+# 🎙️ Qwen3-TTS Pro Suite v4.6.0
 
 **Local AI Voice Design, Cloning, and Batch Production**
 
@@ -9,45 +9,45 @@ Qwen3-TTS Pro Suite is a professional-grade "Director" for speech synthesis. Bui
 ## ⚠️ Safety & GPU Disclaimer
 
 **IMPORTANT: READ BEFORE RUNNING**
-This application uses high-performance AI models that heavily utilize your GPU. 
-*   **Thermal Monitoring**: Ensure your system has adequate cooling. Monitor your GPU temperatures during long batch runs.
-*   **Responsibility**: By using this software, you acknowledge that you are running it at your own risk. **Blues Creative Engineering** is not responsible for any hardware damage, data loss, or system instability caused by the use of this local AI suite.
-*   **Power Supply**: High-end AI inference can cause significant power spikes. Ensure your PSU is rated for your GPU's peak performance.
+This application uses high-performance AI models that heavily utilize your GPU.
+* **Thermal Monitoring**: Ensure your system has adequate cooling. Monitor GPU temperatures during long batch runs.
+* **Responsibility**: By using this software, you acknowledge that you are running it at your own risk. **Blues Creative Engineering** is not responsible for any hardware damage, data loss, or system instability.
+* **Power Supply**: High-end AI inference can cause significant power spikes. Ensure your PSU is rated for your GPU's peak performance.
 
 ## 🛡️ Windows Smart App Control
 
-Because this is an unsigned, open-source project, Windows 11 **Smart App Control** or **Windows Defender** may flag the application. 
+Because this is an unsigned, open-source project, Windows 11 **Smart App Control** or **Windows Defender** may flag the application.
 To run the suite:
-1.  If blocked, click "More Info" and "Run Anyway".
-2.  Ensure you have enough disk space (approx 15GB) for the local engines.
-3.  The app does not require internet after the initial engine download.
+1. If blocked, click "More Info" and "Run Anyway".
+2. Ensure you have enough disk space (approx 15GB) for the local engines.
+3. The app does not require internet after the initial engine download.
 
 ---
 
 ## 🚀 Key Features
 
-*   **Three Creative Engines**:
-    *   🟢 **Custom Voice**: Use natural language instructions and style descriptors to command high-quality pre-trained personas.
-    *   🔵 **Voice Design**: Create entirely new vocal identities from scratch using text descriptions.
-    *   🟣 **Voice Clone**: Perfect digital replicas of any person from just a few seconds of reference audio.
-*   **Modules Manager (Primary Tab)**: A unified manager to synchronize plugins with the official GitHub repository and toggle features on/off dynamically with immediate loading.
-*   **Smart Director Architecture**: Includes an integrated **Batch Studio** (Non-Linear Editor) for sequencing complex multi-voice scripts and scenes.
-*   **VRAM Monitor**: Real-time GPU memory tracking integrated into the status bar for stability.
-*   **Dynamic Extension Support**: A modular plugin system allows you to add new features and automated scripting via the `modules/` folder. [Read the Plugin Guide (PLUGINS.md)](PLUGINS.md).
-*   **Smart Patch Update System**: The launcher now automatically detects and applies small patches, keeping your installation up-to-date without re-downloading the heavy engine.
-*   **Persistent Settings**: User settings and module states are now securely stored in your local APPDATA directory, ensuring your preferences are remembered across sessions and application updates.
-*   **Tutorials Always On**: The interactive tutorial plugin is now enabled by default for new installations, guiding you through the suite's features from the start.
-*   **Stability First**: Forced local path architecture ensures core components (SoX, Engines) are always where they need to be.
-*   **Prep Station**: Built-in **Whisper AI** for transcribing reference files and preparing data.
+* **Three Creative Engines**:
+    * 🟢 **Custom Voice**: Command high-quality pre-trained personas (Ryan, Vivian, Sohee, etc.) with natural language style instructions.
+    * 🔵 **Voice Design**: Create entirely new vocal identities from scratch using text descriptions.
+    * 🟣 **Voice Clone**: Perfect digital replicas of any voice from just a few seconds of reference audio.
+* **Batch Studio (Non-Linear Editor)**: A full production pipeline for multi-voice scripts. Per-block single generation (⚡ Gen), Multi-Take picker (🎲 x3), deterministic Seed control, and a colour-coded review/approval workflow.
+* **Deterministic Generation (Seed)**: Pin any integer seed before generating to get a perfectly reproducible take every time. Accepted Multi-Takes write their seed back automatically.
+* **Style & Profile Manager**: Inline enable/disable and editing of all custom Styles and Voice Design Profiles from a single panel.
+* **Aggressive VRAM Management**: `flush_vram()` utility called between every block and take, plus a meta-tensor safety guard that severs corrupted model references before they crash the batch.
+* **Modules Manager**: Unified tab to synchronise plugins with the official GitHub repository and toggle features on/off dynamically without restarting.
+* **Smart Patch Update System**: The launcher detects and applies small patches automatically, keeping your installation current without re-downloading the heavy engine.
+* **Persistent Settings**: User settings and module states are stored in `%LOCALAPPDATA%\Qwen3Studio\` and survive updates.
+* **VRAM Monitor**: Real-time GPU memory tracking in the status bar.
+* **Prep Station**: Built-in **Whisper AI** transcription for reference file preparation.
 
 ---
 
 ## 📦 Getting Started
 
 ### 1. Requirements
-*   **OS**: Windows 10/11 (win32)
-*   **GPU**: NVIDIA RTX (8GB+ VRAM recommended for optimal performance)
-*   **Python**: 3.10+
+* **OS**: Windows 10/11 (win32)
+* **GPU**: NVIDIA RTX (8GB+ VRAM recommended)
+* **Python**: 3.10+
 
 ### 2. Installation
 1. Clone this repository:
@@ -55,18 +55,17 @@ To run the suite:
    git clone https://github.com/1verysimple-lab/Qwen3-TTS.git
    cd Qwen3-TTS
    ```
-2. **For NVIDIA GPU users (especially RTX series):** To ensure optimal CUDA compatibility and prevent "kernel image" errors, it is highly recommended to manually install PyTorch with the universal NVIDIA build *before* running `pip install -r requirements.txt`.
+2. **For NVIDIA GPU users:** Install PyTorch with the correct CUDA build first to avoid "kernel image" errors:
    ```bash
    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
    ```
-   Then proceed with the general dependency installation:
-3. Install dependencies:
+3. Install remaining dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
 ### 3. Launch
-Always start the application via the **Smart Launcher** to ensure system integrity and receive updates:
+Always start via the **Smart Launcher**:
 ```bash
 python app_launcher.py
 ```
@@ -75,59 +74,64 @@ python app_launcher.py
 
 ## 🔧 System Configuration
 
-*   **SoX Folder**: Place the SoX binaries in the `./sox/` folder.
-*   **AI Engines**: Models will be automatically placed in the `./engine/` folder.
-*   **MP3 Support**: To enable MP3 export, download `libmp3lame-0.dll` and drop it directly into the `./sox/` folder.
+* **SoX Folder**: Place SoX binaries in `./sox/`.
+* **AI Engines**: Models are automatically placed in `%LOCALAPPDATA%\Qwen3Studio\Qwen3-TTS\`.
+* **MP3 Support**: Drop `libmp3lame-0.dll` directly into `./sox/` to enable MP3 export.
 
 ---
 
 ## 📖 Documentation
 
-*   **[Features & Specs](FEATURES.md)**: Detailed breakdown of the creative engines.
-*   **[Developer SDK / Plugin Guide](PLUGINS.md)**: Learn how to build extensions.
-*   **[User Guide & Style Tips](GUIDE.md)**: Best practices for getting the best voices.
-*   **[Build & Deployment](DEPLOYMENT.md)**: Technical notes for standalone building.
+* **[Features & Specs](FEATURES.md)**: Detailed breakdown of capabilities and engines.
+* **[Developer SDK / Plugin Guide](PLUGINS.md)**: How to build extensions.
+* **[User Guide & Style Tips](GUIDE.md)**: Best practices and style reference.
+* **[Release Protocol](release_protocol.md)**: Build and deployment instructions.
 
 ---
 
 ## 🎓 Official Documentation & Community
 
-*   **Project Page**: [https://blues-lab.pro](https://blues-lab.pro)
-*   **App by Blues**: [Blues Creative Engineering](https://blues-lab.pro)
+* **Project Page**: [https://blues-lab.pro](https://blues-lab.pro)
+* **Built by**: [Blues Creative Engineering](https://blues-lab.pro)
 
 ---
 
 ## ⚖️ License
+
 This project is licensed under the Apache-2.0 License. AI models are subject to the original Qwen license terms.
+
+---
 
 ## 📁 Project Structure
 
 ### 🏗️ Core Application
 | File | Description |
 | :--- | :--- |
-| **`app_main.py`** | The main entry point for the Qwen3 Studio application. |
-| **`app_launcher.py`** | Handles environment setup, updates, and launches the main app. |
-| **`config_manager.py`** | Manages user settings and configuration (paths, defaults). |
-| **`batch_director.py`** | Logic for the "Podcast Mode" and batch processing. |
-| **`modules/`** | Folder for dynamic plugins and extensions. |
-| **`qwen_tts/`** | Interface for the AI Model inference. |
+| **`app_main.py`** | Main GUI application — `QwenTTSApp` class, all tabs, engine wiring, and `ModuleHub`. |
+| **`app_launcher.py`** | Smart launcher: integrity checks, auto-patch, engine download. |
+| **`batch_director.py`** | Batch Studio — `BatchDirector` and `ScriptBlock` with Multi-Take, Seed, and per-block generation. |
+| **`config_manager.py`** | HuggingFace hub integration, model repo resolution, system checks. |
+| **`modules/`** | Dynamic plugin directory. Drop `.py` files here to extend the app. |
+| **`qwen_tts/`** | AI model inference package (`core/`, `cli/`, `inference/`). |
 
-### 🛠️ Installer & Build System
+### 🛠️ Build & Release
 | File | Description |
 | :--- | :--- |
-| **`version.json`** | Remote manifest for the Smart Patch system. |
-| **`version.txt`** | Local version tracking file. |
-| **`build_tiny.py`** | Script to compile `app_launcher.py` into a lightweight setup EXE. |
-| **`build_distribution.py`** | Script to build the full standalone Pro App bundle. |
-| **`requirements.txt`** | Python dependencies required to run the source code. |
+| **`bump_version.py`** | Updates version numbers across all relevant files in one command. |
+| **`deploy_workflow.py`** | Interactive guided deployment: build → upload → release. |
+| **`installer.py`** | Standalone installer builder (run from clean-room environment). |
+| **`release_config.json`** | Version metadata and HuggingFace repo IDs. |
+| **`requirements.txt`** | Python dependencies for running from source. |
 
 ### 📄 Documentation & Assets
 | File | Description |
 | :--- | :--- |
-| **`README.md`** | Main project overview and user instructions. |
-| **`GUIDE.md`** | Detailed user manual for Studio features. |
-| **`FEATURES.md`** | Functional specifications and capabilities. |
-| **`tutorials/`** | JSON source scripts for the interactive tutorial system. |
-| **`pq.ico`** | Application icon file. |
+| **`README.md`** | This file. Project overview and quick-start. |
+| **`GUIDE.md`** | Style reference, tone recipes, and directionsl tips. |
+| **`FEATURES.md`** | Full functional specification. |
+| **`PLUGINS.md`** | Plugin SDK and developer guide. |
+| **`CLAUDE.md`** | AI coding assistant context file. |
+| **`tutorials/`** | JSON scripts for the interactive tutorial system. |
+| **`pq.ico`** | Application icon. |
 
 *Built with ❤️ by Blues in Spain.*

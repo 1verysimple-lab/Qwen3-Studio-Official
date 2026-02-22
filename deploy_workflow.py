@@ -158,8 +158,8 @@ def main():
     print("\n2. Click 'Create a new release'")
     
     print("\n3. Fill in:")
-    print("   Tag: v4.1.0")
-    print("   Title: Qwen3 Studio v4.1.0")
+    print("   Tag: v4.6.0")
+    print("   Title: Qwen3 Studio v4.6.0")
     
     print("\n4. Upload this file:")
     print("   📁 dist/Qwen3_Studio_Setup.exe")

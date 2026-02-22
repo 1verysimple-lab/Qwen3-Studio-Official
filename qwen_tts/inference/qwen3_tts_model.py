@@ -15,6 +15,7 @@
 # limitations under the License.
 import base64
 import io
+import random
 import urllib.request
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -476,6 +477,7 @@ class Qwen3TTSModel:
         x_vector_only_mode: Union[bool, List[bool]] = False,
         voice_clone_prompt: Optional[Union[Dict[str, Any], List[VoiceClonePromptItem]]] = None,
         non_streaming_mode: bool = False,
+        seed: Optional[int] = None,
         **kwargs,
     ) -> Tuple[List[np.ndarray], int]:
         """
@@ -598,6 +600,13 @@ class Qwen3TTSModel:
                     ref_tok = self._tokenize_texts([self._build_ref_text(rt)])[0]
                     ref_ids.append(ref_tok)
 
+        if seed is not None:
+            torch.manual_seed(seed)
+            if torch.cuda.is_available():
+                torch.cuda.manual_seed_all(seed)
+            random.seed(seed)
+            np.random.seed(seed)
+
         gen_kwargs = self._merge_generate_kwargs(**kwargs)
 
         talker_codes_list, _ = self.model.generate(
@@ -640,6 +649,7 @@ class Qwen3TTSModel:
         instruct: Union[str, List[str]],
         language: Union[str, List[str]] = None,
         non_streaming_mode: bool = True,
+        seed: Optional[int] = None,
         **kwargs,
     ) -> Tuple[List[np.ndarray], int]:
         """
@@ -714,6 +724,13 @@ class Qwen3TTSModel:
             else:
                 instruct_ids.append(self._tokenize_texts([self._build_instruct_text(ins)])[0])
 
+        if seed is not None:
+            torch.manual_seed(seed)
+            if torch.cuda.is_available():
+                torch.cuda.manual_seed_all(seed)
+            random.seed(seed)
+            np.random.seed(seed)
+
         gen_kwargs = self._merge_generate_kwargs(**kwargs)
 
         talker_codes_list, _ = self.model.generate(
@@ -736,6 +753,7 @@ class Qwen3TTSModel:
         language: Union[str, List[str]] = None,
         instruct: Optional[Union[str, List[str]]] = None,
         non_streaming_mode: bool = True,
+        seed: Optional[int] = None,
         **kwargs,
     ) -> Tuple[List[np.ndarray], int]:
         """
@@ -823,6 +841,13 @@ class Qwen3TTSModel:
                 instruct_ids.append(None)
             else:
                 instruct_ids.append(self._tokenize_texts([self._build_instruct_text(ins)])[0])
+
+        if seed is not None:
+            torch.manual_seed(seed)
+            if torch.cuda.is_available():
+                torch.cuda.manual_seed_all(seed)
+            random.seed(seed)
+            np.random.seed(seed)
 
         gen_kwargs = self._merge_generate_kwargs(**kwargs)
 

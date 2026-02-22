@@ -1,30 +1,74 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "在批量工作室中运行一个场景后，每个块都会有一个新的音频录音，等待你的审查。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "第十二章：批量工作室审查。运行场景后，工作室进入审查阶段。每个成功完成的块的左侧都会显示一个状态图标。此图标确切地告诉您录音所处的状态。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "每个块上的状态图标表示其状态。一个黄色的问号表示该录音是一个需要审查的新草稿。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "黄色问号表示该录音是新草稿，等待您的决定。绿色复选标记表示您已批准。红色感叹号表示您已拒绝。没有任何图标的块尚未生成。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "你可以通过点击其块上的播放按钮来预览任何录音。如果你对表演满意，点击黄色图标以批准它。它会变成一个绿色的复选标记。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "要审查录音，请单击其块上的"播放"按钮以收听。如果满意，请单击黄色问号图标以批准。它会变为绿色。如果不满意，请右键单击该图标并选择"拒绝"。它会变为红色。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "已批准的绿色块在下次运行场景时不会被重新生成，这可以节省时间。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "在您开始手动逐个审听之前，有一个工具可以为您完成初步筛查。工具栏中的"自动验证批次"复选框位于"自动切换"旁边。在运行场景之前启用它，工作室将在生成完成后自动审核每个块。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "如果你对某个录音不满意，可以右键单击该图标以拒绝它。它会变成一个红色的感叹号。被拒绝的块将在下一次运行时被重新生成。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "自动验证运行两项检查。首先，它扫描音频中的异常静音——任何超过两秒的停顿都是幻觉或音频中断的迹象。其次，它使用语音识别模型转录生成的内容，并与您的原始脚本进行比较。匹配度低于百分之七十五的块将被标记。将鼠标悬停在任何被标记块的黄色圆点上，即可查看确切原因。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "一旦你批准了场景中的所有录音，你就可以使用‘导出已批准’按钮将所有获得绿灯的音频文件保存到一个有组织的文件夹中。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "这种批准系统使批量生产变得高效。当您再次单击"运行场景"时，工作室会跳过所有已批准的绿色块，仅重新生成被拒绝的红色块和任何剩余的待处理块。您永远不会浪费时间重新生成您已经喜欢的录音。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "接下来，让我们看看准备我们源音频的工具包。请加载第十三章。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "工具栏中的"全部播放"按钮会按顺序播放每个已批准的录音，让您预览整个组合场景。这是在导出前快速检查多语音作品流程和节奏的快捷方式。"
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "当您的场景完全获得批准后，请单击工具栏中的"导出已批准"。这会将所有获得绿灯的录音另存为编号的WAV文件，并保存在您选择的单个文件夹中。文件按顺序命名，因此可以干净地导入任何DAW或视频编辑器。"
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "请加载第十三章：转录助手，我们将在这里查看用于语音克隆源音频的准备工具。"
     }
 ]

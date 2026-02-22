@@ -1,30 +1,110 @@
 [
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Welcome to the Batch Studio. This is your non-linear editor for audio, designed for producing complex scenes with multiple lines and voices."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "You can add different script blocks using the buttons at the bottom. Each block can be configured independently, with its own engine, voice, and text."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "For example, you could have the first block be a line from Vivian in the Custom engine, and the second block be a line from a voice you cloned."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The 'Auto-Switch' checkbox is the key to automation. When checked, the application will automatically load the correct A I model for each block in your sequence when you run the scene."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "For very large projects, you can click on the header of any block to collapse it. This helps keep your workspace clean and manageable."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "You can save and load your entire scene at any time using the file menu, allowing you to work on large projects over multiple sessions."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Next, we will discuss the review and export process within the Batch Studio. Please load chapter twelve."
-    }
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Chapter Eleven: Batch Studio Sequencing. You are already inside the Batch Studio \u2014 this tutorial is running in it right now. It is your non-linear editor for audio production, designed for building complex scenes with multiple lines, voices, and engines.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1336225976",
+    "status": "review",
+    "audio_file": "Tutorial_11_Batch_Studio_Sequencing_audio/001_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Each row in the Batch Studio is a Script Block. Every block is an independent generation unit with its own engine, voice, style, text, and settings. You can mix and match freely \u2014 one block can be a Custom Voice line from Ryan, the next can be a Voice Design character, and the next can be a voice clone.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "109539249",
+    "status": "review",
+    "audio_file": "Tutorial_11_Batch_Studio_Sequencing_audio/002_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The Auto-Switch checkbox is the key to seamless automation. When enabled, the studio automatically loads the correct A I model for each block when you run the scene. Without it, you would need to manually switch engines between blocks.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1713415713",
+    "status": "review",
+    "audio_file": "Tutorial_11_Batch_Studio_Sequencing_audio/003_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Each block also has a Seed field. Enter a number to pin that block to a reproducible take. Leave it empty and the studio picks a random seed, then writes it back into the field so you can re-run the exact same take later. The Dice button next to the seed rolls a random number you can save.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2156967365",
+    "status": "review",
+    "audio_file": "Tutorial_11_Batch_Studio_Sequencing_audio/004_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Each block has two special generation buttons. The lightning bolt Gen button generates only that single block immediately, without touching anything else in the scene. Use this for quick retakes without rerunning the entire script.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3124380245",
+    "status": "review",
+    "audio_file": "Tutorial_11_Batch_Studio_Sequencing_audio/005_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The Multi-Take button \u2014 that is the dice icon with a three \u2014 generates three variations of that block silently in the background and then opens a picker dialog. You preview each variation and select the best one. The winning seed is automatically saved into the block.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3896765160",
+    "status": "review",
+    "audio_file": "Tutorial_11_Batch_Studio_Sequencing_audio/006_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "For large projects, click a block's header to collapse it. This keeps your workspace clean. You can also save your entire scene to a file and reload it in a future session. The File menu in the Batch Studio toolbar handles this.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1764665159",
+    "status": "review",
+    "audio_file": "Tutorial_11_Batch_Studio_Sequencing_audio/007_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "For best efficiency, group blocks by engine. Place all Custom blocks together, then all Clone blocks together. This minimises model-switching time. The Auto-Switch feature handles the transitions, but fewer switches means a faster overall run.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2737339594",
+    "status": "review",
+    "audio_file": "Tutorial_11_Batch_Studio_Sequencing_audio/008_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Please load Chapter Twelve: Batch Studio Review, and we will cover the approval workflow and how to export your finished audio.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "656278534",
+    "status": "review",
+    "audio_file": "Tutorial_11_Batch_Studio_Sequencing_audio/009_TutorialWizard.wav"
+  }
 ]

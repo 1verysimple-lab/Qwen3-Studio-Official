@@ -2,42 +2,49 @@
     {
         "speaker": "Vivian",
         "style": "News Anchor",
-        "text": "第3章：精通 Custom Voice。我是 Vivian。这个标签页用于使用像我这样的预训练语音进行快速、高质量的制作。",
+        "text": "第三章：自定义语音精通。我是Vivian。自定义语音引擎是您获得制作级质量音频的最快途径。它使用预先训练好的说话人身份，因此您听到的声音稳定、一致，并可用于长篇叙述。",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Vivian",
         "style": "News Anchor",
-        "text": "在 Custom Voice 标签页中，你可以从9个不同的身份中进行选择，涵盖英语、中文、日语和韩语的母语口音。",
+        "text": "您有九位说话人可供选择。Ryan和Aiden是英语为母语的男性。Vivian、Serena、Eric、Dylan和Fu叔是中文声音。Ono Anna是日语。Sohee是韩语。每个人都有自己独特的音色和个性。",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Vivian",
         "style": "Seductive",
-        "text": "表演就是一切。我现在使用的是 'Seductive' 风格。你可以在框中输入任何表演指令来立即改变我们的情绪。",
+        "text": "现在仔细听。我刚刚切换到了诱人风格。那一行指令改变了我的整个表达方式。您在风格指令字段中输入表演指导，模型会像训练有素的演员一样做出反应。",
         "temp": 0.9,
         "top_p": 0.9
     },
     {
         "speaker": "Vivian",
         "style": "News Anchor",
-        "text": "'Generate Voice Set' 按钮是你最好的朋友。它会为你的一行台词创建多个情感版本，以便你选择最好的一个。",
+        "text": "风格下拉菜单中充满了您一键即可加载的预设。您也可以直接输入自己的指令，或修改现有的指令。像‘密谋地低语’或‘像激动但试图保持冷静一样阅读’这样的指令效果非常好。",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Vivian",
         "style": "News Anchor",
-        "text": "现在轮到你尝试了。去 'Custom Voice' 标签页。在指令字段中写下你喜欢的风格描述，然后使用 'Save As' 框保存它。我们将在第4章中使用这个。",
+        "text": "一旦您编写了自己喜欢的风格，请使用指令框下方的“另存为”字段进行保存。给它一个名字，从那时起它就会出现在所有三个引擎的下拉菜单中。",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Vivian",
         "style": "News Anchor",
-        "text": "完成后，回到这里，加载 'Tutorial_04_VoiceDesigner' 并点击 'Run Scene'。",
+        "text": "语言选择器可以强制说话者的口音，而无需更改文本的语言。例如，在保持英文文本的同时切换到德语，将产生带有德国口音的英语。这是创建外国角色声音的强大技巧。",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "准备好后，加载第四章：语音设计师，学习如何创造全新的角色。",
         "temp": 0.6,
         "top_p": 0.8
     }

@@ -1,43 +1,50 @@
 [
     {
         "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "¡Bienvenido al Laboratorio! Este es el Capítulo 4: Voice Design. Fui creado justo aquí mediante una simple descripción de texto.",
+        "style": "",
+        "text": "Capítulo Cuatro: El Motor de Diseño de Voz. Fui creado aquí. No soy un hablante pre-entrenado. Soy un personaje que el motor de Diseño de Voz ensambló a partir de una descripción de texto: un anciano de unos setenta años, voz grave y áspera, masculina y ronca, con una textura vocal rugosa y rasposa.",
         "temp": 0.7,
         "top_p": 0.8
     },
     {
         "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "En esta pestaña, ves dos cuadros principales. El cuadro Description define el 'Cuerpo' - cosas como Edad, Género y Textura Vocal.",
+        "style": "",
+        "text": "La pestaña de Diseño de Voz está marcada en azul. Dentro, encontrarás dos campos de texto. El primero es la Descripción de la Voz. Esto define el cuerpo físico del hablante: cosas como la edad, el género, la textura vocal y el acento. Estas cualidades se mantienen consistentes en cada línea que generas.",
         "temp": 0.7,
         "top_p": 0.8
     },
     {
         "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "El cuadro Style define la 'Actuación'. ¡Incluso puedes cargar ese estilo personalizado que guardaste en el Capítulo 3 justo aquí!",
+        "style": "",
+        "text": "El segundo campo es la Instrucción de Estilo. Funciona exactamente igual que en la pestaña de Voz Personalizada. Controla cómo se desempeña el hablante en este momento: su emoción, ritmo y energía. Puedes cambiar esto entre tomas sin alterar la voz subyacente.",
         "temp": 0.7,
         "top_p": 0.8
     },
     {
         "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "Ahora es tu turno. Ve a la pestaña 'Voice Design'. En el cuadro de descripción, escribe: 'A futuristic AI assistant voice, neutral and crisp'. En el cuadro de texto objetivo, escribe: 'Engine Loaded', y haz clic en 'Generate Design'.",
+        "style": "",
+        "text": "Cuando encuentres una combinación que te guste, haz clic en Guardar Perfil. Dale un nombre y se almacenará como un Perfil de Diseño de Voz reutilizable. Puedes cargarlo desde el menú desplegable en la parte superior de la pestaña para restaurar instantáneamente tanto la descripción como el estilo.",
         "temp": 0.7,
         "top_p": 0.8
     },
     {
         "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "Luego, ve a tu Session History. Haz clic derecho en tu nueva toma y selecciona 'Set as Notification Sound'. ¡Esto convierte tu creación en el sonido de listo de la aplicación!",
+        "style": "",
+        "text": "Si tienes habilitado el plugin de Administrador de Estilos y Perfiles, agrega una pestaña dedicada donde puedes navegar, editar, habilitar y deshabilitar todos tus estilos y perfiles guardados en un solo lugar. Los elementos deshabilitados se ocultan de los menús desplegables sin ser eliminados.",
         "temp": 0.7,
         "top_p": 0.8
     },
     {
         "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "Finalmente, crea un personaje más que te encante, genera una línea y haz clic en 'Save WAV' en el historial. Clonaremos ese archivo en el Capítulo 5. Cárgalo cuando estés listo.",
+        "style": "",
+        "text": "También hay un truco útil para fijar una voz de Diseño de Voz. Genera una línea que te encante, guárdala como un W A V desde el Historial de Sesiones, luego carga ese W A V en la pestaña de Clonación de Voz como referencia. El motor de Clonación puede entonces reproducir ese personaje en cualquier texto nuevo con alta consistencia.",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "text": "Cuando estés listo, carga el Capítulo Cinco: Dirigiendo con Instrucciones, y te enseñaré cómo escribir indicaciones de estilo que obtengan el rendimiento que deseas cada vez.",
         "temp": 0.7,
         "top_p": 0.8
     }

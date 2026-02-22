@@ -16,3 +16,20 @@ generation_stats.json
 # Local app data
 module_registry.json
 *.log
+
+# Binary archives
+*.rar
+
+# Generated tutorial audio output
+tutorials/*_audio/
+
+# Runtime state files
+last_generation_time.txt
+
+# Local scratch / temp files
+fix_prompt.md
+files_root.txt
+qwen3_tts_pro_suite.html
+
+# Claude Code project-local config
+.claude/

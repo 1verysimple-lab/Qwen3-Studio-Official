@@ -1,30 +1,58 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "转录助手选项卡是你的准备站。在这里，你可以录制、导入、编辑和转录高质量语音克隆所需的音频。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "第十三章：转录助手。此选项卡是您的音频准备站。它处理在将语音加载到克隆引擎之前所需的一切——录制、修剪、转录和导出。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "你可以使用‘打开’按钮加载现有的音频文件，也可以使用‘录制’按钮直接在应用程序中录制新的音频。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "您有两种方法可以将音频导入助手。单击“打开文件”从您的计算机加载现有音频文件，或单击“录制”直接从您的麦克风捕获音频。如果您有多个输入设备，麦克风设备选择器可让您选择要使用的输入。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "加载音频后，其波形将会出现。你可以在波形上左键单击设置起点，右键单击设置终点。然后‘裁剪’按钮会将音频修剪到你选择的范围。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "音频加载后，显示区域会出现一个波形。在波形上单击鼠标左键设置起点，单击鼠标右键设置终点。然后单击“裁剪”将音频精确裁剪到该选定区域。这是从较长录音中提取干净的三到十秒片段的最快方法。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "‘音频到文本’按钮是一个强大的功能。它使用集成的Whisper AI引擎来听你加载的音频文件，并自动为其生成文字记录。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "“音频到文本”按钮是这里最强大的功能。它使用集成的Whisper AI来收听您加载的音频并自动生成准确的文本转录。对于大多数干净的录音，这非常有效，无需编辑。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "这是准备语音克隆的理想工作流程：加载你的参考音频，点击‘音频到文本’以获得准确的文字记录，然后‘全部发送到语音克隆选项卡’。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "准备语音克隆的理想工作流程是：加载或录制您的参考音频，将其裁剪为最干净的三到八秒，单击“音频到文本”生成转录，然后单击“全部发送到语音克隆选项卡”。所有内容一步到位——音频路径和转录都会自动填充。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "你也可以将你的工作保存为一个可重复使用的配置文件。这将音频和文字记录捆绑在一起，你可以随时加载到语音克隆选项卡中。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "您还可以将您的工作另存为命名配置文件。转录助手配置文件将修剪后的音频文件及其转录捆绑在一个名称下。您可以在任何将来的会话中将此配置文件加载到语音克隆选项卡中，以立即恢复您的参考设置，而无需重新开始。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "现在是我们的最后课程：更深入地了解专业级设置。请加载第十四章。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "请加载第十四章：专业提示和精确滑块，深入了解应用程序中两个最强大的微调控件。"
     }
 ]

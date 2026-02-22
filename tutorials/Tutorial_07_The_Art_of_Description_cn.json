@@ -1,30 +1,66 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "写一个好的声音描述就像用文字雕刻。你的描述越具体、越能唤起共鸣，你得到的声音就越独特。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "第七章：描述的艺术。写一个好的声音描述就像用文字雕刻。你的描述越具体、越能唤起共鸣，你的角色就会越独特、越可重复。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "从基本要素开始：年龄和性别。例如，‘一个年轻的成年女性’，或‘一个年长的男人’。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "从两个最基本的属性开始：年龄和性别。“一个年轻的成年女性”或“一个年长的男人”立即为模型提供了一个坚实的构建基础。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "接下来，添加质感和音高。像‘沙哑’、‘气声’、‘粗糙’、‘平滑’、‘深沉’或‘高亢’这样的词非常有效。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "接下来，添加质感和音高。像“沙哑”、“有气息”、“粗嘎”、“平滑”、“鼻音”、“嘶哑”、“低沉”或“高亢”这样的词都非常有效。该模型对声音质感语言有很强的理解能力。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "你也可以指定口音。该模型能理解许多地区口音，如‘英国口音’、‘美国南方口音’或‘苏格兰口音’。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "然后，如果相关，可以添加口音。该模型能理解许多地区口音：英式标准发音、美国南方口音、苏格兰口音、浓重的俄罗斯口音、标准美国口音等等。要具体——“轻微的苏格兰口音”与“浓重的格拉斯哥口音”表现不同。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "让我们把这些想法结合起来。像‘一个声音平滑、清晰、带有标准美国口音的中年妇女’这样的描述是专业叙述者的坚实基础。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "这是一个完整、专业的叙述者描述示例：“一位中年女性，四十多岁，声音平滑清晰，标准美国口音，温暖而令人安心。”这将可靠地产生一个干净、多才多艺的叙述者。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "相比之下，像‘一个声音深沉、扭曲、咆哮的远古生物’这样的描述会产生更加奇幻的效果。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "这是一个奇幻的例子：“一个古老、永恒的实体，拥有不可思议的深沉、扭曲、共鸣的声音，带有轻微的混响质感，既非男性也非女性。”挑战极限——该模型也能处理超现实的描述。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "既然你能创造声音了，让我们学习如何复制它们。请加载第八章来探索语音克隆引擎。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "帮助指南包含一整套语音设计角色预设——现成的描述与风格说明配对，涵盖了像牛仔叙述者、古代女巫、电子机器人等角色。它们是绝佳的起点。"
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "请加载第八章：语音克隆引擎，我们将继续学习套件中最强大的引擎。"
     }
 ]

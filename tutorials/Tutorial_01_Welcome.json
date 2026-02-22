@@ -1,30 +1,86 @@
 [
-    {
-        "speaker": "Eric",
-        "style": "News Anchor",
-        "text": "Hi, I am Eric. I am a built-in voice, and you just generated me! Welcome to your new creative suite.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Eric",
-        "style": "News Anchor",
-        "text": "Take a look at the Session History panel on the right. You will see my takes appearing there in real-time.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Eric",
-        "style": "News Anchor",
-        "text": "In that history list, you can replay, delete, or even convert files to M P 3. Every line you make is automatically logged there.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Eric",
-        "style": "News Anchor",
-        "text": "It's now your turn to try. Click the 'Clear All' button in the toolbar above, then load 'Tutorial_02_UI_Overview' from the tutorials folder, and click 'Run Scene' to see how to navigate the app.",
-        "temp": 0.6,
-        "top_p": 0.8
-    }
+  {
+    "type": "standard",
+    "speaker": "Eric",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "Welcome. I am Eric, one of your built-in voices. And yes, you just generated me. What you are hearing right now is entirely local, A I speech synthesis running on your own machine.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "181358184",
+    "status": "review",
+    "audio_file": "Tutorial_01_Welcome_audio/001_Eric.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Eric",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "This is Qwen Three T T S Pro Suite. It gives you three distinct creative engines: Custom Voice for pre-trained speakers, Voice Design for inventing new characters from scratch, and Voice Clone for replicating any voice from a short audio sample.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "869004111",
+    "status": "review",
+    "audio_file": "Tutorial_01_Welcome_audio/002_Eric.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Ryan",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "Hey! I am Ryan. And I am also built in. Notice how different we sound? Same engine, same model, completely different identity. The Custom Voice tab gives you nine of us to choose from, across English, Chinese, Japanese, and Korean.",
+    "temp": 0.65,
+    "top_p": 0.8,
+    "seed": "573251768",
+    "status": "review",
+    "audio_file": "Tutorial_01_Welcome_audio/003_Ryan.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Eric",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "Now look to the right side of the window. That is the Session History panel. Every take you generate is automatically logged there in real time. You can replay, delete, rename, or export any take from that list at any time.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "652945927",
+    "status": "review",
+    "audio_file": "Tutorial_01_Welcome_audio/004_Eric.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Eric",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "Right-clicking any entry in the history gives you more options. You can save it as a W A V file, convert it to M P 3, or even set it as the app's notification sound for when a long generation finishes.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "3770307669",
+    "status": "review",
+    "audio_file": "Tutorial_01_Welcome_audio/005_Eric.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Ryan",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "This tutorial series has sixteen chapters, and each one loads directly into the Batch Studio as a playable script. We will walk you through every feature, from the basic controls right up to the pro-level tools.",
+    "temp": 0.65,
+    "top_p": 0.8,
+    "seed": "3208247672",
+    "status": "review",
+    "audio_file": "Tutorial_01_Welcome_audio/006_Ryan.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Eric",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "When you are ready, go to the Tutorial tab, select Chapter Two: U I Overview, and click Load Tutorial Script. Then click Run Scene to continue.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "246872697",
+    "status": "review",
+    "audio_file": "Tutorial_01_Welcome_audio/007_Eric.wav"
+  }
 ]

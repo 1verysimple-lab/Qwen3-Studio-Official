@@ -1,44 +1,98 @@
 [
-    {
-        "speaker": "Ryan",
-        "style": "News Anchor",
-        "text": "Welcome to Chapter 2: The Navigation Deck. I am Ryan. Let's look at the layout of the app.",
-        "temp": 0.5,
-        "top_p": 0.7
-    },
-    {
-        "speaker": "Ryan",
-        "style": "News Anchor",
-        "text": "At the very top is the Header. This is where you find the Precision Sliders. Temperature controls my creativity, while Top P controls my vocabulary breadth.",
-        "temp": 0.5,
-        "top_p": 0.7
-    },
-    {
-        "speaker": "Ryan",
-        "style": "News Anchor",
-        "text": "The Stop button in the top right is your safety switch. If the engine ever feels stuck or slows down, use the 'Reset' button next to the model name to clear the memory.",
-        "temp": 0.5,
-        "top_p": 0.7
-    },
-    {
-        "speaker": "Ryan",
-        "style": "News Anchor",
-        "text": "Below the header are the Tabs. We have five stations: Transcript Helper, Voice Clone, Voice Design, Custom Voice, and where we are now: the Batch Studio.",
-        "temp": 0.5,
-        "top_p": 0.7
-    },
-    {
-        "speaker": "Ryan",
-        "style": "News Anchor",
-        "text": "Finally, look at the bottom of the window. The colored Status Bar will always tell you which engine is currently loaded and warn you if you are in the wrong tab.",
-        "temp": 0.5,
-        "top_p": 0.7
-    },
-    {
-        "speaker": "Ryan",
-        "style": "News Anchor",
-        "text": "It's now your turn to try. Load 'Tutorial_03_CustomMastery' from the tutorials folder and click 'Run Scene' to explore the Custom Voice presets.",
-        "temp": 0.5,
-        "top_p": 0.7
-    }
+  {
+    "type": "standard",
+    "speaker": "Ryan",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "Chapter Two: The Navigation Deck. I am Ryan, and I will be your tour guide. Let us walk through the layout from top to bottom.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "196658023",
+    "status": "review",
+    "audio_file": "Tutorial_02_UI_Overview_audio/001_Ryan.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Ryan",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "At the very top is the Header bar. On the left you will see the app name and version. On the right side are the Precision Sliders: Temperature and Top P. These two knobs are your primary tools for shaping how any voice sounds. We will cover them in detail later.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "253055025",
+    "status": "review",
+    "audio_file": "Tutorial_02_UI_Overview_audio/002_Ryan.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Ryan",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "Next to the sliders, look for the Seed field. This is a number you can type in to make a generation exactly reproducible. Leave it empty and the app picks a random seed, which it then writes back so you can reuse that exact take later.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "997688162",
+    "status": "review",
+    "audio_file": "Tutorial_02_UI_Overview_audio/003_Ryan.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Ryan",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "Also in the header are the Stop button, which halts any active generation immediately, and the Reset button, which clears the model from memory. Use Reset if the engine slows down or starts producing strange audio after a long session.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "245396776",
+    "status": "review",
+    "audio_file": "Tutorial_02_UI_Overview_audio/004_Ryan.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Ryan",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "Below the header are the Tabs. The green tab is Custom Voice. The blue tab is Voice Design. The purple tab is Voice Clone. Then you have the Transcript Helper, the Batch Studio, and the Modules Manager.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "1428589882",
+    "status": "review",
+    "audio_file": "Tutorial_02_UI_Overview_audio/005_Ryan.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Ryan",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "If you have plugins enabled, you may also see additional tabs. For example, the Style and Profile Manager adds a tab for organising your styles and voice designs. The Tutorial tab, where you loaded this script, is also a plugin.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "2800256036",
+    "status": "review",
+    "audio_file": "Tutorial_02_UI_Overview_audio/006_Ryan.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Ryan",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "At the very bottom of the window is the Status Bar. It shows you which engine is currently loaded and warns you if you try to generate using the wrong tab for the active model. Always glance at the status bar before starting a long batch run.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "1722495057",
+    "status": "review",
+    "audio_file": "Tutorial_02_UI_Overview_audio/007_Ryan.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Ryan",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "When you are ready, go to the Tutorial tab and load Chapter Three: Custom Mastery, then run it to explore your built-in voice roster.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "461988808",
+    "status": "review",
+    "audio_file": "Tutorial_02_UI_Overview_audio/008_Ryan.wav"
+  }
 ]

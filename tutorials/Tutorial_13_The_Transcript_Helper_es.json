@@ -1,30 +1,58 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "La pestaña Asistente de Transcripción es tu estación de preparación. Aquí es donde puedes grabar, importar, editar y transcribir el audio necesario para una clonación de voz de alta calidad."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Capítulo Trece: El Asistente de Transcripción. Esta pestaña es tu estación de preparación de audio. Se encarga de todo lo necesario antes de cargar una voz en el motor de Clonación: grabar, recortar, transcribir y exportar."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Puedes cargar un archivo de audio existente usando el botón 'Abrir', o puedes grabar uno nuevo directamente en la aplicación usando el botón 'Grabar'."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Tienes dos formas de introducir audio en el asistente. Haz clic en Abrir Archivo para cargar un archivo de audio existente desde tu computadora, o haz clic en Grabar para capturar audio directamente desde tu micrófono. El selector de dispositivo de micrófono te permite elegir qué entrada usar si tienes más de una."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Una vez que se carga el audio, aparecerá su forma de onda. Puedes hacer clic izquierdo en la forma de onda para establecer un punto de inicio, y clic derecho para establecer un punto final. El botón 'Recortar' luego ajustará el audio a tu selección."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Una vez que se carga el audio, aparece una forma de onda en el área de visualización. Haz clic con el botón izquierdo en la forma de onda para establecer un punto de inicio y con el botón derecho para establecer un punto final. Luego, haz clic en Recortar para recortar el audio exactamente a esa selección. Esta es la forma más rápida de extraer un segmento limpio de tres a diez segundos de una grabación más larga."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "El botón 'Audio a Texto' es una función poderosa. Utiliza el motor de IA Whisper integrado para escuchar tu archivo de audio cargado y generar automáticamente una transcripción para él."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "El botón de Audio a Texto es la función más potente aquí. Utiliza la IA Whisper integrada para escuchar tu audio cargado y generar una transcripción de texto precisa automáticamente. Para la mayoría de las grabaciones limpias, esto funciona extremadamente bien sin necesidad de edición."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Este es el flujo de trabajo ideal para preparar un clon de voz: carga tu audio de referencia, haz clic en 'Audio a Texto' para obtener una transcripción precisa y luego 'Enviar Todo a la Pestaña de Clonación de Voz'."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "El flujo de trabajo ideal para preparar un clon de voz es: cargar o grabar tu audio de referencia, recortarlo a los tres u ocho segundos más limpios, hacer clic en Audio a Texto para generar la transcripción y luego hacer clic en Enviar Todo a la Pestaña de Clonación de Voz. Todo se transfiere en un solo paso: la ruta del audio y la transcripción se rellenan automáticamente."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "También puedes guardar tu trabajo como un Perfil reutilizable. Esto empaqueta el audio y la transcripción juntos, que puedes cargar en la pestaña de Clonación de Voz en cualquier momento."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "También puedes guardar tu trabajo como un Perfil con nombre. Un Perfil del Asistente de Transcripción agrupa el archivo de audio recortado y su transcripción bajo un solo nombre. Puedes cargar este perfil en la pestaña de Clonación de Voz en cualquier sesión futura para restaurar instantáneamente tu configuración de referencia sin tener que empezar de nuevo."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Ahora, para nuestras lecciones finales: una mirada más cercana a la configuración de nivel profesional. Por favor, carga el capítulo catorce."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Por favor, carga el Capítulo Catorce: Consejos Profesionales y Deslizadores de Precisión, para una inmersión profunda en los dos controles de ajuste fino más potentes de la aplicación."
     }
 ]

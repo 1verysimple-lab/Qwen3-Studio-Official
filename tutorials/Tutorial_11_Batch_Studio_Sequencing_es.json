@@ -1,30 +1,74 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Bienvenido al Estudio de Lotes. Este es tu editor no lineal para producción de audio, diseñado para producir escenas complejas con múltiples líneas y voces."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Capítulo Once: Secuenciación en Batch Studio. Ya estás dentro del Batch Studio; este tutorial se está ejecutando en él en este momento. Es tu editor no lineal para la producción de audio, diseñado para construir escenas complejas con múltiples líneas, voces y motores."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Puedes añadir diferentes bloques de guion usando los botones en la parte inferior. Cada bloque se puede configurar de forma independiente, con su propio motor, voz y texto."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Cada fila en el Batch Studio es un Bloque de Guion. Cada bloque es una unidad de generación independiente con su propio motor, voz, estilo, texto y configuraciones. Puedes mezclar y combinar libremente: un bloque puede ser una línea de Voz Personalizada de Ryan, el siguiente puede ser un personaje de Diseño de Voz y el siguiente puede ser un clon de voz."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Por ejemplo, podrías tener el primer bloque con una línea de Vivian del motor Personalizado, y el segundo bloque con una línea de una voz que clonaste."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "La casilla de verificación de Cambio Automático es la clave para una automatización perfecta. Cuando está habilitada, el estudio carga automáticamente el modelo de IA correcto para cada bloque cuando ejecutas la escena. Sin ella, necesitarías cambiar manualmente los motores entre los bloques."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "La casilla 'Cambio Automático' es la clave para la automatización. Cuando está marcada, la aplicación cargará automáticamente el modelo de IA correcto para cada bloque en tu secuencia cuando ejecutes la escena."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Cada bloque también tiene un campo de Semilla. Ingresa un número para fijar ese bloque a una toma reproducible. Déjalo vacío y el estudio elige una semilla aleatoria, luego la escribe de nuevo en el campo para que puedas volver a ejecutar la misma toma exacta más tarde. El botón de Dados junto a la semilla lanza un número aleatorio que puedes guardar."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Para proyectos muy grandes, puedes hacer clic en el encabezado de cualquier bloque para colapsarlo. Esto ayuda a mantener tu espacio de trabajo limpio y manejable."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Cada bloque tiene dos botones de generación especiales. El botón Gen con el rayo genera solo ese bloque de inmediato, sin tocar nada más en la escena. Úsalo para retomas rápidas sin tener que volver a ejecutar todo el guion."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Puedes guardar y cargar tu escena completa en cualquier momento usando el menú de archivo, lo que te permite trabajar en grandes proyectos durante múltiples sesiones."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "El botón de Múltiples Tomas, que es el icono de los dados con un tres, genera tres variaciones de ese bloque en silencio en segundo plano y luego abre un diálogo de selección. Previsualizas cada variación y seleccionas la mejor. La semilla ganadora se guarda automáticamente en el bloque."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "A continuación, discutiremos el proceso de revisión y exportación dentro del Estudio de Lotes. Por favor, carga el capítulo doce."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Para proyectos grandes, haz clic en el encabezado de un bloque para contraerlo. Esto mantiene tu espacio de trabajo limpio. También puedes guardar toda tu escena en un archivo y recargarla en una sesión futura. El menú Archivo en la barra de herramientas del Batch Studio se encarga de esto."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Para una mejor eficiencia, agrupa los bloques por motor. Coloca todos los bloques Personalizados juntos, luego todos los bloques de Clonación juntos. Esto minimiza el tiempo de cambio de modelo. La función de Cambio Automático se encarga de las transiciones, pero menos cambios significa una ejecución general más rápida."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Por favor, carga el Capítulo Doce: Revisión en Batch Studio, y cubriremos el flujo de trabajo de aprobación y cómo exportar tu audio terminado."
     }
 ]

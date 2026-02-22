@@ -1,30 +1,66 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Más allá de los controles principales, puedes dirigir una actuación usando etiquetas y puntuación directamente dentro de tu guion."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Capítulo Quince: Etiquetas y Puntuación. Más allá de los deslizadores y las instrucciones de estilo, tienes dos herramientas más directas para dar forma a una actuación: etiquetas de acción en el guion y control de la puntuación."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "El motor entiende etiquetas especiales para sonidos humanos. Por ejemplo, escribir la palabra 'risa' entre corchetes hará que el modelo se ría."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Las etiquetas de acción son comandos cortos que incrustas directamente en tu texto para activar sonidos humanos específicos. Las etiquetas admitidas son: risa, respiración, suspiro, jadeo, llanto y carraspeo. Siempre coloca espacios alrededor de los corchetes para obtener resultados confiables."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Otras etiquetas útiles incluyen 'respiración', 'suspiro', 'jadeo' y 'aclara la garganta'. Para que funcionen de manera fiable, siempre debes colocar espacios alrededor de los corchetes."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Las etiquetas funcionan mejor cuando la instrucción de estilo proporciona un contexto coincidente. Una etiqueta de jadeo dentro de una instrucción de 'calma' producirá un sonido sutil. La misma etiqueta de jadeo dentro de una instrucción de 'aterrorizado, en pánico' producirá algo mucho más visceral. El estilo amplifica la etiqueta."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "La puntuación también es una herramienta poderosa para controlar el ritmo. La IA hará una pausa natural en las comas y los puntos."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "La puntuación es otro instrumento poderoso. El modelo hace una pausa natural en las comas y los puntos, creando los puntos una parada ligeramente más larga. Usa esto para dar forma al ritmo de una línea directamente en el texto, sin cambiar la instrucción de estilo."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Si quieres crear una pausa más larga y dramática en un monólogo, simplemente inserta un salto de línea, o una línea vacía, en el guion."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Para pausas más dramáticas en un monólogo, presiona Enter para agregar una línea en blanco en medio de tu texto. El modelo interpreta esa línea vacía como una dirección para hacer una pausa. Esto se llama el Truco de la Pausa, y le da a tu escena una sensación mucho más natural y humana de la que cualquier elipsis o coma puede lograr."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "El modelo interpretará esa línea vacía como una dirección para hacer una pausa, dándole a tu escena una sensación más natural y humana."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Hay una técnica más avanzada: forzar el acento con el selector de Idioma. Selecciona cualquier idioma en el selector mientras mantienes tu texto en un idioma diferente. El modelo producirá el texto en el idioma original pero hablado con los patrones fonológicos del seleccionado. El texto en inglés con la configuración de idioma coreano, por ejemplo, produce inglés con un acento coreano natural."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Hemos llegado al final de nuestras lecciones. Por favor, carga el capítulo final para unas palabras de conclusión."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Si alguna vez experimentas una voz que arrastra las palabras o suena confusa, la solución es casi siempre la misma: baja la Temperatura a entre cero punto tres y cero punto cinco, simplifica la instrucción de estilo eliminando cualquier emoción conflictiva y comprueba que tus etiquetas de acción tengan espacios alrededor de sus corchetes."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Por favor, carga el capítulo final — Capítulo Dieciséis — para algunas reflexiones finales y un vistazo al ecosistema de módulos."
     }
 ]

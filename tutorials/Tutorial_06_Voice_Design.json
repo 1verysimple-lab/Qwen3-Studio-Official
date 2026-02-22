@@ -1,26 +1,86 @@
 [
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The Voice Design engine, marked in blue, is where you can invent new speakers. In this tab, you are not directing a pre-trained actor; you are creating one from imagination."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "This process uses two distinct prompts. The first is the Voice Description. This describes the physical, consistent qualities of the speaker."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Think of attributes like age, gender, accent, and vocal texture. For example, 'An elderly male with a deep, gravelly voice and a British accent'."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The second prompt is the Style Instruction, which works just like it does in the Custom Voice tab. This defines the speaker's current emotional state and performance."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The A I combines these two pieces of information to generate a unique voice. The results can be surprising, so feel free to experiment with creative combinations."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "In our next chapter, we will focus on the art of writing effective descriptions for this engine. Please load chapter seven."
-    }
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Chapter Six: The Voice Design Engine. The blue tab is your character creation laboratory. Unlike the Custom Voice engine, there is no pre-trained speaker identity here. You describe the voice you want in plain language, and the model synthesises it from zero.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3419127550",
+    "status": "review",
+    "audio_file": "Tutorial_06_Voice_Design_audio/001_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "This engine uses two completely separate prompts that the model combines. The Voice Description defines the consistent, physical qualities of the speaker. Think of it as the character's body. These qualities do not change between takes.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "959126998",
+    "status": "review",
+    "audio_file": "Tutorial_06_Voice_Design_audio/002_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The Style Instruction defines the current performance. Think of it as the character's mood in this scene. You can generate the same voice description ten times with ten different style instructions, and get ten entirely different emotional performances.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1741699015",
+    "status": "review",
+    "audio_file": "Tutorial_06_Voice_Design_audio/003_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The results of zero-shot voice design are non-deterministic. The same description can produce slightly different voices on each run. This is normal. When you find a voice you love, pin the Seed number from the header to reproduce it exactly, or save a W A V and use the Clone engine.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3788550188",
+    "status": "review",
+    "audio_file": "Tutorial_06_Voice_Design_audio/004_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Speaking of which \u2014 if you design a voice you want to reuse in a long project, here is the workflow: generate one clean line, save it as W A V from the Session History, then load that W A V into the Voice Clone tab as a reference. The clone engine will then reproduce that character across any text with much higher stability.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1730973216",
+    "status": "review",
+    "audio_file": "Tutorial_06_Voice_Design_audio/005_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The Voice Design engine is also the engine behind the Batch Studio's Design blocks. When you add a Design block in Batch Studio, you can load any saved profile to use your custom character inside a multi-voice scene.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1749609026",
+    "status": "review",
+    "audio_file": "Tutorial_06_Voice_Design_audio/006_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Please load Chapter Seven: The Art of Description. We will focus on the craft of writing great voice descriptions for this engine.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1356486648",
+    "status": "review",
+    "audio_file": "Tutorial_06_Voice_Design_audio/007_TutorialWizard.wav"
+  }
 ]

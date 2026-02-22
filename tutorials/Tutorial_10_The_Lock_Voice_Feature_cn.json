@@ -1,26 +1,58 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "‘锁定声音’功能是语音克隆最重要的工作流程改进之一。它为你节省了大量的时间。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "第十章：锁定语音功能。这是语音克隆选项卡中最重要的工作流程工具。一旦你理解了它，你将永远不想在没有它的情况下工作。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "通常情况下，每次你点击‘克隆声音’，引擎都必须从头开始重新分析你的源音频文件。这在计算上是昂贵的。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "通常情况下，每次您点击“克隆语音”时，引擎都会在开始生成之前从头重新分析您的参考音频。这个分析步骤需要几秒钟，并且每次都会重复。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "当你点击‘锁定声音’时，引擎会执行一次这个分析，然后将得到的声学数据存储在内存中。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "当您点击“锁定语音”时，引擎会精确地执行一次该分析，并将生成的声码数据存储在内存中。此后的每一次生成都会完全跳过分析步骤。您只生成新的音频——身份分析已经缓存。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "对于该声音的每一次后续生成，引擎都会使用这个缓存的数据，这比重新分析文件要快得多。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "当语音被缓存后，按钮标签会变为“解锁语音”，确认锁定已激活。要更改参考文件，请先点击“解锁语音”以清除缓存，然后加载新的音频并再次锁定。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "当一个声音被缓存后，按钮会变成‘解锁声音’。你可以再次点击它来清除缓存的数据并加载一个新的参考文件。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "此功能对于批量工作室会话至关重要。当批量工作室切换到克隆块时，它会使用当前锁定的任何语音。如果在运行场景之前锁定语音，该场景中的每个克隆块都会使用相同的缓存身份，而无需重新分析。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "这个功能在批量工作室工作时是必不可少的，我们接下来会讲到。请加载第十一章。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "您还可以保存一个转录助手配置文件，该文件将音频文件及其转录捆绑在一起。随时将配置文件加载到克隆选项卡中，即可立即恢复您的参考设置——然后锁定它。"
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "请加载第十一章：批量工作室序列。批量工作室是所有三个引擎汇集的地方。"
     }
 ]

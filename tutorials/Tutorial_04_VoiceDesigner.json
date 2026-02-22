@@ -1,44 +1,86 @@
 [
-    {
-        "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "Welcome to the Laboratory! This is Chapter 4: Voice Design. I was created right here by a simple text description.",
-        "temp": 0.7,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "In this tab, you see two main boxes. The Description box defines the 'Body' - things like Age, Gender, and Vocal Texture.",
-        "temp": 0.7,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "The Style box defines the 'Acting'. You can even load that custom style you saved in Chapter 3 right here!",
-        "temp": 0.7,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "It's now your turn to try. Go to the 'Voice Design' tab. In the description box, type: 'A futuristic A I assistant voice, neutral and crisp'. In the target text box, type: 'Engine Loaded', and click 'Generate Design'.",
-        "temp": 0.7,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "Next, go to your Session History. Right-click your new take and select 'Set as Notification Sound'. This makes your creation the app's ready sound!",
-        "temp": 0.7,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "Finally, create one more character you love, generate a line, and click 'Save WAV' in the history. We will clone that file in Chapter 5. Load it when you are ready.",
-        "temp": 0.7,
-        "top_p": 0.8
-    }
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Chapter Four: The Voice Design Engine. I was created here. I am not a pre-trained speaker. I am a character the Voice Design engine assembled from a text description \u2014 an elderly man in his seventies, deep and gravelly, masculine and husky, with a rough, raspy texture.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2843978221",
+    "status": "review",
+    "audio_file": "Tutorial_04_VoiceDesigner_audio/001_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The Voice Design tab is marked in blue. Inside, you will find two text fields. The first is the Voice Description. This defines the physical body of the speaker \u2014 things like age, gender, vocal texture, and accent. These qualities stay consistent across every line you generate.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3691809406",
+    "status": "review",
+    "audio_file": "Tutorial_04_VoiceDesigner_audio/002_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The second field is the Style Instruction. This works exactly like it does in the Custom Voice tab. It controls how the speaker performs right now \u2014 their emotion, pace, and energy. You can change this between takes without altering the underlying voice.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2656890512",
+    "status": "review",
+    "audio_file": "Tutorial_04_VoiceDesigner_audio/003_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "When you find a combination you like, click Save Profile. Give it a name, and it will be stored as a reusable Voice Design Profile. You can load it from the dropdown at the top of the tab to instantly restore both the description and the style.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2033583621",
+    "status": "review",
+    "audio_file": "Tutorial_04_VoiceDesigner_audio/004_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "If you have the Style and Profile Manager plugin enabled, it adds a dedicated tab where you can browse, edit, enable, and disable all your saved styles and profiles in one place. Disabled items are hidden from the dropdowns without being deleted.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "614941729",
+    "status": "review",
+    "audio_file": "Tutorial_04_VoiceDesigner_audio/005_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "There is also a useful trick for locking in a Voice Design voice. Generate a line you love, save it as a W A V from the Session History, then load that W A V into the Voice Clone tab as a reference. The Clone engine can then reproduce that character across any new text with high consistency.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3938837989",
+    "status": "review",
+    "audio_file": "Tutorial_04_VoiceDesigner_audio/006_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "When you are ready, load Chapter Five: Directing with Instructions, and I will teach you how to write style prompts that get the performance you want every time.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3480680117",
+    "status": "review",
+    "audio_file": "Tutorial_04_VoiceDesigner_audio/007_TutorialWizard.wav"
+  }
 ]

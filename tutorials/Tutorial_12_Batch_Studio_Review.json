@@ -1,30 +1,110 @@
 [
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "After running a scene in the Batch Studio, each block will have a new audio take, ready for your review."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The status icon on each block indicates its state. A yellow question mark means the take is a new draft that needs review."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "You can preview any take by clicking the play button on its block. If you are happy with the performance, click the yellow icon to approve it. It will turn into a green check mark."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Approved, green blocks will not be re-generated the next time you run the scene, which saves time."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "If you are not satisfied with a take, you can right-click the icon to reject it. It will turn into a red exclamation point. Rejected blocks will be re-generated on the next run."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Once you have approved all the takes in your scene, you can use the 'Export Approved' button to save all the green-lit audio files into a single, organized folder."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Next, let's look at the toolkit for preparing our source audio. Please load chapter thirteen."
-    }
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Chapter Twelve: Batch Studio Review. After you run a scene, the studio enters a review phase. Every block that completed successfully shows a status icon on its left side. This icon tells you exactly what state the take is in.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3465683383",
+    "status": "review",
+    "audio_file": "Tutorial_12_Batch_Studio_Review_audio/001_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "A yellow question mark means the take is a new draft, awaiting your decision. A green check mark means you have approved it. A red exclamation mark means you have rejected it. Blocks without any icon have not been generated yet.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3602163822",
+    "status": "review",
+    "audio_file": "Tutorial_12_Batch_Studio_Review_audio/002_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "To review a take, click the Play button on its block to hear it. If you are satisfied, click the yellow question mark icon to approve. It turns green. If you are not satisfied, right-click the icon and select Reject. It turns red.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3920088994",
+    "status": "review",
+    "audio_file": "Tutorial_12_Batch_Studio_Review_audio/003_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Before you start clicking through takes manually, there is a tool that can do the first pass for you. The Auto-Verify Batch checkbox sits in the toolbar next to Auto-Switch. Enable it before you run a scene, and the studio will audit every completed block automatically when generation finishes.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2356945982",
+    "status": "review",
+    "audio_file": "Tutorial_12_Batch_Studio_Review_audio/004_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Auto-Verify runs two checks. First, it scans the audio for unnatural silences \u2014 any pause longer than two seconds is a sign of a hallucination or dropout. Second, it uses a speech recognition model to transcribe what was generated and compare it to your original script. A match below seventy-five percent is flagged. Hover over the yellow dot on any flagged block to read the exact reason.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1373497883",
+    "status": "review",
+    "audio_file": "Tutorial_12_Batch_Studio_Review_audio/005_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "This approval system is what makes batch production efficient. When you click Run Scene again, the studio skips all green approved blocks and only regenerates the red rejected ones and any remaining pending blocks. You never waste time re-generating takes you already like.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "725487060",
+    "status": "review",
+    "audio_file": "Tutorial_12_Batch_Studio_Review_audio/006_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The Play All button in the toolbar plays every approved take in sequence, in order, giving you a preview of the entire assembled scene. This is a fast way to check the flow and pacing of a multi-voice production before exporting.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2429120555",
+    "status": "review",
+    "audio_file": "Tutorial_12_Batch_Studio_Review_audio/007_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "When your scene is fully approved, click Export Approved in the toolbar. This saves all green-lit takes as numbered W A V files into a single folder of your choice. The files are named in sequence so they import cleanly into any D A W or video editor.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3359394037",
+    "status": "review",
+    "audio_file": "Tutorial_12_Batch_Studio_Review_audio/008_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Please load Chapter Thirteen: The Transcript Helper, where we will look at the preparation tools for voice cloning source audio.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2474505707",
+    "status": "review",
+    "audio_file": "Tutorial_12_Batch_Studio_Review_audio/009_TutorialWizard.wav"
+  }
 ]

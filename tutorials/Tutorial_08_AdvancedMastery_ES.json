@@ -2,42 +2,42 @@
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "Capítulo 8: Producción Nivel Pro. Hablemos de los pequeños detalles que marcan una gran diferencia.",
+        "text": "Capítulo 8: Producción a Nivel Profesional. Hablemos de los pequeños detalles que marcan una gran diferencia.",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Vivian",
         "style": "News Anchor",
-        "text": "¿Sabías que puedes activar sonidos humanos? Intenta agregar [ laughter ] o [ breath ] dentro de tu texto. ¡Solo recuerda poner espacios alrededor de los corchetes!",
+        "text": "¿Sabías que puedes activar sonidos humanos? Intenta agregar [ risa ] o [ respiración ] dentro de tu texto. ¡Solo recuerda poner espacios alrededor de los corchetes!",
         "temp": 0.8,
         "top_p": 0.9
     },
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "Si una generación es demasiado silenciosa, búscala en el panel History, haz clic derecho y selecciona 'Normalize'. Esto aumentará el volumen a un nivel profesional automáticamente.",
+        "text": "Si una generación es demasiado silenciosa, búscala en el panel de Historial, haz clic con el botón derecho y selecciona 'Normalizar'. Esto aumentará el volumen a un nivel profesional automáticamente.",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Vivian",
         "style": "News Anchor",
-        "text": "Ayuda a la aplicación a aprender la velocidad de tu computadora. Después de una generación exitosa, haz clic en el botón 'Log' en el encabezado. La aplicación comenzará a predecir cuánto tardará cada línea en terminar.",
+        "text": "Ayuda a la aplicación a aprender la velocidad de tu computadora. Después de una generación exitosa, haz clic en el botón 'Registrar' en el encabezado. La aplicación comenzará a predecir cuánto tiempo tardará cada línea en finalizar.",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "¿Necesitas mover tus archivos? Haz clic en el icono de engranaje arriba a la derecha para cambiar tus rutas de SoX o Engine sin reinstalar nada.",
+        "text": "Need to move your files? Click the Gear icon in the top right to change your SoX or Engine paths without reinstalling anything.",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "Ahora es tu turno de experimentar. Juega con las etiquetas de acción y los controles deslizantes para encontrar tu sonido único. Ahora eres un maestro de Qwen 3 T T S Pro Suite. ¡Feliz dirección!",
+        "text": "Ahora es tu turno de intentarlo. Experimenta con las etiquetas de acción y los deslizadores para encontrar tu sonido único. Ahora eres un maestro de la Qwen 3 T T S Pro Suite. ¡Feliz dirección!",
         "temp": 0.7,
         "top_p": 0.8
     }

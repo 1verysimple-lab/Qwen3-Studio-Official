@@ -1,26 +1,58 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "语音设计引擎，标记为蓝色，是你发明新说话者的地方。在这个选项卡中，你不是在指导一个预先训练好的演员；你是在从想象中创造一个。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "第六章：语音设计引擎。蓝色选项卡是您的角色创建实验室。与自定义语音引擎不同，这里没有预先训练的说话者身份。您用简单的语言描述您想要的声音，模型会从零开始合成它。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "这个过程使用两个不同的提示。第一个是语音描述。这描述了说话者身体上的、一致的品质。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "该引擎使用两个完全独立的提示，模型会将它们结合起来。语音描述定义了说话者一贯的物理特性。可以把它想象成角色的身体。这些特性在不同录音之间不会改变。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "可以想象年龄、性别、口音和声音质感等属性。例如，‘一个声音深沉、沙哑、带有英国口音的老年男性’。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "风格指令定义了当前的表现。可以把它想象成角色在此场景中的情绪。您可以对同一个语音描述使用十种不同的风格指令生成十次，从而获得十种完全不同的情感表现。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "第二个提示是风格指令，它的作用与在自定义语音选项卡中的作用完全相同。这定义了说话者当前的情感状态和表现。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "零样本语音设计的结果是不确定的。相同的描述在每次运行时可能会产生略微不同的声音。这是正常的。当您找到喜欢的声音时，请从标题中固定种子编号以精确再现它，或者保存一个WAV文件并使用克隆引擎。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "人工智能将这两条信息结合起来，生成一个独特的声音。结果可能会令人惊讶，所以请随意尝试创造性的组合。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "说到这个——如果你设计了一个想在长项目中重复使用的声音，工作流程如下：生成一行干净的音频，从会话历史中将其另存为WAV，然后将该WAV加载到语音克隆选项卡中作为参考。克隆引擎将以更高的稳定性在任何文本中再现该角色。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "在我们的下一章中，我们将专注于为这个引擎编写有效描述的艺术。请加载第七章。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "语音设计引擎也是批量工作室设计块背后的引擎。当您在批量工作室中添加设计块时，您可以加载任何已保存的配置文件，以便在多语音场景中使用您的自定义角色。"
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "请加载第七章：描述的艺术。我们将专注于为该引擎编写出色的语音描述的技巧。"
     }
 ]

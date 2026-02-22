@@ -1,26 +1,58 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "La función 'Bloquear Voz' es una de las mejoras de flujo de trabajo más importantes para la clonación de voz. Te ahorra una cantidad significativa de tiempo."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Capítulo Diez: La Función de Bloquear Voz. Esta es la herramienta de flujo de trabajo más importante en la pestaña de Clonación de Voz. Una vez que la entiendas, nunca querrás trabajar sin ella."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Normalmente, cada vez que haces clic en 'Clonar Voz', el motor tiene que volver a analizar tu archivo de audio de origen desde cero. Esto es computacionalmente costoso."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Normalmente, cada vez que haces clic en 'Clonar Voz', el motor vuelve a analizar tu audio de referencia desde cero antes de comenzar a generar. Este paso de análisis lleva varios segundos y se repite cada vez."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Cuando haces clic en 'Bloquear Voz', el motor realiza este análisis una vez y luego almacena los datos vocales resultantes en la memoria."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Cuando haces clic en 'Bloquear Voz', el motor realiza ese análisis exactamente una vez y almacena los datos vocales resultantes en la memoria. Cada generación posterior omite por completo el paso de análisis. Solo generas audio nuevo; el análisis de identidad ya está en caché."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Para cada generación posterior con esa voz, el motor utiliza estos datos en caché, lo cual es dramáticamente más rápido que volver a analizar el archivo."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "La etiqueta del botón cambia a 'Desbloquear Voz' cuando una voz está en caché, lo que confirma que el bloqueo está activo. Para cambiar los archivos de referencia, primero haz clic en Desbloquear Voz para borrar la caché, luego carga tu nuevo audio y vuelve a bloquear."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "El botón cambiará a 'Desbloquear Voz' cuando una voz está en caché. Puedes hacer clic de nuevo para borrar los datos en caché y cargar un nuevo archivo de referencia."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Esta función es esencial para las sesiones de Batch Studio. Cuando el Batch Studio cambia a un bloque de Clonación, utiliza la voz que esté actualmente bloqueada. Si bloqueas una voz antes de ejecutar una escena, cada bloque de Clonación en esa escena utiliza la misma identidad en caché sin volver a analizar."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Esta función es esencial cuando se trabaja en el Estudio de Lotes, que cubriremos a continuación. Por favor, carga el capítulo once."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "También puedes guardar un Perfil de Asistente de Transcripción que agrupa el archivo de audio y su transcripción. Carga el perfil en la pestaña Clonar en cualquier momento para restaurar instantáneamente tu configuración de referencia, y luego bloquéala."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Por favor, carga el Capítulo Once: Secuenciación en Batch Studio. El Batch Studio es donde los tres motores se unen."
     }
 ]

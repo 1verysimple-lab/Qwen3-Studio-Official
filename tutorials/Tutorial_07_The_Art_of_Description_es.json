@@ -1,30 +1,66 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Escribir una buena descripción de voz es como esculpir con palabras. Cuanto más específica y evocadora sea tu descripción, más única será la voz resultante."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Capítulo Siete: El Arte de la Descripción. Escribir una gran descripción de voz es como esculpir con palabras. Cuanto más específico y evocador seas, más único y repetible será tu personaje."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Comienza con los fundamentos: edad y género. Por ejemplo, 'Una mujer joven adulta', o 'Un hombre anciano'."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Comienza con los dos atributos más determinantes: edad y género. 'Una mujer joven adulta' o 'un hombre anciano' le dan inmediatamente al modelo una base sólida sobre la cual construir."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "A continuación, añade textura y tono. Palabras como 'rasposa', 'susurrante', 'grave', 'suave', 'profunda' o 'aguda' son muy efectivas."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "A continuación, agrega textura y tono. Palabras como 'rasposa', 'susurrante', 'grave', 'suave', 'nasal', 'ronca', 'profunda' o 'aguda' son todas muy efectivas. El modelo tiene un sólido entendimiento del lenguaje de la textura vocal."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "También puedes especificar un acento. El modelo entiende muchos acentos regionales, como 'británico', 'del sur de Estados Unidos' o 'escocés'."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Luego, si es relevante, agrega un acento. El modelo entiende muchos acentos regionales: Pronunciación Recibida Británica, del sur de Estados Unidos, escocés, ruso marcado, americano estándar y muchos otros. Sé específico: 'un ligero deje escocés' se comporta de manera diferente a 'un marcado acento de Glasgow'."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Combinemos estas ideas. Una descripción como 'Una mujer de mediana edad con una voz suave y clara y un acento americano estándar' es una base sólida para un narrador profesional."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Aquí tienes un ejemplo de una descripción completa y profesional de un narrador: 'Una mujer de mediana edad, cuarenta y tantos, voz suave y clara, acento americano estándar, cálida y tranquilizadora'. Eso producirá de manera confiable un narrador limpio y versátil."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "En contraste, una descripción como 'Una criatura ancestral con una voz profunda, distorsionada y gutural' producirá algo mucho más fantástico."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Y aquí tienes un ejemplo fantástico: 'Una entidad antigua y sin edad con una voz imposiblemente profunda, distorsionada y resonante, con una ligera cualidad de reverberación, ni masculina ni femenina'. Supera los límites: el modelo también puede manejar descripciones surrealistas."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Ahora que puedes crear voces, aprendamos a replicarlas. Por favor, carga el capítulo ocho para explorar el motor de Clonación de Voz."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "La Guía de Ayuda contiene un conjunto completo de Preajustes de Personajes de Diseño de Voz: descripciones listas para usar combinadas con instrucciones de estilo, que cubren personajes como el Narrador Cowboy, la Bruja Anciana, el Ciber Droide y más. Son un excelente punto de partida."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Por favor, carga el Capítulo Ocho: El Motor de Clonación de Voz, y pasaremos al motor más potente del paquete."
     }
 ]

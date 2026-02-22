@@ -1,22 +1,98 @@
 [
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "You have reached the end of this guided tour. You now possess the foundational knowledge to direct all three creative engines, manage complex scenes, and produce high-quality audio."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Remember that A I is a creative partner. The best results often come from experimentation. Do not be afraid to try unusual descriptions or instructions."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "If you ever need a refresher, the new Help Guide is available from the link in the top-left of the main window. It contains a full text version of everything we have discussed."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The world of audio is now yours to create. This studio is merely a set of tools; the vision is yours alone."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Thank you for joining me. Happy directing!"
-    }
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Chapter Sixteen: Final Words. You have completed the full tour. You now understand all three synthesis engines, the Batch Studio production pipeline, the precision controls, and the in-script performance tools.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "4030375488",
+    "status": "review",
+    "audio_file": "Tutorial_16_Final_Words_audio/001_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Before we close, let us talk about the Modules system. The Modules Manager tab is where you control which plugins are active. Each plugin extends the app with additional capabilities, and they can be enabled or disabled at any time without restarting.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3964576998",
+    "status": "review",
+    "audio_file": "Tutorial_16_Final_Words_audio/002_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The bundled plugins include: this Tutorial Plugin, which you are using right now. The Peak Meter Plugin, which adds a floating real-time V U meter to monitor output levels and prevent clipping \u2014 look for the signal bars button in the header when it is enabled.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "747746309",
+    "status": "review",
+    "audio_file": "Tutorial_16_Final_Words_audio/003_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Also included is the Style and Profile Manager, which adds a dedicated tab for browsing, editing, enabling, and disabling all your saved style instructions and voice design profiles. It is the cleanest way to curate your creative library as it grows.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1871104619",
+    "status": "review",
+    "audio_file": "Tutorial_16_Final_Words_audio/004_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The Modules Manager also supports synchronising plugins from the official repository via G it Hub. This means new plugins created by the community can be downloaded and activated directly from within the app.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "4199451398",
+    "status": "review",
+    "audio_file": "Tutorial_16_Final_Words_audio/005_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "Furious",
+    "language": "English",
+    "text": "For a full reference of every feature, tone recipe, tag, and technique covered in this series, open the Help Guide from the top-left of the main window. It is a comprehensive text guide that covers everything in one place.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2975805182",
+    "status": "review",
+    "audio_file": "Tutorial_16_Final_Words_audio/006_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "A final thought. This suite is a set of instruments. The skill of the musician is what determines the quality of the music. Experiment freely. Try unusual descriptions. Combine unexpected styles. The model will surprise you.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2383514316",
+    "status": "review",
+    "audio_file": "Tutorial_16_Final_Words_audio/007_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Thank you for your time. The studio is yours. Happy directing.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "435399131",
+    "status": "review",
+    "audio_file": "Tutorial_16_Final_Words_audio/008_TutorialWizard.wav"
+  }
 ]

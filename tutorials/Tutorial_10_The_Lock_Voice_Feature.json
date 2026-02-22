@@ -1,26 +1,86 @@
 [
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The 'Lock Voice' feature is one of the most important workflow improvements for voice cloning. It saves you a significant amount of time."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Normally, every time you click 'Clone Voice', the engine has to re-analyze your source audio file from scratch. This is computationally expensive."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "When you click 'Lock Voice', the engine performs this analysis once and then stores the resulting vocal data in memory."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "For every subsequent generation with that voice, the engine uses this cached data, which is dramatically faster than re-analyzing the file."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The button will change to 'Unlock Voice' when a voice is cached. You can click it again to clear the cached data and load a new reference file."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "This feature is essential when working in the Batch Studio, which we will cover next. Please load chapter eleven."
-    }
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Chapter Ten: The Lock Voice Feature. This is the most important workflow tool in the Voice Clone tab. Once you understand it, you will never want to work without it.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "4118164543",
+    "status": "review",
+    "audio_file": "Tutorial_10_The_Lock_Voice_Feature_audio/001_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Normally, every time you click 'Clone Voice', the engine re-analyses your reference audio from scratch before it starts generating. This analysis step takes several seconds and repeats every single time.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1108183783",
+    "status": "review",
+    "audio_file": "Tutorial_10_The_Lock_Voice_Feature_audio/002_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "When you click 'Lock Voice', the engine performs that analysis exactly once and stores the resulting vocal data in memory. Every subsequent generation skips the analysis step entirely. You only generate new audio \u2014 the identity analysis is already cached.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1004293421",
+    "status": "review",
+    "audio_file": "Tutorial_10_The_Lock_Voice_Feature_audio/003_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The button label changes to 'Unlock Voice' when a voice is cached, confirming the lock is active. To change reference files, click Unlock Voice first to clear the cache, then load your new audio and lock again.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3391338054",
+    "status": "review",
+    "audio_file": "Tutorial_10_The_Lock_Voice_Feature_audio/004_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "This feature is essential for Batch Studio sessions. When the Batch Studio switches to a Clone block, it uses whatever voice is currently locked. If you lock a voice before running a scene, every Clone block in that scene uses the same cached identity without re-analysing.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1134944528",
+    "status": "review",
+    "audio_file": "Tutorial_10_The_Lock_Voice_Feature_audio/005_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "You can also save a Transcript Helper Profile that bundles the audio file and its transcript together. Load the profile into the Clone tab at any time to instantly restore your reference setup \u2014 and then lock it.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2434138589",
+    "status": "review",
+    "audio_file": "Tutorial_10_The_Lock_Voice_Feature_audio/006_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Please load Chapter Eleven: Batch Studio Sequencing. The Batch Studio is where all three engines come together.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1728633419",
+    "status": "review",
+    "audio_file": "Tutorial_10_The_Lock_Voice_Feature_audio/007_TutorialWizard.wav"
+  }
 ]

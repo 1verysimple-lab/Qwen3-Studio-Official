@@ -1,44 +1,86 @@
 [
-    {
-        "speaker": "Ryan",
-        "style": "News Anchor",
-        "text": "Chapter 8: Pro-Level Production. Let's talk about the small details that make a big difference.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Vivian",
-        "style": "News Anchor",
-        "text": "Did you know you can trigger human sounds? Try adding [ laughter ] or [ breath ] inside your text. Just remember to put spaces around the brackets!",
-        "temp": 0.8,
-        "top_p": 0.9
-    },
-    {
-        "speaker": "Ryan",
-        "style": "News Anchor",
-        "text": "If a generation is too quiet, find it in the History panel, right-click, and select 'Normalize'. This will boost the volume to a professional level automatically.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Vivian",
-        "style": "News Anchor",
-        "text": "Help the app learn your computer's speed. After a successful generation, click the 'Log' button in the header. The app will start predicting how long each line will take to finish.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Ryan",
-        "style": "News Anchor",
-        "text": "Need to move your files? Click the Gear icon in the top right to change your SoX or Engine paths without reinstalling anything.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Ryan",
-        "style": "News Anchor",
-        "text": "It's now your turn to try. Experiment with action tags and sliders to find your unique sound. You are now a master of the Qwen 3 T T S Pro Suite. Happy directing!",
-        "temp": 0.7,
-        "top_p": 0.8
-    }
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Chapter Eight: The Voice Clone Engine. The purple tab is the most powerful engine in the suite. Given a short audio sample, it can reproduce that voice speaking any new text you provide.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "874796988",
+    "status": "review",
+    "audio_file": "Tutorial_08_AdvancedMastery_audio/001_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "To use it, you first load a Source Voice file. This is a short audio recording of the voice you want to clone. We will talk about what makes a good source file in the next chapter. For now, know that three to ten seconds is the ideal length.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2259582158",
+    "status": "review",
+    "audio_file": "Tutorial_08_AdvancedMastery_audio/002_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "For the highest quality results, you should also provide a Transcript. This is the exact text of what the speaker says in the reference audio. The 'Transcribe' button can generate this automatically using the built-in Whisper A I. Providing a transcript greatly improves tonal accuracy.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "376366226",
+    "status": "review",
+    "audio_file": "Tutorial_08_AdvancedMastery_audio/003_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "If you do not have a transcript, check the 'Ignore Text' box. The engine will focus only on the acoustic fingerprint of the voice. The output will still sound like the speaker, but may have slightly less precise inflection.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2013163103",
+    "status": "review",
+    "audio_file": "Tutorial_08_AdvancedMastery_audio/004_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "In the Target Text box, type whatever you want the cloned voice to say. This is completely independent of the source transcript. You can write entire paragraphs of new content and the engine will deliver them in the cloned voice.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1959418990",
+    "status": "review",
+    "audio_file": "Tutorial_08_AdvancedMastery_audio/005_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "For very long target texts, use the pipe delimiter \u2014 two vertical bars, like this: pipe pipe. This splits the text into segments, and each segment is generated separately and then stitched together. This greatly improves the consistency of long outputs.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "4266912634",
+    "status": "review",
+    "audio_file": "Tutorial_08_AdvancedMastery_audio/006_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Please load Chapter Nine: Preparing Clone Audio, and we will discuss how to choose and prepare the ideal reference file.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "4089572237",
+    "status": "review",
+    "audio_file": "Tutorial_08_AdvancedMastery_audio/007_TutorialWizard.wav"
+  }
 ]

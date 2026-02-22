@@ -1,26 +1,86 @@
 [
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The quality of your voice clone is directly dependent on the quality of your source audio. Garbage in, garbage out."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Your source audio file should be as clean as possible. This means no background music, no noise, and no other people speaking."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The ideal length is between three and ten seconds. Less than three seconds may not provide enough data, and more than fifteen seconds can sometimes introduce instability."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The speaker should be talking in a normal, neutral tone. Highly emotional performances with shouting or whispering can make for a poor quality clone that is difficult to direct later."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "You can use the Transcript Helper tab to record your own voice or to trim a longer audio file down to a perfect, clean sample."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Once you have a high-quality sample, you can use a feature to make your workflow much faster. Let's explore that next. Please load chapter ten."
-    }
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Chapter Nine: Preparing Clone Audio. The quality of your clone is a direct reflection of the quality of your reference audio. A perfect clone comes from a perfect sample.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1755377978",
+    "status": "review",
+    "audio_file": "Tutorial_09_Preparing_Clone_Audio_audio/001_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The most important requirement is silence. Your reference audio must contain only one voice, with no background music, no reverb, no crowd noise, and no other speakers. Even a small amount of background sound will bleed into the clone.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3003659337",
+    "status": "review",
+    "audio_file": "Tutorial_09_Preparing_Clone_Audio_audio/002_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The ideal length is between three and ten seconds. Less than three seconds does not give the model enough acoustic data to work with. More than fifteen seconds does not improve results and can sometimes introduce instability.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1468261323",
+    "status": "review",
+    "audio_file": "Tutorial_09_Preparing_Clone_Audio_audio/003_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The speaker should be using a neutral, conversational tone. Highly emotional performances \u2014 shouting, crying, or whispering \u2014 are harder to clone cleanly and produce a voice that is more difficult to direct once cloned.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1731245006",
+    "status": "review",
+    "audio_file": "Tutorial_09_Preparing_Clone_Audio_audio/004_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "You can record your own reference audio directly in the app using the Transcript Helper tab. It can also crop an existing audio file down to a perfect sample, and its built-in Whisper transcription will generate an accurate text transcript for you automatically.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1964577226",
+    "status": "review",
+    "audio_file": "Tutorial_09_Preparing_Clone_Audio_audio/005_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "A great practical workflow: use the Transcript Helper to record yourself reading five to eight seconds of plain text, trim the clip, click Audio to Text, and then hit 'Send All to Voice Clone Tab'. Everything transfers over in one step.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1836813692",
+    "status": "review",
+    "audio_file": "Tutorial_09_Preparing_Clone_Audio_audio/006_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Please load Chapter Ten: The Lock Voice Feature, and we will cover the single most important time-saving tool for voice cloning sessions.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "500418804",
+    "status": "review",
+    "audio_file": "Tutorial_09_Preparing_Clone_Audio_audio/007_TutorialWizard.wav"
+  }
 ]

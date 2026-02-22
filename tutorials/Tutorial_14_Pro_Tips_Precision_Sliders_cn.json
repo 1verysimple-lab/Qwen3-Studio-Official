@@ -1,34 +1,74 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "让我们仔细看看精度滑块。这两个控件，温度和Top P，是你微调AI性能的主要工具。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "第十四章：精确滑块。标题栏中的这三个控件适用于所有引擎——自定义、设计和克隆。掌握它们是获得足够效果和专业品质音频之间的区别。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "温度控制声音的创造力或随机性。把它想象成一个能量水平。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "温度控制创造力和能量。可以把它想象成贯穿表演的电压。低温——低于零点五——会产生高度稳定、中性、近乎机器人的表达。这非常适合长篇旁白、法律免责声明，或者修复听起来“醉酒”或含糊不清的语音克隆。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "低温，低于零点五，会产生非常稳定、一致，有时甚至是机械的交付。这对于中性叙述或修复听起来不稳定的声音很有用。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "大多数语音的最佳点在零点六到零点九之间。这能产生听起来自然、表现力强的语音。您现在正在收听的教程就是在这个范围内生成的。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "高温，高于一点零，会产生非常戏剧化和情绪化的表演。用它来大喊或强烈耳语，但要注意这会增加音频出现故障的风险。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "高温——高于一点零——会释放出戏剧性、情感强烈的表演。可用于喊叫、哭泣或强烈的角色扮演。但请注意：高温与矛盾的风格指令相结合会显著增加出现故障和音频失真的几率。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "大多数自然听起来的语音的推荐范围在零点六到零点九之间。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Top P 控制词汇范围——模型在每一步考虑多少种可能的声音。低值，低于零点五，会产生集中、清晰、明了的发音。高值，接近一点零，会产生更多样化的语调和自然的节奏感。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "另一方面，Top P控制AI考虑的可能声音的范围。较低的值会导致更清晰、更集中的发音，而较高的值则允许更多样化和更具个性的语调。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "种子字段是第三个控件，也是可重复性最强的控件。在种子字段中输入任何整数，使用该种子的每一次生成都将产生逐字节相同的音频，无论您何时或运行多少次。这对于受控的A/B比较至关重要。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "你可以锁定滑块，以防止在加载具有不同保存值的配置文件时更改它们。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "将种子字段留空，应用程序会在生成时自动选择一个随机种子，然后将其写回字段中。这意味着即使您没有提前计划，您也始终可以获得上次录音的种子。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "在我们的下一章中，我们将介绍脚本内标签和标点的使用。请加载第十五章。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "单击种子字段旁边的骰子按钮，可以在不生成的情况下向字段中滚动一个新的随机数。当您想在长时间的批量运行之前预设一个种子，以便每个块都获得一个已知的起始种子时，这很有用。"
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "请加载第十五章：标签和标点符号的专业提示，以获取脚本内性能控制的最后一层。"
     }
 ]

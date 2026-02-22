@@ -2,28 +2,49 @@
     {
         "speaker": "Eric",
         "style": "News Anchor",
-        "text": "Hola, soy Eric. Soy una voz integrada, ¡y acabas de generarme! Bienvenido a tu nueva suite creativa.",
+        "text": "Bienvenido. Soy Eric, una de tus voces incorporadas. Y sí, acabas de generarme. Lo que estás escuchando en este momento es síntesis de voz por IA completamente local, ejecutándose en tu propia máquina.",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Eric",
         "style": "News Anchor",
-        "text": "Echa un vistazo al panel Session History a la derecha. Verás mis tomas apareciendo allí en tiempo real.",
+        "text": "Esto es Qwen Three T T S Pro Suite. Te ofrece tres motores creativos distintos: Voz Personalizada para hablantes pre-entrenados, Diseño de Voz para inventar nuevos personajes desde cero y Clonación de Voz para replicar cualquier voz a partir de una breve muestra de audio.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "¡Hola! Soy Ryan. Y también estoy incorporado. ¿Notas cuán diferentes sonamos? Mismo motor, mismo modelo, identidad completamente diferente. La pestaña de Voz Personalizada te da nueve de nosotros para elegir, en inglés, chino, japonés y coreano.",
+        "temp": 0.65,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Eric",
+        "style": "News Anchor",
+        "text": "Ahora mira al lado derecho de la ventana. Ese es el panel de Historial de Sesiones. Cada toma que generas se registra automáticamente allí en tiempo real. Puedes reproducir, eliminar, renombrar o exportar cualquier toma de esa lista en cualquier momento.",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Eric",
         "style": "News Anchor",
-        "text": "En esa lista del history, puedes reproducir, eliminar o incluso convertir archivos a MP3. Cada línea que haces se registra automáticamente allí.",
+        "text": "Hacer clic derecho en cualquier entrada del historial te da más opciones. Puedes guardarla como un archivo W A V, convertirla a M P 3, o incluso establecerla como el sonido de notificación de la aplicación para cuando finalice una generación larga.",
         "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "Esta serie de tutoriales tiene dieciséis capítulos, y cada uno se carga directamente en el Batch Studio como un guion reproducible. Te guiaremos a través de cada función, desde los controles básicos hasta las herramientas de nivel profesional.",
+        "temp": 0.65,
         "top_p": 0.8
     },
     {
         "speaker": "Eric",
         "style": "News Anchor",
-        "text": "Ahora es tu turno de probar. Haz clic en el botón 'Clear All' en la barra de herramientas superior, luego carga 'Tutorial_02_UI_Overview' desde la carpeta de tutoriales y haz clic en 'Run Scene' para ver cómo navegar por la aplicación.",
+        "text": "Cuando estés listo, ve a la pestaña de Tutorial, selecciona el Capítulo Dos: Resumen de la Interfaz de Usuario, y haz clic en Cargar Guion de Tutorial. Luego haz clic en Ejecutar Escena para continuar.",
         "temp": 0.6,
         "top_p": 0.8
     }

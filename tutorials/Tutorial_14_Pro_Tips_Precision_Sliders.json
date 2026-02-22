@@ -1,34 +1,110 @@
 [
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Let us take a closer look at the Precision Sliders. These two controls, Temperature and Top P, are your primary tools for fine-tuning an A I performance."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Temperature controls the creativity or randomness of the voice. Think of it as an energy level."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "A low temperature, below point five, results in a very stable, consistent, and sometimes robotic delivery. This is useful for neutral narration or for fixing a voice that sounds unstable."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "A high temperature, above one point zero, results in a highly dramatic and emotional performance. Use this for shouting or intense whispering, but be aware that it increases the risk of audio glitches."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The recommended range for most natural-sounding speech is between point six and point nine."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Top P, on the other hand, controls the range of possible sounds the A I considers. A lower value leads to clearer, more focused pronunciation, while a higher value allows for more characterful and diverse intonation."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "You can lock the sliders to prevent them from being changed when you load a profile that has different saved values."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "In our next chapter, we will cover the use of in-script tags and punctuation. Please load chapter fifteen."
-    }
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Chapter Fourteen: Precision Sliders. These three controls in the header bar apply to every engine \u2014 Custom, Design, and Clone. Mastering them is the difference between adequate results and professional-quality audio.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "4126090321",
+    "status": "review",
+    "audio_file": "Tutorial_14_Pro_Tips_Precision_Sliders_audio/001_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Temperature controls creativity and energy. Think of it as the voltage running through the performance. A low temperature \u2014 below point five \u2014 produces a highly stable, neutral, almost robotic delivery. This is ideal for long narration, legal disclaimers, or fixing a voice clone that sounds 'drunk' or slurred.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "621054076",
+    "status": "review",
+    "audio_file": "Tutorial_14_Pro_Tips_Precision_Sliders_audio/002_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The sweet spot for most voices is between point six and point nine. This produces natural-sounding speech with good expressiveness. The tutorials you are listening to now were generated in this range.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "15946974",
+    "status": "review",
+    "audio_file": "Tutorial_14_Pro_Tips_Precision_Sliders_audio/003_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "A high temperature \u2014 above one point zero \u2014 unleashes dramatic, highly emotional performances. Use it for shouting, crying, or intense character acting. But be aware: high temperature combined with contradictory style instructions significantly increases the chance of glitches and audio artifacts.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1653579794",
+    "status": "review",
+    "audio_file": "Tutorial_14_Pro_Tips_Precision_Sliders_audio/004_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Top P controls the vocabulary range \u2014 how many possible sounds the model considers at each step. A low value, below point five, produces focused, crisp, clear pronunciation. A high value, near one point zero, produces more diverse intonation and natural character in the rhythm.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3337908975",
+    "status": "review",
+    "audio_file": "Tutorial_14_Pro_Tips_Precision_Sliders_audio/005_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The Seed field is the third control, and it is the most powerful for reproducibility. Type any integer into the Seed field and every generation using that seed will produce byte-for-byte identical audio, regardless of when or how many times you run it. This is essential for controlled A B comparisons.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3414669038",
+    "status": "review",
+    "audio_file": "Tutorial_14_Pro_Tips_Precision_Sliders_audio/006_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Leave the Seed field empty and the app automatically picks a random seed at generation time, then writes it back into the field. This means you always have the seed of your last take available, even when you did not plan ahead.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3446041940",
+    "status": "review",
+    "audio_file": "Tutorial_14_Pro_Tips_Precision_Sliders_audio/007_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Click the Dice button next to the Seed field to roll a new random number into the field without generating. This is useful when you want to pre-set a seed before a long batch run, so that every block gets a known starting seed.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3208278448",
+    "status": "review",
+    "audio_file": "Tutorial_14_Pro_Tips_Precision_Sliders_audio/008_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Please load Chapter Fifteen: Pro Tips for Tags and Punctuation, for the final layer of in-script performance control.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "65516877",
+    "status": "review",
+    "audio_file": "Tutorial_14_Pro_Tips_Precision_Sliders_audio/009_TutorialWizard.wav"
+  }
 ]

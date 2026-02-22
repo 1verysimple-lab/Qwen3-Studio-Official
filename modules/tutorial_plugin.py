@@ -36,5 +36,3 @@ def initialize(app):
             btn.pack(side=tk.LEFT)
         except Exception as e2:
             print(f"Fallback tutorial button also failed: {e2}")
-
-    print("Tutorial Plugin Initialized: Tab and menu item enabled.")

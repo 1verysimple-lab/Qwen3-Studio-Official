@@ -1,30 +1,66 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Writing a good voice description is like sculpting with words. The more specific and evocative your description, the more unique your resulting voice will be."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Chapter Seven: The Art of Description. Writing a great voice description is like sculpting with words. The more specific and evocative you are, the more unique and repeatable your character will be."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Start with the fundamentals: age and gender. For example, 'A young adult female', or 'An elderly man'."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Start with the two most anchoring attributes: age and gender. 'A young adult female' or 'an elderly man' immediately give the model a strong foundation to build on."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Next, add texture and pitch. Words like 'raspy', 'breathy', 'gravelly', 'smooth', 'deep', or 'high-pitched' are very effective."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Next, add texture and pitch. Words like 'raspy', 'breathy', 'gravelly', 'smooth', 'nasal', 'husky', 'deep', or 'high-pitched' are all highly effective. The model has a strong understanding of vocal texture language."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "You can also specify an accent. The model understands many regional accents, such as 'British', 'Southern American', or 'Scottish'."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Then, if relevant, add an accent. The model understands many regional accents: British Received Pronunciation, Southern American, Scottish, thick Russian, standard American, and many others. Be specific — 'a slight Scottish lilt' behaves differently from 'a thick Glaswegian accent'."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Let's combine these ideas. A description like 'A middle-aged woman with a smooth, clear voice and a standard American accent' is a strong foundation for a professional narrator."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Here is an example of a complete, professional narrator description: 'A middle-aged woman, mid-forties, smooth and clear voice, standard American accent, warm and reassuring.' That will reliably produce a clean, versatile narrator."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "In contrast, a description like 'An ancient creature with a deep, distorted, growling voice' will produce something far more fantastical."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "And here is a fantastical example: 'An ancient, ageless entity with an impossibly deep, distorted, resonant voice, with a slight reverb quality, neither male nor female.' Push the boundaries — the model can handle surreal descriptions too."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Now that you can create voices, let's learn how to replicate them. Please load chapter eight to explore the Voice Clone engine."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "The Help Guide contains a full set of Voice Design Character Presets — ready-made descriptions paired with style instructions, covering characters like the Cowboy Narrator, the Ancient Witch, the Cyber Droid, and more. They are an excellent starting point."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Please load Chapter Eight: The Voice Clone Engine, and we will move on to the most powerful engine in the suite."
     }
 ]

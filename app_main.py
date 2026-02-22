@@ -8,22 +8,68 @@ import json
 import re
 import subprocess
 import gc
+import random
 import shutil
-import msvcrt
+if os.name == 'nt':
+    import msvcrt
+else:
+    msvcrt = None
 import importlib.util
+import faulthandler
+import traceback
+import logging
+import hashlib
+import atexit
 from typing import Optional, Dict, Any, List
-import sys
-import os
 
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
+# ---------------------------------------------------------------------------
+# DIAGNOSTICS — captures Python exceptions (all threads), native C crashes
+# (PortAudio segfaults/access violations), and Tkinter callback errors.
+# Log file: debug.log next to this script.  Open it after a crash.
+# ---------------------------------------------------------------------------
+_LOG_PATH  = None
+_log_file  = None  # kept open so faulthandler can write to it
 
-    return os.path.join(base_path, relative_path)
+def _setup_diagnostics():
+    """Call once at startup, before the Tk window is created."""
+    global _log_file, _LOG_PATH
+    _LOG_PATH = os.path.join(APP_DATA_ROOT, "debug.log")
+
+    # 1. File-based logger (append so history survives across runs)
+    logging.basicConfig(
+        filename=_LOG_PATH,
+        level=logging.DEBUG,
+        format="%(asctime)s [%(threadName)-16s] %(levelname)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+    logging.info("=" * 60)
+    logging.info("App starting — Python %s", sys.version.split()[0])
+
+    # 2. faulthandler: writes a Python stack trace on ANY native crash
+    #    (segfault, PortAudio access violation, etc.)
+    _log_file = open(_LOG_PATH, "a", encoding="utf-8")
+    faulthandler.enable(file=_log_file, all_threads=True)
+    logging.info("faulthandler enabled → %s", _LOG_PATH)
+
+    # 3. Catch unhandled exceptions in background threads
+    def _thread_excepthook(args):
+        logging.error(
+            "Unhandled exception in thread '%s':\n%s",
+            getattr(args.thread, "name", "?"),
+            "".join(traceback.format_exception(
+                args.exc_type, args.exc_value, args.exc_traceback)),
+        )
+    threading.excepthook = _thread_excepthook
+
+def _log_audio(action: str, detail: str = ""):
+    """Thin wrapper — call before every sd.play() / sd.stop()."""
+    logging.debug("AUDIO %-6s %-30s %s", action, detail,
+                  f"thread={threading.current_thread().name}")
+
+def _open_url(url):
+    """Open a URL in the default browser, cross-platform."""
+    import webbrowser
+    webbrowser.open(url)
 try:
     import winsound
 except ImportError:
@@ -36,28 +82,31 @@ ENGINE_ROOT = ""
 sox_path = ""
 VERSION_FILE = ""
 CONFIG_FILE = ""
-APP_VERSION = "4.1.0"
+MODULES_DIR = ""
+APP_VERSION = "4.6.0"
 MODEL_CUSTOM = ""
 MODEL_BASE = ""
 MODEL_DESIGN = ""
 
 def setup_environment():
-    """Configures all system paths and environment variables. 
+    """Configures all system paths and environment variables.
     Must be called BEFORE UI or Locking starts."""
     global BASE_DIR, APP_DATA_ROOT, ENGINE_ROOT, sox_path
-    global VERSION_FILE, CONFIG_FILE, APP_VERSION
+    global VERSION_FILE, CONFIG_FILE, MODULES_DIR, APP_VERSION
     global MODEL_CUSTOM, MODEL_BASE, MODEL_DESIGN
 
     # 1. Internal Assets (Icons, Sox, JSONs) - "Where am I unpacked?"
-    if getattr(sys, 'frozen', False):
-        # In --onefile mode, assets are in sys._MEIPASS
+    is_frozen = getattr(sys, 'frozen', False)
+    if is_frozen:
+        # In --onefile mode, assets are in sys._MEIPASS (volatile temp dir)
         BASE_DIR = sys._MEIPASS
     else:
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
     # 2. External Data (The Engine) - "Where is the heavy stuff?"
-    # We use local AppData so it persists even if the EXE is moved/deleted.
+    # We use LOCALAPPDATA so it persists even if the EXE is moved/deleted.
     APP_DATA_ROOT = os.path.join(os.getenv('LOCALAPPDATA'), "Qwen3Studio")
+    os.makedirs(APP_DATA_ROOT, exist_ok=True)
     ENGINE_ROOT = os.path.join(APP_DATA_ROOT, "Qwen3-TTS")
 
     # 3. Setup Dependencies (Sox)
@@ -72,18 +121,45 @@ def setup_environment():
         # On Windows, some libraries also look at 'sox' in PATH
         os.environ["sox"] = os.path.join(abs_sox, "sox.exe")
 
-    # 4. CONFIG & PATH SETUP
-    VERSION_FILE = os.path.join(BASE_DIR, "version.json")
-    CONFIG_FILE = os.path.join(BASE_DIR, "app_config.json")
+    # 4. CONFIG FILE — always lives in APP_DATA_ROOT (survives frozen temp wipe)
+    VERSION_FILE = os.path.join(BASE_DIR, "version.json")  # read-only bundled asset
+    CONFIG_FILE = os.path.join(APP_DATA_ROOT, "app_config.json")
+
+    # Migrate: first run in dev mode may have config only in BASE_DIR
+    _base_config = os.path.join(BASE_DIR, "app_config.json")
+    if not os.path.exists(CONFIG_FILE) and os.path.exists(_base_config):
+        try:
+            shutil.copy2(_base_config, CONFIG_FILE)
+        except Exception:
+            pass
 
     # Load Version
     if os.path.exists(VERSION_FILE):
         try:
             with open(VERSION_FILE, 'r') as f:
                 APP_VERSION = json.load(f).get("version", APP_VERSION)
-        except: pass
+        except Exception as e:
+            logging.warning("Failed to load version file: %s", e)
 
-    # 5. Local Path Mappings (Forced Stability)
+    # 5. MODULES DIR — persistent in APP_DATA_ROOT when frozen, repo root in dev
+    if is_frozen:
+        MODULES_DIR = os.path.join(APP_DATA_ROOT, "modules")
+        os.makedirs(MODULES_DIR, exist_ok=True)
+        # Seed defaults on first frozen run by copying bundled plugins
+        bundled_modules = os.path.join(BASE_DIR, "modules")
+        if os.path.isdir(bundled_modules):
+            for fname in os.listdir(bundled_modules):
+                if fname.endswith(".py") and not fname.startswith("__"):
+                    dest = os.path.join(MODULES_DIR, fname)
+                    if not os.path.exists(dest):
+                        try:
+                            shutil.copy2(os.path.join(bundled_modules, fname), dest)
+                        except Exception:
+                            pass
+    else:
+        MODULES_DIR = os.path.join(BASE_DIR, "modules")
+
+    # 6. Local Path Mappings (Forced Stability)
     MODEL_CUSTOM = os.path.join(ENGINE_ROOT, "custom")
     MODEL_BASE = os.path.join(ENGINE_ROOT, "base")
     MODEL_DESIGN = os.path.join(ENGINE_ROOT, "design")
@@ -137,11 +213,8 @@ MAX_WAVEFORM_POINTS = 2000  # UI optimization
 class ModuleHub:
     """Handles synchronization with GitHub and managing enabled/disabled states."""
     def __init__(self, modules_dir):
-        self.modules_dir = modules_dir 
-        # Create persistent path in APPDATA for compiled app stability
-        app_data = os.path.join(os.getenv('APPDATA'), "Qwen3Studio")
-        os.makedirs(app_data, exist_ok=True)
-        self.registry_file = os.path.join(app_data, "enabled_modules.json")
+        self.modules_dir = modules_dir
+        self.registry_file = os.path.join(os.getenv('LOCALAPPDATA'), "Qwen3Studio", "enabled_modules.json")
         
         self.registry = self.load_registry()
         self.repo_url = "https://api.github.com/repos/1verysimple-lab/Qwen3-Studio-Official/contents/modules"
@@ -150,16 +223,27 @@ class ModuleHub:
 
     def load_registry(self):
         """Loads module states and enforces essential defaults."""
-        defaults = {"tutorial_plugin.py": True, "autoscript_plugin.py": False, "peak_meter_plugin.py": True}
+        defaults = {
+            "tutorial_plugin.py": True,
+            "peak_meter_plugin.py": True,
+            "text_parser_plugin.py": True,
+            "style_profile_manager_plugin.py": True,
+            "autoscript_plugin.py": False,
+        }
         if os.path.exists(self.registry_file):
             try:
                 with open(self.registry_file, "r") as f:
                     self.registry = json.load(f)
-                # Ensure the tutorial is always there even in old registry files
-                if "tutorial_plugin.py" not in self.registry:
-                    self.registry["tutorial_plugin.py"] = True
+                # Back-fill any bundled plugins missing from older registry files
+                changed = False
+                for name, state in defaults.items():
+                    if name not in self.registry:
+                        self.registry[name] = state
+                        changed = True
+                if changed:
                     self.save_registry()
-            except:
+            except Exception as e:
+                logging.warning("Failed to load module registry, using defaults: %s", e)
                 self.registry = defaults
         else:
             self.registry = defaults
@@ -170,11 +254,12 @@ class ModuleHub:
         try:
             with open(self.registry_file, 'w') as f:
                 json.dump(self.registry, f, indent=4)
-        except: pass
+        except Exception as e:
+            logging.warning("Failed to save module registry: %s", e)
 
     def is_enabled(self, filename):
-        # Default to True if not in registry
-        return self.registry.get(filename, True)
+        # Default to False — unknown files never load without explicit opt-in
+        return self.registry.get(filename, False)
 
     def toggle_module(self, module_name, state):
         """Saves the state immediately to cure the 'amnesia' bug."""
@@ -182,12 +267,30 @@ class ModuleHub:
         self.save_registry() # Critical: Burn the choice into the JSON file
         if self.on_refresh: self.on_refresh()
 
+    def verify_file_hash(self, file_content_bytes, expected_hash):
+        """Returns True if SHA-256 of file_content_bytes matches expected_hash."""
+        actual = hashlib.sha256(file_content_bytes).hexdigest()
+        return actual == expected_hash
+
     def sync_from_github(self, callback=None):
-        """Fetches the list of modules from GitHub and updates/downloads if needed."""
+        """Securely fetches modules from GitHub, verifying SHA-256 against manifest.json."""
         def task():
             try:
                 import requests
-                # 1. Fetch File List
+
+                # Step 1: Fetch manifest (trust anchor — committed to same repo, served over TLS)
+                manifest_url = f"{self.raw_base_url}/manifest.json"
+                r_manifest = requests.get(manifest_url, timeout=10)
+                if r_manifest.status_code != 200:
+                    if callback: callback("error", f"Failed to fetch manifest: {r_manifest.status_code}", [])
+                    return
+                try:
+                    manifest = r_manifest.json()
+                except Exception as e:
+                    if callback: callback("error", f"Invalid manifest JSON: {e}", [])
+                    return
+
+                # Step 2: Fetch GitHub API file list
                 headers = {'Accept': 'application/vnd.github.v3+json'}
                 r = requests.get(self.repo_url, headers=headers, timeout=10)
                 if r.status_code != 200:
@@ -195,31 +298,47 @@ class ModuleHub:
                     return
 
                 files = r.json()
-                # Filter for valid python plugins only
-                py_files = [f for f in files if isinstance(f, dict) and f.get('name', '').endswith('.py') and not f.get('name', '').startswith('__')]
+                py_files = [f for f in files if isinstance(f, dict)
+                            and f.get('name', '').endswith('.py')
+                            and not f.get('name', '').startswith('__')]
                 newly_downloaded = []
-                
+
+                # Step 3: For each .py file — gate on manifest, skip existing, verify hash
                 for f in py_files:
                     name = f['name']
-                    
+
+                    # Block anything not explicitly approved in the manifest
+                    if name not in manifest:
+                        print(f"[SECURITY BLOCK] '{name}' is not in manifest.json — skipping.")
+                        continue
+
                     target_path = os.path.join(self.modules_dir, name)
-                    
-                    # Download if missing
-                    if not os.path.exists(target_path):
-                        raw_url = f"{self.raw_base_url}/{name}"
-                        r_code = requests.get(raw_url, timeout=15)
-                        if r_code.status_code == 200:
-                            with open(target_path, 'w', encoding='utf-8') as mod_file:
-                                mod_file.write(r_code.text)
-                            newly_downloaded.append(name)
-                            if name not in self.registry:
-                                self.registry[name] = True
-                
+
+                    # Skip files already on disk (no re-download)
+                    if os.path.exists(target_path):
+                        continue
+
+                    # Download and verify integrity before writing
+                    raw_url = f"{self.raw_base_url}/{name}"
+                    r_code = requests.get(raw_url, timeout=15)
+                    if r_code.status_code != 200:
+                        print(f"[WARN] Failed to download '{name}': HTTP {r_code.status_code}")
+                        continue
+
+                    content_bytes = r_code.content
+                    if self.verify_file_hash(content_bytes, manifest[name]):
+                        with open(target_path, 'wb') as mod_file:
+                            mod_file.write(content_bytes)
+                        newly_downloaded.append(name)
+                        if name not in self.registry:
+                            self.registry[name] = False  # disabled until user manually enables
+                    else:
+                        print(f"[SECURITY CRITICAL] Hash mismatch for '{name}' — file discarded.")
+
+                # Step 4: Persist registry and fire callback
                 self.save_registry()
-                # Correctly report the number of *plugins* found
                 msg = f"Sync Complete. Found {len(py_files)} plugins, downloaded {len(newly_downloaded)} new modules."
-                
-                if callback: 
+                if callback:
                     callback("success", msg, newly_downloaded)
                 elif self.on_refresh:
                     self.on_refresh()
@@ -348,8 +467,8 @@ def get_voice_recipes() -> Dict[str, Dict[str, Any]]:
             "temp": 0.8, "top_p": 0.9
         },
         "Tutorial Wizard": {
-            "instruct": "Wise, calm, and slightly breathy.", 
-            "desc": "An elderly male with a deep, resonant voice and a gentle rasp.", 
+            "instruct": "Slow, deliberate, and wise. Calm and commanding.",
+            "desc": "An elderly man in his seventies. Deep, gravelly bass voice, masculine and husky. Resonant chest voice with a rough, raspy texture. Slow-paced and deliberate.",
             "script": "Knowledge is the only treasure that grows when shared. Welcome to my sanctum.",
             "temp": 0.7, "top_p": 0.8
         }
@@ -387,127 +506,275 @@ STYLE_DEMO_SCRIPTS = {
 # Fallback script for unknown styles
 GENERIC_SCRIPT = "I wonder if I made the right choice. It felt right at the time."
 
-# --- HELP CONTENT (UPDATED) ---
+# --- HELP RENDERING HELPERS ---
+
+def _configure_help_tags(widget, colors, base_h1=15):
+    """Configure text tags used by _render_help_text on any tk.Text widget."""
+    widget.tag_configure("h1",
+        font=("Segoe UI", base_h1, "bold"),
+        foreground=colors["accent"],
+        spacing1=2, spacing3=10)
+    widget.tag_configure("divider",
+        font=("Segoe UI", 3),
+        foreground=colors["border"],
+        spacing1=0, spacing3=8)
+    widget.tag_configure("h2",
+        font=("Segoe UI", 10, "bold"),
+        foreground=colors["fg"],
+        spacing1=12, spacing3=3)
+    widget.tag_configure("bullet",
+        font=("Segoe UI", 10),
+        lmargin1=20, lmargin2=32,
+        spacing1=2)
+    widget.tag_configure("numbered",
+        font=("Segoe UI", 10),
+        lmargin1=20, lmargin2=32,
+        spacing1=2)
+    widget.tag_configure("body",
+        font=("Segoe UI", 10),
+        spacing1=1, spacing3=1)
+    widget.tag_configure("indent",
+        font=("Consolas", 9),
+        foreground=colors["muted"],
+        lmargin1=28, lmargin2=28,
+        spacing1=1)
+
+
+def _render_help_text(widget, text):
+    """Parse and insert formatted help text into a tk.Text widget.
+
+    Recognises:
+      • First non-blank line      → h1 title + divider rule
+      • Lines starting with '## ' → h2 sub-header
+      • Lines starting with '• '  → bullet
+      • Lines starting with digit+'.'+space → numbered item
+      • Lines starting with two spaces      → indented (code/example)
+      • Empty lines               → body spacer
+      • Everything else           → body
+    """
+    lines = text.strip().split("\n")
+    first_line = True
+    for line in lines:
+        if first_line and line.strip():
+            widget.insert(tk.END, line.strip() + "\n", "h1")
+            widget.insert(tk.END, "─" * 55 + "\n", "divider")
+            first_line = False
+        elif line.startswith("## "):
+            widget.insert(tk.END, line[3:] + "\n", "h2")
+        elif line.startswith("• "):
+            widget.insert(tk.END, line + "\n", "bullet")
+        elif len(line) > 2 and line[0].isdigit() and line[1] in ".":
+            widget.insert(tk.END, line + "\n", "numbered")
+        elif line.startswith("  ") and line.strip():
+            widget.insert(tk.END, line + "\n", "indent")
+        elif line.strip() == "":
+            widget.insert(tk.END, "\n", "body")
+        else:
+            widget.insert(tk.END, line + "\n", "body")
+
+
+# --- HELP CONTENT ---
 HELP_ENGINES = """The 3 Creative Engines\n
-This suite uses three distinct AI models, each color-coded for clarity:
 
-1. 🟢 CUSTOM VOICE (Green)
-Uses high-stability, pre-trained personas (Vivian, Eric, etc.). Best for consistency.
+## 🟢 Custom Voice  (Green)
+Uses high-stability pre-trained personas — best for consistency and long-form narration where the voice must not drift.
+Speakers: Vivian, Serena, Ryan, Aiden, Eric, Dylan, Uncle_Fu, Ono_Anna, Sohee
 
-2. 🔵 VOICE DESIGN (Blue)
-Zero-shot generation. Create entirely new people by describing them.
+## 🔵 Voice Design  (Blue)
+Zero-shot generation. Describe a person and the AI creates them from scratch.
+Ideal for unique or one-off characters without reference audio.
 
-3. 🟣 VOICE CLONE (Purple)
-The Replica engine. Mimics a specific voice based on reference audio.
+## 🟣 Voice Clone  (Purple)
+The Replica engine. Provide reference audio and it mimics that voice.
+The closer the recording quality to studio conditions, the more accurate the clone.
 
-🔧 System Configuration:
-• Audio Backend: The app uses the included 'sox' folder for most audio tasks like normalization.
-• MP3 Support: For MP3 conversion, the app will first try to use FFmpeg if it is installed and in your system's PATH. If not found, it will fall back to SoX, which requires the 'libmp3lame-0.dll' to be placed inside the 'sox' folder."""
+## System Notes
+• Audio processing uses the bundled sox folder for normalisation.
+• MP3 conversion: FFmpeg (in PATH) is tried first; falls back to SoX + libmp3lame-0.dll (place in the sox folder)."""
 
 HELP_PERSONAS = """Preset Speaker Personas (Custom Engine)\n
-The pre-trained speakers have 'Native' languages where they sound most natural, but all can speak any supported language.
 
-• Vivian: Bright, edgy young female. (Native: Chinese)
-• Serena: Warm, gentle young female. (Native: Chinese)
-• Ryan: Dynamic male, strong rhythmic drive. (Native: English)
-• Aiden: Sunny American male, clear midrange. (Native: English)
-• Eric: Lively male, slightly husky brightness. (Native: Chinese/Sichuan)
-• Dylan: Youthful male, clear/natural. (Native: Chinese/Beijing)
-• Uncle_Fu: Seasoned male, low and mellow. (Native: Chinese)
-• Ono_Anna: Playful Japanese female. (Native: Japanese)
-• Sohee: Warm Korean female, rich emotion. (Native: Korean)"""
+Pre-trained speakers have a native language where they sound most natural — but all can speak any supported language.
+
+## English
+• Ryan — Dynamic male, strong rhythmic drive.
+• Aiden — Sunny American male, clear midrange.
+
+## Chinese
+• Vivian — Bright, edgy young female.
+• Serena — Warm, gentle young female.
+• Eric — Lively male, slightly husky brightness.  (Sichuan accent)
+• Dylan — Youthful male, clear and natural.  (Beijing accent)
+• Uncle_Fu — Seasoned male, low and mellow.
+
+## Other Languages
+• Ono_Anna — Playful Japanese female.  (Native: Japanese)
+• Sohee — Warm Korean female, rich emotion.  (Native: Korean)"""
 
 HELP_TAGS = """In-Script Action Tags\n
-Insert these directly into your text to trigger specific human sounds. 
-Note: Effectiveness depends on the energy of the style/instruction.
 
-• Laughter: [laughter] or <laughter>
-• Breathing: [breath] or <breath>
-• Sighing: [sigh]
-• Gasping: [gasp]
-• Throat Clear: [clears throat]
-• Crying: [cry]
+Insert these tags directly into your text to trigger human sounds.
 
-Pro-Tip: Ensure there are spaces around the brackets! 
-Example: "Hello [ laughter ] how are you today?" """
+## Available Tags
+• [laughter] or <laughter> — Natural laugh
+• [breath] or <breath> — Audible inhale / exhale
+• [sigh] — Long, soft sigh
+• [gasp] — Sharp intake of breath
+• [clears throat] — Throat-clearing sound
+• [cry] — Emotional crying
+
+## Tips
+• Wrap tags with spaces: "Hello [ laughter ] how are you?" for best results.
+• Effectiveness varies with temperature and instruction energy.
+• High-energy instructions amplify tag intensity.
+• Try placing [breath] before a dramatic line for added naturalism."""
 
 HELP_RECIPES = """Tone Recipes (Voice Design & Custom)\n
-Copy these into the 'Instruction' field for instant results:
 
-• Furious: Aggressive, shouting, very fast pace, intense anger.
-• Heartbroken: Trembling voice, holding back tears, slow pace.
-• Villain: Low, menacing whisper. Slow and calculated. Cold.
-• ASMR: Soft whisper, extremely close to mic, mouth sounds.
-• News Anchor: Professional, neutral tone, clear articulation.
-• Old Radio: Mid-Atlantic accent, fast pace, energetic, sharp.
-• Seductive: Low pitch, breathy texture, very slow, intimate."""
+Copy any of these into the Instruction field for instant character results.
+
+## Drama & Emotion
+• Heartbroken — Trembling voice, holding back tears, slow pace.
+• Furious — Aggressive, shouting, very fast pace, intense anger.
+• Villain — Low menacing whisper. Slow and calculated. Cold.
+• Terrified — Shaking, whimpering, barely holding it together.
+
+## Performance Styles
+• ASMR — Soft whisper, extremely close to mic, intimate mouth sounds.
+• News Anchor — Professional, neutral tone, clear articulation.
+• Old Radio — Mid-Atlantic accent, fast pace, energetic, sharp.
+• Seductive — Low pitch, breathy texture, very slow, intimate.
+
+## Mixing Tip
+Combine a recipe with context for best results.
+Example: "News Anchor, but visibly exhausted, struggling to stay composed." """
 
 HELP_BATCH = """Batch Studio: The Production Line\n
-1. Workflow: Group your lines by engine (Standard vs Clone) to minimize loading times.
-2. Auto-Switch: Enable '⚡ Auto-Switch' to let the app swap models and continue automatically.
-3. Review Flow: 
-   • Yellow (?): Newly generated, needs review.
-   • Green (✔): Approved. Won't be re-generated.
-   • Red (!): Rejected. Will be re-generated on next run.
-4. Collapsible Blocks: For large scripts, click the triangle next to the status of any block to collapse or expand it, keeping your workspace tidy.
-5. Save/Load: Save your entire scene script as a JSON file to work on it later."""
+
+The Batch Studio is a non-linear script editor for producing multi-voice audio scenes.
+
+## Workflow
+1. Add blocks — one block equals one line of dialogue.
+2. Assign each block a Speaker, Style, Language, and optionally a Seed.
+3. Hit Run to generate the whole scene, or use per-block controls for surgical edits.
+
+## Block Status System
+• Grey — Pending. Not yet generated.
+• Blue — Busy. Generating right now.
+• Yellow — Review. Done, awaiting your approval.
+• Green — Accepted. Will be skipped on the next Run.
+• Red — Rejected. Queued for re-generation.
+
+## Per-Block Controls
+• ⚡ Gen — Generates only this block without touching any others.
+• 🎲 x3 — Multi-Take: generates 3 variations silently, opens a picker to choose the best. The winning seed is saved automatically.
+• Seed field — Pin a number for a reproducible result, or leave empty for a fresh random take.
+
+## Scene Controls
+• ⚡ Auto-Switch — Automatically swaps engines between blocks so you never have to wait.
+• Play All — Plays the accepted scene audio in sequence.
+
+## Saving & Loading
+Save your entire scene (including audio and seeds) as a JSON file to resume later."""
 
 HELP_DESC = """Field A: Voice Description (The Body)\n
-What does the person physically sound like?
-• Age: "Young child", "Mid-30s", "Elderly", "Ancient"
-• Gender: "Male", "Female", "Androgynous"
-• Texture: "Gravelly", "Smooth", "Raspy", "Breathy", "Nasal"
-• Accent: "British", "Southern US", "Thick Russian", "Standard American"
 
-Example: "A 60-year-old male smoker with a deep, gravelly throat." """
+Describes the physical characteristics of the voice — what it sounds like at rest, independent of emotion.
+
+## Attributes to Describe
+• Age — "Young child", "Mid-30s", "Elderly", "Ancient"
+• Gender — "Male", "Female", "Androgynous"
+• Texture — "Gravelly", "Smooth", "Raspy", "Breathy", "Nasal"
+• Accent — "British RP", "Southern US", "Thick Russian", "Standard American"
+• Build — "Deep barrel chest", "Petite and light"
+
+## Example
+A 60-year-old male smoker with a deep, gravelly throat and a faint Southern drawl."""
 
 HELP_INSTR = """Field B: Style Instruction (The Acting)\n
-How are they performing right now?
-• Pace: "Very slow", "Fast", "Conversational", "Measured"
-• Emotion: "Sad", "Angry", "Joyful", "Bored", "Terrified"
-• Volume: "Whispering", "Shouting", "Softly spoken", "Distant"
 
-Example: "Speaking slowly and quietly, as if sharing a secret." """
+Defines how the voice is performing right now — the acting direction, independent of the physical voice.
+
+## Attributes to Direct
+• Pace — "Very slow", "Fast", "Conversational", "Measured"
+• Emotion — "Sad", "Angry", "Joyful", "Bored", "Terrified"
+• Volume — "Whispering", "Shouting", "Softly spoken", "Distant"
+• Context — "Like confessing a secret", "As if addressing a crowd"
+
+## Example
+Speaking slowly and quietly, as if sharing a long-buried secret. Barely above a whisper."""
 
 HELP_LOCK = """Locking the Perfect Voice\n
-If you generate a voice you absolutely love in the Voice Design tab:
-1. Save the Audio (Save WAV).
-2. Go to Voice Clone tab (or a Clone Block in Batch).
-3. Load that WAV as your Source.
-4. Result: You can now use that exact identity with high stability."""
+
+Once you've designed a voice you love, use the Clone engine to permanently lock and stabilise it.
+
+## Steps
+1. Generate a voice you're happy with in the Voice Design tab.
+2. Click Save WAV to export it.
+3. Switch to the Voice Clone tab (or add a Clone Block in Batch Studio).
+4. Load your saved WAV as the Source Audio.
+5. Provide a short transcript of what was spoken in the reference clip.
+
+## Result
+The Clone engine treats that WAV as a reference persona, reproducing the same voice identity with high consistency across any new text."""
 
 HELP_TIPS = """Pro-Tips for Better Generation\n
-1. The "Pause" Trick: The AI respects line breaks. For dramatic pauses, hit Enter between sentences.
-2. Fix "Slurring": If the voice sounds drunk, lower the Temperature (0.3-0.5) and simplify instructions.
-3. Language Accent: Use the 'Lang' selector to force accents. English text + German Language = English with a German accent.
-4. Reset Engine: If generation gets stuck or crashes, use the '🔄 Reset' button in the header."""
+
+## The Pause Trick
+The AI respects line breaks. For dramatic pauses between sentences, press Enter to put them on separate lines instead of using commas or ellipses.
+
+## Fix Slurring
+If a voice sounds drunk or garbled, lower Temperature to 0.3–0.5 and simplify the instruction. Complexity and high temperature together cause most slurring.
+
+## Accent Forcing
+Use the Lang selector to push an accent onto any text.
+Example: English text + German language = English spoken with a German accent.
+
+## Deterministic Takes
+Enter a number in the Seed field before generating. The same seed always produces the same audio. Leave it empty for a fresh result each time — the chosen seed is written back automatically.
+
+## Multi-Take Workflow
+Use 🎲 x3 on any block to generate 3 variations side-by-side, then pick the best one. Accepting a take writes its seed back into the block so you can reproduce it.
+
+## Engine Reset
+If generation gets stuck or a VRAM crash occurs, click 🔄 Reset in the Engine Status header to abort and reload the model cleanly."""
 
 HELP_SLIDERS = """The Precision Sliders\n
-Temperature (Creativity)
-• 0.1 - 0.5: Stable, news-anchor style. Good for long texts.
-• 0.6 - 0.9: Natural human variation. Recommended.
-• 1.0 - 1.5: High drama, intense acting. Risk of glitching.
 
-Top P (Vocabulary)
-• 0.1 - 0.5: Focused, very clear pronunciation.
-• 0.8 - 1.0: Diverse, better for rhythmic flow and character."""
+## Temperature  (Creativity & Stability)
+Controls how much randomness the model introduces.
+• 0.1 – 0.5 — The News Anchor. Flat, stable, consistent. Best for long narration.
+• 0.6 – 0.9 — The Sweet Spot. Natural human variation. Recommended for most work.
+• 1.0 – 1.5 — The Drama. High emotion and expressiveness. Higher risk of artifacts.
+
+## Top P  (Vocabulary Range)
+Controls how many token candidates the model considers at each step.
+• 0.1 – 0.5 — Focused. Best for crisp, clear pronunciation.
+• 0.8 – 1.0 — Diverse. Better for character acting and rhythmic flow.
+
+## Seed  (Reproducibility)
+Pins the random state for a deterministic, repeatable result.
+• Empty — A fresh random seed is chosen and written back automatically after generation.
+• Number — That exact seed is used every time, producing identical audio output."""
 
 HELP_PLUGINS = """Plugins & Automation\n
-Qwen3 Studio is an extensible platform. You can manage your plugins in the "Modules" tab.
 
-Core Plugins:
-• Tutorial Plugin: Provides the interactive, multi-chapter tutorial experience.
-• Peak Meter Plugin: Adds the '📶 VU' button to the header, which opens a floating peak meter to monitor audio levels and prevent clipping.
-• Autoscript Plugin (Disabled by default): A demo showing how the app can be controlled by external scripts for automation.
+Qwen3 Studio is built on an extensible plugin architecture. All plugins live in the ./modules/ folder and are managed from the Modules tab.
 
-Extending the App:
-You can add your own features by dropping Python scripts into the './modules/' folder. The app will automatically detect and load them.
+## Bundled Plugins
+• Tutorial Plugin — The interactive multi-chapter tutorial experience.
+• Peak Meter Plugin — Adds a 📶 VU button to the header. Opens a floating real-time peak meter to monitor levels and prevent clipping.
+• Style & Profile Manager — Manage, enable/disable, and inline-edit your Styles and Voice Design Profiles from a single panel.
+• Autoscript Plugin (disabled) — Demo showing how the app can be driven by external automation scripts.
 
-Integration Vision:
-Plugins don't need a UI. They can be:
-• Watch Folders: Processing scripts dropped into a folder.
-• Local APIs: Allowing other apps to request audio via HTTP.
-• Custom Exporters: Sending audio directly to your game engine or editor."""
+## Building Your Own
+Drop any Python file into ./modules/. It must export one function:
+  initialize(app)  →  called once at startup with the QwenTTSApp instance.
+
+## Plugin Ideas
+• Watch Folder — Monitor a folder and auto-generate audio for any new .txt file dropped in.
+• Local API — Expose a small HTTP server so other tools can request audio on demand.
+• Custom Exporter — Push finished audio straight to your game engine, DAW, or editor."""
 
 TIP_TEMP = """Temperature (Creativity & Stability)
 • Low (0.1 - 0.5): The "News Anchor". Stable, consistent.
@@ -596,18 +863,16 @@ class QwenTTSApp:
         self.root.geometry("1170x850")
         
         # Paths
-        self.temp_dir = os.path.join(BASE_DIR, "temp_outputs")
-        if not os.path.exists(self.temp_dir):
-            os.makedirs(self.temp_dir)
-            
-        self.assets_dir = os.path.join(BASE_DIR, "saved_assets")
-        if not os.path.exists(self.assets_dir):
-            os.makedirs(self.assets_dir)
+        self.temp_dir = os.path.join(APP_DATA_ROOT, "temp_outputs")
+        os.makedirs(self.temp_dir, exist_ok=True)
+
+        self.assets_dir = os.path.join(APP_DATA_ROOT, "saved_assets")
+        os.makedirs(self.assets_dir, exist_ok=True)
 
         self.model_dir = ENGINE_ROOT 
 
         # Module Hub Initialization
-        self.modules_dir = os.path.join(BASE_DIR, "modules")
+        self.modules_dir = MODULES_DIR
         if not os.path.exists(self.modules_dir):
             os.makedirs(self.modules_dir, exist_ok=True)
         self.hub = ModuleHub(self.modules_dir)
@@ -642,9 +907,15 @@ class QwenTTSApp:
         # Threading & Events
         self.playback_thread = None
         self.gen_thread = None
+        self.history_playback_thread = None
+        self.history_stop_event = threading.Event()
+        self._audio_gen = 0  # single counter for ALL audio — guards every finally: sd.stop()
+        self.history_audio_data = None  # keeps the numpy array alive during PortAudio playback
         self.stop_event = threading.Event()
         self.pause_event = threading.Event()
         self.cancel_signal = threading.Event()
+        self._app_alive = True  # set to False on window close to signal daemon threads
+        self._model_load_event = threading.Event()
 
         # Audio Helper Data
         self.helper_audio_data = None
@@ -687,16 +958,6 @@ class QwenTTSApp:
         self.tutorial_lang_var = tk.StringVar(value="English")
         self.tutorial_chapter_var = tk.StringVar(value="Chapter 1: Welcome")
 
-        # Merge Recipes into Design Profiles
-        for name, data in self.voice_recipes.items():
-            self.design_profiles[name] = {
-                "desc": data.get("desc", ""),
-                "instruct": data.get("instruct", ""),
-                "script": data.get("script", ""),
-                "temp": data.get("temp", 0.8),
-                "top_p": data.get("top_p", 0.8)
-            }
-        
         # UI Construction
         self.root.configure(bg=self.colors["bg"])
         self.setup_ui()
@@ -707,8 +968,7 @@ class QwenTTSApp:
 
         # Startup
         self.set_busy(True, "Initializing Engine...")
-        start_tab_index = 1 if self.hub.is_enabled('tutorial_plugin.py') else 0
-        self.notebook.select(self.notebook.tabs()[start_tab_index])
+        self.notebook.select(self.notebook.tabs()[0])  # Always start on Custom Voice
         
         # Initial Model Load
         self.switch_model("custom") # Start with custom
@@ -729,7 +989,7 @@ class QwenTTSApp:
     def setup_styles(self):
         self.colors = {
             "bg": "#f4f6f9",
-            "fg": "#2c3e50", 
+            "fg": "#2c3e50",
             "accent": "#3498db",
             "accent_hover": "#2980b9",
             "header_bg": "#ecf0f1",
@@ -738,7 +998,13 @@ class QwenTTSApp:
             "warning": "#e67e22",
             "danger": "#e74c3c",
             "text_bg": "#ffffff",
-            "text_fg": "#2c3e50"
+            "text_fg": "#2c3e50",
+            # UI system colors — use these instead of hardcoding
+            "muted": "#7f8c8d",        # secondary / dimmed text
+            "border": "#dfe6e9",       # status bar, dividers
+            "separator": "#bdc3c7",    # inline "|" separators
+            "row_selected": "#d6eaf8", # history row highlight (accent-tinted)
+            "preview_bg": "#1e2d3d",   # waveform / dark canvas background
         }
 
         style = ttk.Style()
@@ -775,6 +1041,11 @@ class QwenTTSApp:
         
         style.configure("Panic.TButton", font=("Segoe UI", 11, "bold"), padding=10, background=c["danger"], foreground="white")
         style.map("Panic.TButton", background=[("active", "#c0392b")])
+
+        style.configure("Flat.TButton", font=("Segoe UI", 9, "bold"), padding=6,
+                        borderwidth=0, relief="flat",
+                        background="#e2e6ea", foreground="#2c3e50")
+        style.map("Flat.TButton", background=[("active", "#d2d6da"), ("disabled", "#ecf0f1")])
         
         # Headers
         style.configure("HelperHeader.TLabel", font=("Segoe UI", 14, "bold"), foreground=c["accent"], background=c["bg"])
@@ -784,122 +1055,146 @@ class QwenTTSApp:
         style.configure("TCombobox", fieldbackground=c["text_bg"], padding=5)
 
     def setup_ui(self):
-        # 1. Header
-        header = tk.Frame(self.root, bg=self.colors["header_bg"], padx=15, pady=8)
-        header.pack(fill=tk.X)
-        
-        # Section A: Branding & Support
-        self.brand_frame = tk.Frame(header, bg=self.colors["header_bg"])
-        self.brand_frame.pack(side=tk.LEFT, padx=(0, 20))
-        tk.Label(self.brand_frame, text="Qwen3 TTS Pro", font=("Segoe UI", 16, "bold"), bg=self.colors["header_bg"], fg=self.colors["fg"]).pack(anchor=tk.W)
-        
-        support_row = tk.Frame(self.brand_frame, bg=self.colors["header_bg"])
-        support_row.pack(anchor=tk.W, pady=(2,0))
-        lbl_link = tk.Label(support_row, text="App by Blues", font=("Segoe UI", 8, "underline"), bg=self.colors["header_bg"], fg=self.colors["accent"], cursor="hand2")
-        lbl_link.pack(side=tk.LEFT)
-        lbl_link.bind("<Button-1>", lambda e: os.startfile("https://blues-lab.pro"))
-        
-        tk.Label(support_row, text=" | ", bg=self.colors["header_bg"], fg="#ccc").pack(side=tk.LEFT, padx=5)
+        hbg = self.colors["header_bg"]
 
-        lbl_help = tk.Label(support_row, text="❓ Help", font=("Segoe UI", 8, "underline"), bg=self.colors["header_bg"], fg=self.colors["accent"], cursor="hand2")
+        # ── OUTER HEADER WRAPPER (always visible) ─────────────────────────
+        # This thin strip holds the title + collapse toggle at all times.
+        self.header_wrapper = tk.Frame(self.root, bg=hbg)
+        self.header_wrapper.pack(fill=tk.X)
+
+        # Title bar row: always visible
+        title_bar = tk.Frame(self.header_wrapper, bg=hbg, padx=15, pady=6)
+        title_bar.pack(fill=tk.X)
+
+        tk.Label(title_bar, text="Qwen3 TTS Pro", font=("Segoe UI", 16, "bold"),
+                 bg=hbg, fg=self.colors["fg"]).pack(side=tk.LEFT)
+
+        support_row = tk.Frame(title_bar, bg=hbg)
+        support_row.pack(side=tk.LEFT, padx=(12, 0))
+        lbl_link = tk.Label(support_row, text="App by Blues", font=("Segoe UI", 9, "underline"),
+                             bg=hbg, fg=self.colors["accent"], cursor="hand2")
+        lbl_link.pack(side=tk.LEFT)
+        lbl_link.bind("<Button-1>", lambda e: _open_url("https://blues-lab.pro"))
+        tk.Label(support_row, text=" | ", bg=hbg, fg=self.colors["separator"]).pack(side=tk.LEFT)
+        lbl_help = tk.Label(support_row, text="❓ Help", font=("Segoe UI", 9, "underline"),
+                             bg=hbg, fg=self.colors["accent"], cursor="hand2")
         lbl_help.pack(side=tk.LEFT)
         lbl_help.bind("<Button-1>", lambda e: self.show_help_guide())
-
-        tk.Label(support_row, text=" | ", bg=self.colors["header_bg"], fg="#ccc").pack(side=tk.LEFT, padx=5)
-        
-        lbl_coffee = tk.Label(support_row, text="Support", font=("Segoe UI", 8, "bold"), bg=self.colors["header_bg"], fg="#e67e22", cursor="hand2")
+        tk.Label(support_row, text=" | ", bg=hbg, fg=self.colors["separator"]).pack(side=tk.LEFT)
+        lbl_coffee = tk.Label(support_row, text="Support", font=("Segoe UI", 9, "bold"),
+                               bg=hbg, fg=self.colors["warning"], cursor="hand2")
         lbl_coffee.pack(side=tk.LEFT)
         lbl_coffee.bind("<Button-1>", lambda e: self.show_support_modal())
 
-        # Section B: Engine Status
-        engine_f = ttk.LabelFrame(header, text=" Engine Status ", padding=8)
-        engine_f.pack(side=tk.LEFT, padx=5, fill=tk.Y)
-        
-        status_top = tk.Frame(engine_f)
-        status_top.pack(fill=tk.X)
-        self.status_icon = StatusIndicator(status_top, size=14) 
-        self.status_icon.pack(side=tk.LEFT, padx=(0, 5))
-        self.lbl_active_model = tk.Label(status_top, text="Initializing...", font=("Segoe UI", 9, "bold"), fg="#555")
-        self.lbl_active_model.pack(side=tk.LEFT, expand=True, fill=tk.X)
-        
-        ttk.Button(status_top, text="⚙", command=self.show_settings_dialog, width=3).pack(side=tk.RIGHT)
-        ttk.Button(status_top, text="🔄 Reset", command=self.force_reset_model, width=8).pack(side=tk.RIGHT, padx=5)
-        
-        self.btn_cancel = tk.Button(
-            status_top, text="STOP", 
-            command=self.cancel_generation, 
-            bg=self.colors["danger"], fg="white", 
-            font=("Segoe UI", 8, "bold"),
-            activebackground="#c0392b", activeforeground="white",
-            relief="raised", bd=1, pady=0, width=6
+        # ── SINGLE CONTROLS ROW ───────────────────────────────────────────────
+        controls_row = tk.Frame(self.header_wrapper, bg=hbg, padx=15, pady=5)
+        controls_row.pack(fill=tk.X)
+
+        # === RIGHT SIDE — two stacked rows: buttons top, options bottom ===
+        right_area = tk.Frame(controls_row, bg=hbg)
+        right_area.pack(side=tk.RIGHT, padx=(8, 0))
+
+        # Top row: History + VU
+        right_top = tk.Frame(right_area, bg=hbg)
+        right_top.pack(fill=tk.X, pady=(0, 3))
+
+        self.btn_history = tk.Button(
+            right_top, text="📜 History",
+            command=self.setup_history_panel,
+            bg=self.colors["accent"], fg="white",
+            font=("Segoe UI", 9, "bold"),
+            activebackground=self.colors["accent_hover"], activeforeground="white",
+            relief="flat", bd=0
         )
-        self.btn_cancel.pack(side=tk.RIGHT, padx=5)
+        self.btn_history.pack(side=tk.LEFT, ipady=2)
 
-        stat_bot = tk.Frame(engine_f)
-        stat_bot.pack(fill=tk.X, pady=(5,0))
-        self.lbl_last_time = tk.Label(stat_bot, text="Time: --", font=("Segoe UI", 8), fg=self.colors["accent"])
-        self.lbl_last_time.pack(side=tk.LEFT)
+        self.vu_button_container = tk.Frame(right_top, height=26, width=70, bg=hbg)
+        self.vu_button_container.pack(side=tk.LEFT, padx=(4, 0), fill=tk.Y)
+        self.vu_button_container.pack_propagate(False)
 
-        # Section C: Precision Settings
-        config_f = ttk.LabelFrame(header, text=" Precision ", padding=8)
-        config_f.pack(side=tk.LEFT, padx=5, fill=tk.Y)
-        
-        for label, var, tip in [("Temp", "temp", TIP_TEMP), ("Top P", "top_p", TIP_TOP_P)]:
-            row = tk.Frame(config_f)
-            row.pack(fill=tk.X)
-            tk.Label(row, text=label, width=5, anchor=tk.W, font=("Segoe UI", 8, "bold")).pack(side=tk.LEFT)
-            val_var = tk.DoubleVar(value=self.app_config.get(var, 0.8))
-            setattr(self, f"{var}_var", val_var)
-            s = ttk.Scale(row, from_=0.1, to=1.5 if var=="temp" else 1.0, variable=val_var, orient=tk.HORIZONTAL, length=120, command=self.update_precision_labels)
-            s.pack(side=tk.LEFT, padx=5)
-            CreateToolTip(s, tip)
-            lbl_val = tk.Label(row, text="0.8", width=20, anchor=tk.W, font=("Consolas", 8), fg="#555")
-            lbl_val.pack(side=tk.LEFT)
-            setattr(self, f"lbl_{var}_val", lbl_val)
+        # Bottom row: Auto-Play + Ready Sound + Time
+        right_bot = tk.Frame(right_area, bg=hbg)
+        right_bot.pack(fill=tk.X)
 
-        self.lock_sliders_var = tk.BooleanVar(value=False)
-        tk.Checkbutton(config_f, text="Lock Sliders", variable=self.lock_sliders_var, font=("Segoe UI", 8)).pack(anchor=tk.W)
-
-        # Section D: Automation Options
-        auto_f = ttk.LabelFrame(header, text=" Automation ", padding=8)
-        auto_f.pack(side=tk.LEFT, padx=5, fill=tk.Y)
-        
         self.autoplay_var = tk.BooleanVar(value=self.app_config.get("autoplay", True))
-        ttk.Checkbutton(auto_f, text="Auto-Play", variable=self.autoplay_var, command=self.save_app_config).pack(anchor=tk.W)
-        
+        ttk.Checkbutton(right_bot, text="Auto-Play", variable=self.autoplay_var, command=self.save_app_config).pack(side=tk.LEFT)
+
         self.sound_on_ready_var = tk.BooleanVar(value=self.app_config.get("sound_on_ready", False))
-        cb_snd = ttk.Checkbutton(auto_f, text="Ready Sound", variable=self.sound_on_ready_var, command=self.save_app_config)
-        cb_snd.pack(anchor=tk.W, pady=(5,0))
-        
+        cb_snd = ttk.Checkbutton(right_bot, text="Ready Sound", variable=self.sound_on_ready_var, command=self.save_app_config)
+        cb_snd.pack(side=tk.LEFT, padx=(4, 0))
         sound_name = os.path.basename(self.app_config.get("custom_notification_sound") or "Default Beep")
         self.cb_snd_tooltip = CreateToolTip(cb_snd, f"Current Sound: {sound_name}\n(Right-click to reset)")
         self.snd_popup = tk.Menu(self.root, tearoff=0)
         self.snd_popup.add_command(label="Reset to Default Beep", command=self.reset_notification_sound)
         cb_snd.bind("<Button-3>", lambda e: self.snd_popup.tk_popup(e.x_root, e.y_root))
 
-        self.update_precision_labels()
+        self.lbl_last_time = tk.Label(right_bot, text="Time: --", font=("Segoe UI", 9),
+                                       fg=self.colors["accent"], bg=hbg)
+        self.lbl_last_time.pack(side=tk.RIGHT)
 
-        # Section E: Right-side Action Buttons
-        right_area = tk.Frame(header, bg=self.colors["header_bg"])
-        right_area.pack(side=tk.RIGHT, padx=5, fill=tk.Y)
+        # === LEFT SIDE ===
+        # Status indicator + model label
+        self.status_icon = StatusIndicator(controls_row, size=14)
+        self.status_icon.pack(side=tk.LEFT, padx=(0, 5))
+        self.lbl_active_model = tk.Label(controls_row, text="Initializing...",
+                                          font=("Segoe UI", 9, "bold"), fg=self.colors["muted"],
+                                          bg=hbg)
+        self.lbl_active_model.pack(side=tk.LEFT)
 
-        self.btn_history = tk.Button(
-            right_area, text="📜 History", 
-            command=self.setup_history_panel, 
-            bg=self.colors["accent"], fg="white",
+        # Action buttons
+        self.btn_cancel = tk.Button(
+            controls_row, text="STOP",
+            command=self.cancel_generation,
+            bg="#e74c3c", fg="white",
             font=("Segoe UI", 9, "bold"),
-            activebackground=self.colors["accent_hover"], activeforeground="white",
-            relief="raised", bd=2
+            activebackground="#c0392b", activeforeground="white",
+            relief="flat", bd=0, width=5
         )
-        self.btn_history.pack(fill=tk.BOTH, expand=True, ipady=4)
+        self.btn_cancel.pack(side=tk.LEFT, padx=(8, 2), pady=2)
+        ttk.Button(controls_row, text="🔄 Reset", command=self.force_reset_model, width=8).pack(side=tk.LEFT, padx=2, pady=2)
+        ttk.Button(controls_row, text="⚙", command=self.show_settings_dialog, width=3).pack(side=tk.LEFT, padx=(2, 6), pady=2)
 
-        self.vu_button_container = tk.Frame(right_area, height=30)
-        self.vu_button_container.pack(fill=tk.X, expand=True, pady=(5,0))
-        self.vu_button_container.pack_propagate(False) # Prevent child from shrinking the container
+        # Separator
+        tk.Label(controls_row, text="│", fg=self.colors["separator"], bg=hbg, font=("Segoe UI", 13)).pack(side=tk.LEFT, padx=4)
+
+        # Precision sliders — inline
+        for label, var, tip in [("Temp", "temp", TIP_TEMP), ("Top P", "top_p", TIP_TOP_P)]:
+            tk.Label(controls_row, text=label, font=("Segoe UI", 9, "bold"), bg=hbg).pack(side=tk.LEFT, padx=(6, 2))
+            val_var = tk.DoubleVar(value=self.app_config.get(var, 0.8))
+            setattr(self, f"{var}_var", val_var)
+            s = ttk.Scale(controls_row, from_=0.1, to=1.5 if var=="temp" else 1.0,
+                          variable=val_var, orient=tk.HORIZONTAL, length=90,
+                          command=self.update_precision_labels)
+            s.pack(side=tk.LEFT, padx=2)
+            CreateToolTip(s, tip)
+            lbl_val = tk.Label(controls_row, text="0.80", width=5, anchor=tk.W,
+                               font=("Consolas", 9), fg=self.colors["muted"], bg=hbg)
+            lbl_val.pack(side=tk.LEFT, padx=(0, 4))
+            setattr(self, f"lbl_{var}_val", lbl_val)
+
+        # Seed
+        tk.Label(controls_row, text="Seed", font=("Segoe UI", 9, "bold"), bg=hbg).pack(side=tk.LEFT, padx=(4, 2))
+        self.seed_var = tk.StringVar(value=self.app_config.get("seed", ""))
+        _seed_entry = ttk.Entry(controls_row, textvariable=self.seed_var, width=9)
+        _seed_entry.pack(side=tk.LEFT, padx=2)
+        CreateToolTip(_seed_entry,
+            "Seed — controls output reproducibility.\n\n"
+            "Empty  →  a fresh random seed every generation (output varies each time).\n"
+            "Number  →  deterministic; the same seed always produces the same take.\n\n"
+            "🎲  rolls a new random number into this field so you can save and reuse it.")
+        tk.Button(controls_row, text="🎲",
+                  command=lambda: self.seed_var.set(str(random.randint(0, 0xFFFFFFFF))),
+                  bd=0, cursor="hand2", font=("Segoe UI", 10), bg=hbg).pack(side=tk.LEFT)
+
+        # Lock sliders
+        self.lock_sliders_var = tk.BooleanVar(value=False)
+        ttk.Checkbutton(controls_row, text="Lock", variable=self.lock_sliders_var).pack(side=tk.LEFT, padx=(4, 6))
+
+        self.update_precision_labels()
 
         # 2. Status Bar (Packed Bottom FIRST so it sticks)
         self.status_var = tk.StringVar(value="Ready")
-        self.lbl_status = tk.Label(self.root, textvariable=self.status_var, relief=tk.FLAT, anchor=tk.W, padx=12, pady=6, bg="#dfe6e9", font=("Segoe UI", 9))
+        self.lbl_status = tk.Label(self.root, textvariable=self.status_var, relief=tk.FLAT, anchor=tk.W, padx=12, pady=6, bg=self.colors["border"], font=("Segoe UI", 9))
         self.lbl_status.pack(side=tk.BOTTOM, fill=tk.X)
 
         # 3. Notebook (Fills remaining space)
@@ -915,26 +1210,27 @@ class QwenTTSApp:
         self.tab_batch = ttk.Frame(self.notebook)
         self.tab_hub = ttk.Frame(self.notebook)
         
+        # Tabs ordered by frequency of use — power tools first, utilities last
+        self.notebook.add(self.tab_custom,  text="⭐ Custom Voice")
+        self.notebook.add(self.tab_clone,   text="🎙 Voice Clone")
+        self.notebook.add(self.tab_design,  text="🎨 Voice Design")
+        self.notebook.add(self.tab_batch,   text="🎬 Batch Studio")
+        self.notebook.add(self.tab_helper,  text="📝 Transcript")
+        self.notebook.add(self.tab_hub,     text="🧩 Modules")
         if self.hub.is_enabled('tutorial_plugin.py'):
             self.notebook.add(self.tab_tutorial, text="🎓 Tutorial")
-        self.notebook.add(self.tab_helper, text="📝 Transcript")
-        self.notebook.add(self.tab_clone, text="🎙 Voice Clone")
-        self.notebook.add(self.tab_design, text="🎨 Voice Design")
-        self.notebook.add(self.tab_custom, text="⭐ Custom Voice")
-        self.notebook.add(self.tab_batch, text="🎬 Batch Studio")
-        self.notebook.add(self.tab_hub, text="🧩 Modules")
 
         self.notebook.bind("<<NotebookTabChanged>>", self.on_tab_change)
 
-        # Init Tab Content
-        if self.hub.is_enabled('tutorial_plugin.py'):
-            self.setup_tutorial_tab()
-        self.setup_helper_tab()
+        # Init Tab Content (order matches addition order above)
+        self.setup_custom_tab()
         self.setup_clone_tab()
         self.setup_design_tab()
-        self.setup_custom_tab()
         self.setup_batch_tab()
+        self.setup_helper_tab()
         self.setup_hub_tab()
+        if self.hub.is_enabled('tutorial_plugin.py'):
+            self.setup_tutorial_tab()
 
         # Open History by default
         self.root.after(500, self.setup_history_panel)
@@ -1185,7 +1481,7 @@ class QwenTTSApp:
         # File Ops
         file_f = ttk.Frame(ctrl_row)
         file_f.pack(side=tk.RIGHT)
-        self.lbl_helper_file = ttk.Label(file_f, text="No Audio Loaded", font=("Segoe UI", 8, "italic"), foreground="#666")
+        self.lbl_helper_file = ttk.Label(file_f, text="No Audio Loaded", font=("Segoe UI", 9, "italic"), foreground=self.colors["muted"])
         self.lbl_helper_file.pack(side=tk.TOP, anchor=tk.E, padx=2)
         ttk.Button(file_f, text="Open", command=self.helper_load_audio).pack(side=tk.LEFT, padx=2)
         self.btn_save_rec = ttk.Button(file_f, text="Save WAV", command=self.save_recorded_audio, state=tk.DISABLED)
@@ -1357,7 +1653,7 @@ class QwenTTSApp:
         ttk.Button(prof_f, text="Del", command=self.delete_design_profile, width=6).pack(side=tk.LEFT, padx=5)
         
         self.lock_design_script_var = tk.BooleanVar(value=False)
-        tk.Checkbutton(prof_f, text="🔒 Lock Script", variable=self.lock_design_script_var, bg=self.colors["bg"], font=("Segoe UI", 8)).pack(side=tk.LEFT, padx=5)
+        tk.Checkbutton(prof_f, text="🔒 Lock Script", variable=self.lock_design_script_var, bg=self.colors["bg"], font=("Segoe UI", 9)).pack(side=tk.LEFT, padx=5)
 
         ttk.Label(prof_f, text="| Save As:").pack(side=tk.LEFT, padx=10)
         self.new_des_profile_name = ttk.Entry(prof_f, width=20)
@@ -1447,8 +1743,8 @@ class QwenTTSApp:
         default = {
             "saved_voices": {}, "design_profiles": {}, 
             "style_instructions": {},
-            "temp": 0.8, "top_p": 0.8, 
-            "autoplay": True, "sound_on_ready": False, 
+            "temp": 0.8, "top_p": 0.8, "seed": "",
+            "autoplay": True, "sound_on_ready": False,
             "last_out_dir": "",
             "custom_notification_sound": None,
             "mic_device": "Default"
@@ -1457,14 +1753,15 @@ class QwenTTSApp:
             try:
                 with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
                     return {**default, **json.load(f)}
-            except:
-                pass
+            except Exception as e:
+                logging.warning("Failed to load config: %s", e)
         return default
 
     def save_app_config(self):
         self.app_config.update({
-            "temp": self.temp_var.get(), 
-            "top_p": self.top_p_var.get(), 
+            "temp": self.temp_var.get(),
+            "top_p": self.top_p_var.get(),
+            "seed": self.seed_var.get(),
             "autoplay": self.autoplay_var.get(),
             "sound_on_ready": self.sound_on_ready_var.get(),
             "mic_device": self.mic_device_var.get()
@@ -1472,23 +1769,14 @@ class QwenTTSApp:
         try:
             with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
                 json.dump(self.app_config, f, indent=4)
-        except:
-            pass
+        except Exception as e:
+            logging.warning("Failed to save config: %s", e)
 
     def update_precision_labels(self, event=None):
         t = self.temp_var.get()
         p = self.top_p_var.get()
-        
-        t_desc = "Stable"
-        if t > 0.5: t_desc = "Balanced"
-        if t > 0.9: t_desc = "Creative/Wild"
-        
-        p_desc = "Focused"
-        if p > 0.5: p_desc = "Standard"
-        if p > 0.9: p_desc = "Diverse"
-        
-        self.lbl_temp_val.config(text=f"{t:.1f} ({t_desc})")
-        self.lbl_top_p_val.config(text=f"{p:.1f} ({p_desc})")
+        self.lbl_temp_val.config(text=f"{t:.2f}")
+        self.lbl_top_p_val.config(text=f"{p:.2f}")
 
     def populate_mic_list(self):
         """Finds, scores, and filters audio input devices to provide a clean list."""
@@ -1667,29 +1955,16 @@ class QwenTTSApp:
         else:
             self.lbl_whisper_lang.config(foreground="purple")
             
-    def install_whisper(self):
-        try:
-            self.set_busy(True, "Installing Whisper...")
-            subprocess.check_call([sys.executable, "-m", "pip", "install", "faster-whisper"])
-            global WhisperModel
-            from faster_whisper import WhisperModel
-            return True
-        except Exception as e:
-            messagebox.showerror("Installation Error", str(e))
-            return False
-        finally:
-            self.set_busy(False)
-
     def run_whisper_task(self):
         global WHISPER_AVAILABLE
         if not WHISPER_AVAILABLE:
-            if messagebox.askyesno("Missing Component", "Whisper is not installed. Install it now?"):
-                if self.install_whisper():
-                    WHISPER_AVAILABLE = True
-                else:
-                    return
-            else:
-                return
+            messagebox.showerror(
+                "Whisper Not Found",
+                "faster-whisper is not installed.\n\n"
+                "Run:  pip install faster-whisper\n"
+                "then restart the application."
+            )
+            return
 
         if self.helper_audio_data is None:
             return messagebox.showwarning("No Audio", "Please load or record audio first.")
@@ -1947,7 +2222,7 @@ class QwenTTSApp:
         
         for s in styles:
             var = tk.BooleanVar(value=(s in defaults))
-            cb = tk.Checkbutton(scroll, text=s, variable=var, bg="white", anchor="w")
+            cb = tk.Checkbutton(scroll, text=s, variable=var, bg=self.colors["panel_bg"], anchor="w")
             scroll.window_create("end", window=cb)
             scroll.insert("end", "\n")
             style_vars[s] = var
@@ -2519,22 +2794,36 @@ class QwenTTSApp:
     def show_context_help(self, title, content):
         h = tk.Toplevel(self.root)
         h.title(title)
-        h.geometry("400x350")
+        h.geometry("460x400")
+        h.resizable(True, True)
         try:
-            x = self.root.winfo_x() + (self.root.winfo_width()//2) - 200
-            y = self.root.winfo_y() + (self.root.winfo_height()//2) - 175
+            x = self.root.winfo_x() + (self.root.winfo_width()//2) - 230
+            y = self.root.winfo_y() + (self.root.winfo_height()//2) - 200
             h.geometry(f"+{x}+{y}")
         except: pass
-        
-        lbl = tk.Label(h, text=title, font=("Segoe UI", 12, "bold"), pady=10)
-        lbl.pack(fill=tk.X)
-        
-        txt = tk.Text(h, font=("Segoe UI", 10), wrap=tk.WORD, bg="#f0f0f0", relief=tk.FLAT, padx=15, pady=5)
-        txt.insert("1.0", content)
+
+        # Header bar
+        bar = tk.Frame(h, bg=self.colors["accent"], pady=7)
+        bar.pack(fill=tk.X)
+        tk.Label(bar, text=f"  {title}", font=("Segoe UI", 11, "bold"),
+                 bg=self.colors["accent"], fg="white").pack(side=tk.LEFT, padx=8)
+
+        # Content
+        txt = tk.Text(h, font=("Segoe UI", 10), wrap=tk.WORD, bg="white",
+                      fg=self.colors["fg"], relief=tk.FLAT, padx=18, pady=14,
+                      cursor="arrow")
+        _configure_help_tags(txt, self.colors, base_h1=13)
+        _render_help_text(txt, content)
         txt.config(state=tk.DISABLED)
+
+        scroll = ttk.Scrollbar(h, orient="vertical", command=txt.yview)
+        txt.configure(yscrollcommand=scroll.set)
+        scroll.pack(side=tk.RIGHT, fill=tk.Y)
         txt.pack(fill=tk.BOTH, expand=True)
-        
-        ttk.Button(h, text="Close", command=h.destroy).pack(pady=10)
+
+        close_bar = tk.Frame(h, bg=self.colors["header_bg"], pady=5)
+        close_bar.pack(fill=tk.X, side=tk.BOTTOM)
+        ttk.Button(close_bar, text="Close", command=h.destroy).pack(pady=2)
 
     def show_settings_dialog(self):
         d = tk.Toplevel(self.root)
@@ -2582,10 +2871,10 @@ class QwenTTSApp:
         sync_btn.pack(side=tk.RIGHT)
 
         # Info Panel
-        info_f = tk.Frame(f, bg="#eef2f7", padx=15, pady=15)
+        info_f = tk.Frame(f, bg=self.colors["header_bg"], padx=15, pady=15)
         info_f.pack(fill=tk.X, pady=(0, 20))
-        tk.Label(info_f, text="Dynamically extend Qwen3 Studio by enabling plugins below. Newly enabled plugins appear as new tabs immediately.", 
-                 font=("Segoe UI", 10, "italic"), bg="#eef2f7", fg="#555").pack(anchor="w")
+        tk.Label(info_f, text="Dynamically extend Qwen3 Studio by enabling plugins below. Newly enabled plugins appear as new tabs immediately.",
+                 font=("Segoe UI", 10, "italic"), bg=self.colors["header_bg"], fg=self.colors["muted"]).pack(anchor="w")
 
         # Scrollable List Area
         list_f = ttk.LabelFrame(f, text=" Plugin Inventory ", padding=10)
@@ -2662,14 +2951,14 @@ class QwenTTSApp:
                     with open(os.path.join(self.modules_dir, f_name), 'r', encoding='utf-8') as mod_file:
                         content = mod_file.read()
                         if "def initialize(app):" in content:
-                            tk.Label(row, text="[Blues-Approved]", fg="#3498db", font=("Segoe UI", 8, "bold"), bg="#ffffff").pack(side=tk.RIGHT, padx=15)
+                            tk.Label(row, text="[Blues-Approved]", fg=self.colors["accent"], font=("Segoe UI", 9, "bold"), bg=self.colors["panel_bg"]).pack(side=tk.RIGHT, padx=15)
                 except: pass
 
                 # Enable/Disable switch
                 switch_text = "DISABLE" if is_enabled else "ENABLE"
                 switch_color = "#e74c3c" if is_enabled else "#2ecc71"
-                tk.Button(row, text=switch_text, command=toggle, bg=switch_color, fg="white", 
-                          font=("Segoe UI", 8, "bold"), width=10, bd=0).pack(side=tk.RIGHT, padx=5)
+                tk.Button(row, text=switch_text, command=toggle, bg=switch_color, fg="white",
+                          font=("Segoe UI", 9, "bold"), width=10, bd=0).pack(side=tk.RIGHT, padx=5)
 
         self.hub.on_refresh = lambda: self.root.after(0, refresh_hub_list)
         refresh_hub_list()
@@ -2693,87 +2982,112 @@ class QwenTTSApp:
         if hasattr(self, 'help_window') and self.help_window is not None and self.help_window.winfo_exists():
             self.help_window.lift()
             return
-            
+
         self.help_window = tk.Toplevel(self.root)
-        self.help_window.title("The Director's Guide")
-        self.help_window.geometry("800x600")
+        self.help_window.title("Director's Guide")
+        self.help_window.geometry("940x660")
+        self.help_window.minsize(700, 480)
         try:
             icon_path = os.path.join(BASE_DIR, "pq.ico")
             if os.path.exists(icon_path):
                 self.help_window.iconbitmap(icon_path)
         except: pass
 
-        # Paned Window for resizable sections
+        # ── Title bar ─────────────────────────────────────────────────────────
+        top_bar = tk.Frame(self.help_window, bg=self.colors["accent"], pady=9)
+        top_bar.pack(fill=tk.X)
+        tk.Label(top_bar, text="  Director's Guide",
+                 font=("Segoe UI", 13, "bold"),
+                 bg=self.colors["accent"], fg="white").pack(side=tk.LEFT, padx=10)
+        tk.Label(top_bar, text="Reference documentation for Qwen3 Studio",
+                 font=("Segoe UI", 9),
+                 bg=self.colors["accent"], fg="#d6eaf8").pack(side=tk.LEFT)
+
+        # ── Main pane ─────────────────────────────────────────────────────────
         main_pane = ttk.PanedWindow(self.help_window, orient=tk.HORIZONTAL)
-        main_pane.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        main_pane.pack(fill=tk.BOTH, expand=True)
 
-        # Left side: Treeview for topics
-        tree_frame = ttk.Frame(main_pane, width=250)
-        tree = ttk.Treeview(tree_frame, show="tree", selectmode="browse")
-        tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        
-        # Scrollbar for Treeview
-        tree_scroll = ttk.Scrollbar(tree_frame, orient="vertical", command=tree.yview)
-        tree_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        # Left: topic tree
+        tree_outer = tk.Frame(main_pane, bg=self.colors["header_bg"])
+        tk.Label(tree_outer, text="Topics",
+                 font=("Segoe UI", 9, "bold"),
+                 bg=self.colors["header_bg"], fg=self.colors["muted"],
+                 padx=10, pady=6).pack(anchor="w")
+        tree_inner = tk.Frame(tree_outer, bg=self.colors["header_bg"])
+        tree_inner.pack(fill=tk.BOTH, expand=True)
+
+        tree = ttk.Treeview(tree_inner, show="tree", selectmode="browse")
+        tree_scroll = ttk.Scrollbar(tree_inner, orient="vertical", command=tree.yview)
         tree.configure(yscrollcommand=tree_scroll.set)
+        tree_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        tree.tag_configure("category", font=("Segoe UI", 9, "bold"))
+        tree.tag_configure("topic",    font=("Segoe UI", 9))
+        main_pane.add(tree_outer, weight=1)
 
-        main_pane.add(tree_frame, weight=1)
-
-        # Right side: ScrolledText for content
-        text_frame = ttk.Frame(main_pane)
-        content_text = scrolledtext.ScrolledText(text_frame, font=("Segoe UI", 10), wrap=tk.WORD, padx=15, pady=10, bd=0)
+        # Right: content panel
+        content_outer = tk.Frame(main_pane, bg="white")
+        content_text = tk.Text(content_outer,
+                               font=("Segoe UI", 10), wrap=tk.WORD,
+                               padx=24, pady=18, bd=0, relief="flat",
+                               bg="white", fg=self.colors["fg"],
+                               cursor="arrow")
+        _configure_help_tags(content_text, self.colors, base_h1=15)
+        content_scroll = ttk.Scrollbar(content_outer, orient="vertical",
+                                       command=content_text.yview)
+        content_text.configure(yscrollcommand=content_scroll.set)
+        content_scroll.pack(side=tk.RIGHT, fill=tk.Y)
         content_text.pack(fill=tk.BOTH, expand=True)
         content_text.configure(state="disabled")
+        main_pane.add(content_outer, weight=3)
 
-        main_pane.add(text_frame, weight=3)
-
-        # Data structure for help topics
+        # ── Topic data ────────────────────────────────────────────────────────
         help_topics = {
             "Getting Started": {
-                "Engines": HELP_ENGINES,
-                "Personas": HELP_PERSONAS,
-                "Pro-Tips": HELP_TIPS
+                "Engines":          HELP_ENGINES,
+                "Speaker Personas": HELP_PERSONAS,
+                "Pro-Tips":         HELP_TIPS,
             },
             "Core Features": {
-                "Voice Design": HELP_DESC + "\n\n" + HELP_INSTR,
-                "Cloning": HELP_LOCK,
-                "Batch Studio": HELP_BATCH,
-                "Sliders": HELP_SLIDERS,
-                "Action Tags": HELP_TAGS
+                "Voice Description": HELP_DESC,
+                "Style Instruction":  HELP_INSTR,
+                "Cloning a Voice":    HELP_LOCK,
+                "Batch Studio":       HELP_BATCH,
+                "Precision Sliders":  HELP_SLIDERS,
+                "Action Tags":        HELP_TAGS,
             },
             "Advanced": {
                 "Plugins & Modules": HELP_PLUGINS,
-                "Tone Recipes": HELP_RECIPES
-            }
+                "Tone Recipes":      HELP_RECIPES,
+            },
         }
-        
-        # Populate Treeview
+
         for category, topics in help_topics.items():
-            cat_id = tree.insert("", "end", text=f" {category}", open=True)
-            for topic, content in topics.items():
-                tree.insert(cat_id, "end", text=f"  {topic}", values=(content,))
+            cat_id = tree.insert("", "end", text=f"  {category}",
+                                 open=True, tags=("category",))
+            for topic, raw in topics.items():
+                tree.insert(cat_id, "end", text=f"    {topic}",
+                            values=(raw,), tags=("topic",))
 
         def on_topic_select(event):
-            selected_item = tree.focus()
-            if selected_item:
-                values = tree.item(selected_item, "values")
-                if values:
+            sel = tree.focus()
+            if sel:
+                vals = tree.item(sel, "values")
+                if vals:
                     content_text.configure(state="normal")
                     content_text.delete("1.0", tk.END)
-                    content_text.insert("1.0", values[0])
+                    _render_help_text(content_text, vals[0])
                     content_text.configure(state="disabled")
+                    content_text.yview_moveto(0)
 
         tree.bind("<<TreeviewSelect>>", on_topic_select)
-        
-        # Select first item by default
+
         try:
-            first_item = tree.get_children()[0]
-            if first_item:
-                first_topic = tree.get_children(first_item)[0]
-                tree.selection_set(first_topic)
-                tree.focus(first_topic)
+            first_cat   = tree.get_children()[0]
+            first_topic = tree.get_children(first_cat)[0]
+            tree.selection_set(first_topic)
+            tree.focus(first_topic)
         except IndexError:
-            # Handle case where there are no topics
             pass
 
     def show_support_modal(self):
@@ -2809,7 +3123,7 @@ class QwenTTSApp:
                 # Make image clickable
                 img_lbl = tk.Label(modal, image=self.qr_img, bg="white", borderwidth=1, relief="solid", cursor="hand2")
                 img_lbl.pack(pady=10)
-                img_lbl.bind("<Button-1>", lambda e: os.startfile("https://buymeacoffee.com/appbyblues"))
+                img_lbl.bind("<Button-1>", lambda e: _open_url("https://buymeacoffee.com/appbyblues"))
                 CreateToolTip(img_lbl, "Click to open support page")
             except Exception as e:
                 print(f"Error loading image: {e}")
@@ -2826,7 +3140,7 @@ class QwenTTSApp:
         coffee_btn = tk.Button(
             btn_frame, 
             text="☕ Buy me a coffee", 
-            command=lambda: os.startfile("https://buymeacoffee.com/appbyblues"),
+            command=lambda: _open_url("https://buymeacoffee.com/appbyblues"),
             font=("Segoe UI", 14, "bold"),
             bg="#FFDD00",
             fg="black",
@@ -3058,18 +3372,30 @@ class QwenTTSApp:
         self.hist_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        # MouseWheel
+        # MouseWheel — scoped to canvas only (bind_all would steal scroll from entire app)
         def _on_mousewheel(event):
-            self.hist_canvas.yview_scroll(int(-1*(event.delta/120)), "units")
-        self.hist_canvas.bind_all("<MouseWheel>", _on_mousewheel)
+            if event.delta:
+                units = int(-1 * (event.delta / 120)) if abs(event.delta) >= 120 else int(-1 * event.delta)
+            else:
+                units = 0
+            self.hist_canvas.yview_scroll(units, "units")
+        def _bind_hist_mw(event):
+            self.hist_canvas.bind("<MouseWheel>", _on_mousewheel)
+        def _unbind_hist_mw(event):
+            self.hist_canvas.unbind("<MouseWheel>")
+        self.hist_canvas.bind("<Enter>", _bind_hist_mw)
+        self.hist_canvas.bind("<Leave>", _unbind_hist_mw)
+        if hasattr(self, 'hist_scroll_frame'):
+            self.hist_scroll_frame.bind("<Enter>", _bind_hist_mw)
+            self.hist_scroll_frame.bind("<Leave>", _unbind_hist_mw)
 
         # Preview Canvas (New)
-        self.hist_preview_canvas = tk.Canvas(self.history_window, height=60, bg="#2c3e50", highlightthickness=0)
+        self.hist_preview_canvas = tk.Canvas(self.history_window, height=60, bg=self.colors["preview_bg"], highlightthickness=0)
         self.hist_preview_canvas.pack(fill=tk.X, padx=5, pady=(0, 5))
 
         # Context Menu
         self.hist_popup = tk.Menu(self.history_window, tearoff=0)
-        self.hist_popup.add_command(label="Play", command=self.on_history_play)
+        self.hist_popup.add_command(label="Play", command=lambda: self.on_history_play())
         self.hist_popup.add_command(label="➡️ Send to Transcript Helper", command=self.on_history_send_to_helper)
         self.hist_popup.add_command(label="🔔 Set as Notification Sound", command=self.on_history_set_notification)
         self.hist_popup.add_command(label="Save As...", command=self.on_history_save)
@@ -3083,7 +3409,7 @@ class QwenTTSApp:
         # Controls
         btn_f = ttk.Frame(self.history_window, padding=5)
         btn_f.pack(fill=tk.X)
-        ttk.Button(btn_f, text="▶ Play", width=8, command=self.on_history_play).pack(side=tk.LEFT)
+        ttk.Button(btn_f, text="▶ Play", width=8, command=lambda: self.on_history_play()).pack(side=tk.LEFT)
         ttk.Button(btn_f, text="⏹ Stop", width=8, command=self.on_stop_click).pack(side=tk.LEFT, padx=2)
         ttk.Button(btn_f, text="💾 Save", width=8, command=self.on_history_save).pack(side=tk.LEFT, padx=2)
         ttk.Button(btn_f, text="❌ Del", width=8, command=self.on_history_delete).pack(side=tk.LEFT, padx=2)
@@ -3118,20 +3444,20 @@ class QwenTTSApp:
             self._add_history_row(f_rel)
 
     def _add_history_row(self, filename):
-        row = tk.Frame(self.hist_scroll_frame, bg="white", bd=1, relief="solid")
+        row = tk.Frame(self.hist_scroll_frame, bg=self.colors["panel_bg"], bd=1, relief="solid")
         row.pack(fill=tk.X, pady=2, padx=2)
-        
+
         def _on_click(event): self._select_history_item(filename, event)
-        def _on_right_click(event): 
+        def _on_right_click(event):
             if filename not in self.selected_history_files:
                 self._select_history_item(filename, event)
             self.hist_popup.tk_popup(event.x_root, event.y_root)
-        
-        lbl = tk.Label(row, text=filename, font=("Segoe UI", 8), bg="white", anchor="w")
-        lbl.pack(fill=tk.X, padx=2)
+
+        lbl = tk.Label(row, text=filename, font=("Segoe UI", 9), bg=self.colors["panel_bg"], anchor="w")
+        lbl.pack(fill=tk.X, padx=4, pady=2)
         lbl.bind("<Button-1>", _on_click)
         lbl.bind("<Button-3>", _on_right_click)
-        
+
         row.bind("<Button-1>", _on_click)
         row.bind("<Button-3>", _on_right_click)
         self.history_item_widgets[filename] = row
@@ -3140,13 +3466,16 @@ class QwenTTSApp:
         # Check for Ctrl key (state & 0x0004 on Windows)
         ctrl_pressed = event and (event.state & 0x0004)
         
+        bg_normal   = self.colors["panel_bg"]
+        bg_selected = self.colors["row_selected"]
+
         if not ctrl_pressed:
             # Standard click: clear others
             for f in list(self.selected_history_files):
                 if f in self.history_item_widgets:
                     w = self.history_item_widgets[f]
-                    w.config(bg="white")
-                    for c in w.winfo_children(): c.config(bg="white")
+                    w.config(bg=bg_normal)
+                    for c in w.winfo_children(): c.config(bg=bg_normal)
             self.selected_history_files = {filename}
         else:
             # Ctrl+Click: toggle
@@ -3154,8 +3483,8 @@ class QwenTTSApp:
                 self.selected_history_files.remove(filename)
                 if filename in self.history_item_widgets:
                     w = self.history_item_widgets[f]
-                    w.config(bg="white")
-                    for c in w.winfo_children(): c.config(bg="white")
+                    w.config(bg=bg_normal)
+                    for c in w.winfo_children(): c.config(bg=bg_normal)
             else:
                 self.selected_history_files.add(filename)
 
@@ -3163,8 +3492,8 @@ class QwenTTSApp:
         for f in self.selected_history_files:
             if f in self.history_item_widgets:
                 w = self.history_item_widgets[f]
-                w.config(bg="#cce5ff")
-                for c in w.winfo_children(): c.config(bg="#cce5ff")
+                w.config(bg=bg_selected)
+                for c in w.winfo_children(): c.config(bg=bg_selected)
 
         # Draw Preview for the LAST selected item
         if filename in self.selected_history_files:
@@ -3199,28 +3528,62 @@ class QwenTTSApp:
             return data, sr
         except Exception as e:
             # If sf.read fails, try to use SoX to convert to a temporary wav
-            if path.lower().endswith(".mp3"):
-                temp_wav = os.path.join(self.temp_dir, "_preview_temp.wav")
-                if self.run_sox_command([path, temp_wav]):
-                    try:
+            if path.lower().endswith((".mp3", ".ogg")):
+                # Use a unique temp file to prevent race conditions during playback/preview
+                temp_wav = os.path.join(self.temp_dir, f"_preview_temp_{time.time_ns()}.wav")
+                try:
+                    if self.run_sox_command([path, temp_wav]):
                         data, sr = sf.read(temp_wav)
-                        # os.remove(temp_wav) # Keep it for a bit or cleanup later
                         return data, sr
-                    except: pass
+                    else:
+                        # run_sox_command failed
+                        return None, None
+                except Exception as read_err:
+                    print(f"Failed to read converted file {temp_wav}: {read_err}")
+                finally:
+                    # Ensure the temporary file is cleaned up
+                    if os.path.exists(temp_wav):
+                        try:
+                            os.remove(temp_wav)
+                        except OSError:
+                            # File might be in use, but we tried
+                            pass
+            
             print(f"Failed to load audio {path}: {e}")
             return None, None
 
     def on_history_play(self):
-        if not self.selected_history_files: return
-        # Play the first selected item
+        if not self.selected_history_files:
+            return
         filename = list(self.selected_history_files)[0]
         path = os.path.join(self.temp_dir, filename)
-        if os.path.exists(path):
-            data, sr = self.load_audio_file(path)
-            if data is not None:
-                self.generated_audio = data
-                self.sample_rate = sr
-                self.on_play_click()
+        if not os.path.exists(path):
+            return
+
+        data, sr = self.load_audio_file(path)
+        if data is None:
+            return
+
+        # Keep the array alive on the instance so the GC can't free it
+        # while PortAudio's C callback thread is still reading it.
+        self.history_audio_data = data
+
+        self._audio_gen += 1
+        self._stop_playback_safe()
+        try:
+            _log_audio("PLAY", f"history:{filename}  sr={sr}  gen={self._audio_gen}")
+            sd.play(self.history_audio_data, sr)
+            logging.debug("AUDIO PLAY  history: sd.play() returned OK")
+        except Exception as e:
+            logging.error("AUDIO PLAY  history FAILED: %s\n%s", e, traceback.format_exc())
+
+    def _stop_history_playback(self):
+        """Signal any history monitor thread to stop. Caller handles sd.stop()."""
+        self.history_stop_event.set()
+        if self.history_playback_thread and self.history_playback_thread.is_alive():
+            self.history_playback_thread.join(timeout=0.3)
+        self.history_playback_thread = None
+        self.history_stop_event.clear()
 
     def on_history_send_to_helper(self):
         if not self.selected_history_files: return
@@ -3326,10 +3689,20 @@ class QwenTTSApp:
         messagebox.showinfo("Reset", "Notification sound reset to system beep.")
 
     # --- GENERATION EXECUTION ---
+    def flush_vram(self):
+        """Aggressively release all cached GPU memory."""
+        gc.collect()
+        gc.collect()  # Second pass catches circular refs freed by the first
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()  # Wait for all pending CUDA ops before freeing
+            torch.cuda.empty_cache()
+            torch.cuda.ipc_collect()
+
     def switch_model(self, mtype, on_success=None):
-        if self.current_model_type == mtype: 
+        if self.current_model_type == mtype:
             if on_success: on_success()
             return
+        self._model_load_event.clear()
         self.set_busy(True, f"Switching to {mtype}...")
         self._lock_interface(True)
         threading.Thread(target=self._load_model_thread, args=(mtype, on_success), daemon=True).start()
@@ -3337,14 +3710,26 @@ class QwenTTSApp:
     def _load_model_thread(self, mtype, on_success=None):
         try:
             # 1. Aggressive Cleanup
-            if self.model:
+            # Always run — even when model is None a worker thread may have severed it
+            # without draining VRAM, so we must synchronize before loading anything new.
+            if getattr(self, 'model', None) is not None:
                 print("Unloading previous engine...")
+                try:
+                    if hasattr(self.model, 'model'):
+                        del self.model.model      # destroy the heavy HF model first
+                except Exception:
+                    pass
+                try:
+                    if hasattr(self.model, 'processor'):
+                        del self.model.processor
+                except Exception:
+                    pass
+                del self.model
                 self.model = None
-                gc.collect()
-                if torch.cuda.is_available():
-                    torch.cuda.empty_cache()
-                    torch.cuda.synchronize()
-                time.sleep(1)
+            self.flush_vram()                     # synchronize + empty_cache always runs
+            if torch.cuda.is_available():
+                torch.cuda.synchronize()
+            time.sleep(2)                         # give the CUDA driver time to reclaim pages
             
             p = MODEL_CUSTOM if mtype == "custom" else (MODEL_DESIGN if mtype == "design" else MODEL_BASE)
             repo_id = MODEL_REPOS.get(mtype)
@@ -3391,11 +3776,13 @@ class QwenTTSApp:
                     raise e
             
             self.current_model_type = mtype
+            self._model_load_event.set()  # Signal waiting threads that the model is ready
             self.root.after(0, lambda: self.on_model_loaded(on_success))
 
         except Exception as e:
             err_msg = str(e)
             print(f"Model Load Failed: {err_msg}")
+            self._model_load_event.set()  # Unblock any waiting threads even on failure
             self.root.after(0, lambda: [
                 self.set_busy(False, "Load Failed"),
                 messagebox.showerror("Error", err_msg),
@@ -3588,23 +3975,27 @@ class QwenTTSApp:
             self.set_busy(False, "Resetting Engine...")
             self._lock_interface(False)
             
-            # Try to clear memory
-            if self.model:
+            # Deep teardown — destroy internal HF model before dropping wrapper ref
+            if getattr(self, 'model', None) is not None:
                 try:
-                    del self.model
-                    torch.cuda.empty_cache()
-                    gc.collect()
-                except:
+                    if hasattr(self.model, 'model'):
+                        del self.model.model
+                except Exception:
                     pass
+                try:
+                    if hasattr(self.model, 'processor'):
+                        del self.model.processor
+                except Exception:
+                    pass
+                del self.model
                 self.model = None
-            
-            # Reload current model type
-            if self.current_model_type:
-                mtype = self.current_model_type
-                self.current_model_type = None # Reset to force reload
-                self.switch_model(mtype)
-            else:
-                self.switch_model("custom")
+            self.flush_vram()
+
+            # Delay reload — give the CUDA driver time to reclaim pages before
+            # _load_model_thread tries to allocate 7–8 GB again.
+            mtype = self.current_model_type or "custom"
+            self.current_model_type = None
+            self.root.after(2000, lambda: self.switch_model(mtype))
 
     def start_gen_custom(self, on_complete=None):
         if not self.ensure_model("custom", callback=lambda: self.start_gen_custom(on_complete)): return
@@ -3630,10 +4021,16 @@ class QwenTTSApp:
             start_time = time.time()
             temp = self.temp_var.get()
             top_p = self.top_p_var.get()
+            try:
+                seed = int(self.seed_var.get().strip())
+                if seed < 0:
+                    raise ValueError
+            except (ValueError, AttributeError):
+                seed = random.randint(0, 0xFFFFFFFF)
             wavs = None
             sr = None
             char_count = 0
-            
+
             if mode == "custom":
                 txt = self.text_input_custom.get("1.0", tk.END).strip()
                 char_count = len(txt)
@@ -3644,9 +4041,9 @@ class QwenTTSApp:
                     language=self.lang_var_custom.get() if self.lang_var_custom.get() != "Auto" else None,
                     speaker=clean_spk,
                     instruct=self.instruct_input.get().strip(),
-                    temperature=temp, top_p=top_p
+                    temperature=temp, top_p=top_p, seed=seed
                 )
-            
+
             elif mode == "design":
                 txt = self.txt_design_target.get("1.0", tk.END).strip()
                 char_count = len(txt)
@@ -3654,20 +4051,20 @@ class QwenTTSApp:
                     text=txt,
                     voice_description=self.txt_design_desc.get("1.0", tk.END).strip(),
                     instruct=self.txt_design_instruct.get().strip(),
-                    temperature=temp, top_p=top_p
+                    temperature=temp, top_p=top_p, seed=seed
                 )
-            
+
             elif mode == "base":
                 ref = self.ref_audio_path.get()
                 text_to_process = self.target_text_input.get("1.0", tk.END).strip()
                 char_count = len(text_to_process)
-                
+
                 if not self.locked_voice_prompt and not os.path.exists(ref): raise Exception("No Ref Audio.")
-                
+
                 if self.use_segments_var.get() and "||" in text_to_process:
                     chunks = [c.strip() for c in text_to_process.split("||") if c.strip()]
                     all_parts = []
-                    sr = 24000 
+                    sr = 24000
                     for i, chunk in enumerate(chunks):
                         if self.cancel_signal.is_set(): raise Exception("Cancelled.")
                         self.set_busy(True, f"Cloning Part {i+1}/{len(chunks)}...")
@@ -3675,14 +4072,14 @@ class QwenTTSApp:
                             w, sr = self.model.generate_voice_clone(
                                 text=chunk, language=self.lang_var_clone.get(),
                                 voice_clone_prompt=self.locked_voice_prompt,
-                                temperature=temp, top_p=top_p
+                                temperature=temp, top_p=top_p, seed=seed
                             )
                         else:
                             w, sr = self.model.generate_voice_clone(
                                 text=chunk, language=self.lang_var_clone.get(),
                                 ref_audio=ref, ref_text=self.ref_text_input.get("1.0", tk.END).strip(),
                                 x_vector_only_mode=self.x_vector_var.get(),
-                                temperature=temp, top_p=top_p
+                                temperature=temp, top_p=top_p, seed=seed
                             )
                         all_parts.append(w[0])
                     final_wave = np.concatenate(all_parts)
@@ -3692,14 +4089,14 @@ class QwenTTSApp:
                         wavs, sr = self.model.generate_voice_clone(
                             text=text_to_process, language=self.lang_var_clone.get(),
                             voice_clone_prompt=self.locked_voice_prompt,
-                            temperature=temp, top_p=top_p
+                            temperature=temp, top_p=top_p, seed=seed
                         )
                     else:
                         wavs, sr = self.model.generate_voice_clone(
                             text=text_to_process, language=self.lang_var_clone.get(),
                             ref_audio=ref, ref_text=self.ref_text_input.get("1.0", tk.END).strip(),
                             x_vector_only_mode=self.x_vector_var.get(),
-                            temperature=temp, top_p=top_p
+                            temperature=temp, top_p=top_p, seed=seed
                         )
             
             if self.cancel_signal.is_set(): raise Exception("Cancelled.")
@@ -3752,26 +4149,70 @@ class QwenTTSApp:
         if self.autoplay_var.get() and not self.cancel_signal.is_set():
             self.on_play_click()
 
+    def _stop_playback_safe(self):
+        """Stop all audio and signal all playback threads to exit.
+        Calls sd.stop() FIRST so Pa_StopStream() runs here (explicit, main thread)
+        rather than inside the next sd.play() call — which is what causes the freeze."""
+        logging.debug("_stop_playback_safe  gen=%s  pb=%s  hist=%s",
+                      self._audio_gen,
+                      self.playback_thread.is_alive() if self.playback_thread else "None",
+                      self.history_playback_thread.is_alive() if self.history_playback_thread else "None")
+        self.stop_event.set()
+        self.pause_event.clear()
+        self.history_stop_event.set()
+        # Stop the stream NOW before joining threads.  This unblocks any monitor
+        # thread waiting on sd.get_stream().active and guarantees the stream is
+        # fully closed before the next sd.play() call — preventing Pa_StopStream()
+        # from blocking inside sd.play() and freezing the UI.
+        try:
+            _log_audio("STOP", f"_stop_playback_safe  gen={self._audio_gen}")
+            sd.stop()
+        except Exception:
+            pass
+        for t in [self.playback_thread, self.history_playback_thread]:
+            if t and t.is_alive():
+                t.join(timeout=0.4)
+        self.playback_thread = None
+        self.history_playback_thread = None
+
     def on_play_click(self):
         if self.generated_audio is None:
             return
+        self._audio_gen += 1
+        my_gen = self._audio_gen
+        self._stop_playback_safe()
+        try:
+            _log_audio("PLAY", f"tab  sr={self.sample_rate}  gen={self._audio_gen}")
+            sd.play(self.generated_audio, self.sample_rate)
+            logging.debug("AUDIO PLAY  tab: sd.play() returned OK")
+        except Exception as e:
+            logging.error("AUDIO PLAY  tab FAILED: %s\n%s", e, traceback.format_exc())
+            return
         self.stop_event.clear()
-        self.pause_event.clear()
-        self.playback_thread = threading.Thread(target=self.playback_worker, daemon=True)
+        self.history_stop_event.clear()
+        self.playback_thread = threading.Thread(target=self.playback_worker, args=(my_gen,), daemon=True)
         self.playback_thread.start()
         self.btn_play.config(state=tk.DISABLED)
         self.btn_pause.config(state=tk.NORMAL)
         self.btn_stop.config(state=tk.NORMAL)
 
-    def playback_worker(self):
+    def playback_worker(self, my_gen):
+        """Monitor-only thread. sd.play() was already called on the main thread.
+        No sd.play() or sd.stop() calls here — routes them via root.after()."""
         try:
-            sd.play(self.generated_audio, self.sample_rate)
-            while sd.get_stream().active and not self.stop_event.is_set():
-                time.sleep(0.1)
+            while not self.stop_event.is_set():
+                time.sleep(0.05)
+                try:
+                    if not sd.get_stream().active:
+                        break
+                except Exception:
+                    break  # stream closed or replaced — exit quietly
                 if self.pause_event.is_set():
-                    sd.stop()
-            sd.stop()
-        except:
+                    self.root.after(0, sd.stop)  # stop on main thread
+                    while self.pause_event.is_set() and not self.stop_event.is_set():
+                        time.sleep(0.05)
+                    break  # after unpause, exit — user clicks Play to restart
+        except Exception:
             pass
         self.root.after(0, lambda: [self.btn_play.config(state=tk.NORMAL), self.btn_pause.config(state=tk.DISABLED), self.btn_stop.config(state=tk.DISABLED)])
 
@@ -3782,7 +4223,13 @@ class QwenTTSApp:
             self.pause_event.set()
 
     def on_stop_click(self):
-        self.stop_event.set()
+        self._audio_gen += 1
+        self._stop_playback_safe()
+        try:
+            _log_audio("STOP", f"on_stop_click  gen={self._audio_gen}")
+            sd.stop()
+        except Exception as e:
+            logging.error("AUDIO STOP  on_stop_click FAILED: %s", e)
 
     def save_audio(self):
         if self.generated_audio is None:
@@ -3794,8 +4241,12 @@ class QwenTTSApp:
     def transcribe_ref_audio(self):
         global WHISPER_AVAILABLE
         if not WHISPER_AVAILABLE:
-            if messagebox.askyesno("Missing", "Install Whisper?"):
-                if self.install_whisper(): WHISPER_AVAILABLE = True
+            messagebox.showerror(
+                "Whisper Not Found",
+                "faster-whisper is not installed.\n\n"
+                "Run:  pip install faster-whisper\n"
+                "then restart the application."
+            )
             return
         
         p = self.ref_audio_path.get()
@@ -3878,17 +4329,18 @@ class QwenTTSApp:
         def loop():
             while True:
                 try:
-                    if not self.root.winfo_exists(): break
+                    if not self._app_alive: break
                     used, total = self._get_vram_usage()
                     color = "#2c3e50"
                     if total > 0:
                         pct = used / total
                         if pct > 0.9: color = "#c0392b"
                         elif pct > 0.7: color = "#d35400"
-                    
+
                     status_text = f"VRAM: {used}/{total} MB"
                     self.root.after(0, lambda t=status_text, c=color: [self.vram_var.set(t), self.vram_lbl.config(fg=c)])
-                except: break
+                except Exception:
+                    break
                 time.sleep(2)
         
         threading.Thread(target=loop, daemon=True).start()
@@ -3905,7 +4357,8 @@ class QwenTTSApp:
             output = subprocess.check_output(cmd.split(), startupinfo=si).decode('utf-8').strip()
             used, total = map(int, output.split(','))
             return used, total
-        except: return 0, 0
+        except Exception:
+            return 0, 0
 
 # =========================================================================
 # 🚀 LAUNCHER LOGIC
@@ -3913,14 +4366,35 @@ class QwenTTSApp:
 
 LOCK_HANDLE = None
 
+def _cleanup_on_exit():
+    """Release file lock and close log handle on exit."""
+    global LOCK_HANDLE, _log_file
+    if LOCK_HANDLE is not None:
+        try:
+            if msvcrt:
+                msvcrt.locking(LOCK_HANDLE.fileno(), msvcrt.LK_UNLCK, 1)
+        except Exception:
+            pass
+        try:
+            LOCK_HANDLE.close()
+        except Exception:
+            pass
+        LOCK_HANDLE = None
+    if _log_file is not None:
+        try:
+            _log_file.close()
+        except Exception:
+            pass
+        _log_file = None
+
+atexit.register(_cleanup_on_exit)
+
 def acquire_lock():
     """Prevents multiple instances using a file lock in AppData (Shared Location)."""
     global LOCK_HANDLE
-    
-    # 1. Setup paths first (Just in case)
-    setup_environment() 
-    
-    # 2. Place lock in APPDATA (Persists across runs)
+
+    # APP_DATA_ROOT is already initialized by setup_environment() at module level
+    # Place lock in APPDATA (Persists across runs)
     lock_file = os.path.join(APP_DATA_ROOT, "app.lock")
     
     # Ensure the folder exists
@@ -3930,9 +4404,13 @@ def acquire_lock():
         pass
 
     try:
-        LOCK_HANDLE = open(lock_file, "a") 
+        LOCK_HANDLE = open(lock_file, "a")
         try:
-            msvcrt.locking(LOCK_HANDLE.fileno(), msvcrt.LK_NBLCK, 1)
+            if msvcrt:
+                msvcrt.locking(LOCK_HANDLE.fileno(), msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl
+                fcntl.flock(LOCK_HANDLE.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
             return True
         except IOError:
             return False
@@ -3941,7 +4419,10 @@ def acquire_lock():
 
 def launch_studio():
     """Main entry point called by the Installer."""
-    # 2. Instance Lock
+    # 0. Diagnostics first — before anything else
+    _setup_diagnostics()
+
+    # 1. Instance Lock
     if not acquire_lock():
         # Using a hidden root to show the error since main root isn't created yet
         temp_root = tk.Tk()
@@ -3950,25 +4431,38 @@ def launch_studio():
         temp_root.destroy()
         return
 
-    # 3. Launch UI
+    # 2. Launch UI
     try:
         root = tk.Tk()
-        
+
+        # Catch exceptions that occur inside Tkinter event callbacks
+        # (button clicks, bindings, etc.) — normally swallowed silently.
+        def _tk_excepthook(exc_type, exc_value, exc_tb):
+            logging.error(
+                "Tkinter callback exception:\n%s",
+                "".join(traceback.format_exception(exc_type, exc_value, exc_tb)),
+            )
+        root.report_callback_exception = _tk_excepthook
+
         # Set Icon
         icon_path = os.path.join(BASE_DIR, "pq.ico")
         if os.path.exists(icon_path):
             root.iconbitmap(icon_path)
-            
+
+        logging.info("Tk window created — entering mainloop")
         app = QwenTTSApp(root)
+
+        def _on_closing():
+            app._app_alive = False
+            root.destroy()
+        root.protocol("WM_DELETE_WINDOW", _on_closing)
+
         root.mainloop()
-        
+        logging.info("mainloop exited cleanly")
+
     except Exception as e:
-        # Emergency Crash Logging
-        import traceback
-        log_path = os.path.join(BASE_DIR, "crash_log.txt")
-        with open(log_path, "w", encoding="utf-8") as f:
-            f.write(traceback.format_exc())
-        
+        logging.critical("Top-level crash:\n%s", traceback.format_exc())
+        log_path = _LOG_PATH or os.path.join(APP_DATA_ROOT, "debug.log")
         messagebox.showerror("Critical Error", f"App Crashed.\nLog saved to: {log_path}\n\nError: {e}")
 
 if __name__ == "__main__":

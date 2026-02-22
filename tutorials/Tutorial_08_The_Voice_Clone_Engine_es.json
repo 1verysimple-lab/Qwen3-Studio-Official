@@ -1,26 +1,58 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Bienvenido al motor de Clonación de Voz, marcado en morado. Esta es quizás la herramienta más poderosa de la suite, permitiéndote replicar la voz de una persona específica."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Capítulo Ocho: El Motor de Clonación de Voz. La pestaña morada es el motor más potente del paquete. Dada una breve muestra de audio, puede reproducir esa voz diciendo cualquier texto nuevo que proporciones."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Para comenzar, debes proporcionar una Voz de Origen. Este es un archivo de audio corto que contiene la voz que deseas clonar. Discutiremos qué hace un buen archivo de origen en el próximo capítulo."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Para usarlo, primero cargas un archivo de Voz de Origen. Esta es una grabación de audio corta de la voz que quieres clonar. En el próximo capítulo hablaremos sobre lo que hace un buen archivo de origen. Por ahora, debes saber que de tres a diez segundos es la duración ideal."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Para obtener un clon de la más alta calidad, también debes proporcionar una transcripción de las palabras habladas en el audio de referencia. El botón 'Transcribir' puede ayudarte con esto."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Para obtener resultados de la más alta calidad, también debes proporcionar una Transcripción. Este es el texto exacto de lo que dice el hablante en el audio de referencia. El botón 'Transcribir' puede generar esto automáticamente utilizando la IA Whisper incorporada. Proporcionar una transcripción mejora en gran medida la precisión tonal."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Si no tienes una transcripción, puedes marcar la casilla 'Ignorar Texto'. El motor se centrará únicamente en las propiedades acústicas de la voz, pero el resultado puede ser menos preciso."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Si no tienes una transcripción, marca la casilla 'Ignorar Texto'. El motor se centrará únicamente en la huella acústica de la voz. La salida seguirá sonando como el hablante, pero puede tener una inflexión ligeramente menos precisa."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Una vez que tu audio de origen y tu transcripción estén listos, puedes escribir cualquier texto nuevo en el cuadro 'Texto de Destino' y el motor lo generará con la voz clonada."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "En el cuadro de Texto de Destino, escribe lo que quieras que diga la voz clonada. Esto es completamente independiente de la transcripción de origen. Puedes escribir párrafos enteros de contenido nuevo y el motor los entregará en la voz clonada."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Discutamos ahora un paso crítico para obtener buenos resultados: preparar tu audio. Por favor, carga el capítulo nueve."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Para textos de destino muy largos, utiliza el delimitador de tubería — dos barras verticales, así: ||. Esto divide el texto en segmentos, y cada segmento se genera por separado y luego se une. Esto mejora en gran medida la consistencia de las salidas largas."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Por favor, carga el Capítulo Nueve: Preparando Audio para Clonar, y discutiremos cómo elegir y preparar el archivo de referencia ideal."
     }
 ]

@@ -1,44 +1,98 @@
 [
-    {
-        "speaker": "Aiden",
-        "style": "News Anchor",
-        "text": "Welcome to Chapter 7: The Prep Station. This is the 'Transcript Helper' tab, where you capture and clean your reference data.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Aiden",
-        "style": "News Anchor",
-        "text": "The Workbench features a recorder that supports both your Microphone and System Audio via the 'Sys Audio' loopback checkbox.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Aiden",
-        "style": "News Anchor",
-        "text": "It's now your turn to try. Go to the 'Transcript Helper'. Click the 'Audio to Text' button. The app will use the Whisper engine to listen to your file and write the script for you!",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Vivian",
-        "style": "News Anchor",
-        "text": "Need to clean up a recording? Left-click the waveform for the start and Right-click for the end, then click 'Crop'. It's that simple.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Aiden",
-        "style": "News Anchor",
-        "text": "Finally, give your voice a name in the Profile box and click 'Save'. This creates a permanent Studio Profile that you can load anywhere in the app.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Aiden",
-        "style": "News Anchor",
-        "text": "When you are ready, load the final chapter, Chapter 8, to learn the pro techniques for high-end production.",
-        "temp": 0.6,
-        "top_p": 0.8
-    }
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Chapter Seven: The Art of Description. Writing a great voice description is like sculpting with words. The more specific and evocative you are, the more unique and repeatable your character will be.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "4061502121",
+    "status": "review",
+    "audio_file": "Tutorial_07_PrepStation_audio/001_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Start with the two most anchoring attributes: age and gender. 'A young adult female' or 'an elderly man' immediately give the model a strong foundation to build on.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2400102402",
+    "status": "review",
+    "audio_file": "Tutorial_07_PrepStation_audio/002_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Next, add texture and pitch. Words like 'raspy', 'breathy', 'gravelly', 'smooth', 'nasal', 'husky', 'deep', or 'high-pitched' are all highly effective. The model has a strong understanding of vocal texture language.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "657006592",
+    "status": "review",
+    "audio_file": "Tutorial_07_PrepStation_audio/003_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Then, if relevant, add an accent. The model understands many regional accents: British Received Pronunciation, Southern American, Scottish, thick Russian, standard American, and many others. Be specific \u2014 'a slight Scottish lilt' behaves differently from 'a thick Glaswegian accent'.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "745204485",
+    "status": "review",
+    "audio_file": "Tutorial_07_PrepStation_audio/004_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Here is an example of a complete, professional narrator description: 'A middle-aged woman, mid-forties, smooth and clear voice, standard American accent, warm and reassuring.' That will reliably produce a clean, versatile narrator.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "445203425",
+    "status": "review",
+    "audio_file": "Tutorial_07_PrepStation_audio/005_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "And here is a fantastical example: 'An ancient, ageless entity with an impossibly deep, distorted, resonant voice, with a slight reverb quality, neither male nor female.' Push the boundaries \u2014 the model can handle surreal descriptions too.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "400557855",
+    "status": "review",
+    "audio_file": "Tutorial_07_PrepStation_audio/006_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The Help Guide contains a full set of Voice Design Character Presets \u2014 ready-made descriptions paired with style instructions, covering characters like the Cowboy Narrator, the Ancient Witch, the Cyber Droid, and more. They are an excellent starting point.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "856576611",
+    "status": "review",
+    "audio_file": "Tutorial_07_PrepStation_audio/007_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Please load Chapter Eight: The Voice Clone Engine, and we will move on to the most powerful engine in the suite.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1396216231",
+    "status": "review",
+    "audio_file": "Tutorial_07_PrepStation_audio/008_TutorialWizard.wav"
+  }
 ]

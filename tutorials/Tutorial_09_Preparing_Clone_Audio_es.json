@@ -1,26 +1,58 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "La calidad de tu clon de voz depende directamente de la calidad de tu audio de origen. Si entra basura, sale basura."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Capítulo Nueve: Preparando el Audio para Clonar. La calidad de tu clon es un reflejo directo de la calidad de tu audio de referencia. Un clon perfecto proviene de una muestra perfecta."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Tu archivo de audio de origen debe estar lo más limpio posible. Esto significa sin música de fondo, sin ruido y sin otras personas hablando."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "El requisito más importante es el silencio. Tu audio de referencia debe contener solo una voz, sin música de fondo, sin reverberación, sin ruido de multitud y sin otros hablantes. Incluso una pequeña cantidad de sonido de fondo se filtrará en el clon."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "La duración ideal es de entre tres y diez segundos. Menos de tres segundos puede no proporcionar suficientes datos, y más de quince segundos a veces puede introducir inestabilidad."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "La duración ideal es de entre tres y diez segundos. Menos de tres segundos no le da al modelo suficientes datos acústicos para trabajar. Más de quince segundos no mejora los resultados y a veces puede introducir inestabilidad."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "El locutor debe hablar en un tono normal y neutro. Las actuaciones muy emocionales con gritos o susurros pueden dar como resultado un clon de baja calidad que es difícil de dirigir más tarde."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "El hablante debe usar un tono neutro y conversacional. Las actuaciones muy emocionales —gritar, llorar o susurrar— son más difíciles de clonar limpiamente y producen una voz que es más difícil de dirigir una vez clonada."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Puedes usar la pestaña del Asistente de Transcripción para grabar tu propia voz o para recortar un archivo de audio más largo y obtener una muestra perfecta y limpia."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Puedes grabar tu propio audio de referencia directamente en la aplicación usando la pestaña Asistente de Transcripción. También puede recortar un archivo de audio existente a una muestra perfecta, y su transcripción Whisper incorporada generará una transcripción de texto precisa para ti automáticamente."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Una vez que tengas una muestra de alta calidad, puedes usar una función para acelerar mucho tu flujo de trabajo. Exploremos eso a continuación. Por favor, carga el capítulo diez."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Un gran flujo de trabajo práctico: usa el Asistente de Transcripción para grabarte leyendo de cinco a ocho segundos de texto sin formato, recorta el clip, haz clic en Audio a Texto y luego presiona 'Enviar Todo a la Pestaña de Clonación de Voz'. Todo se transfiere en un solo paso."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Por favor, carga el Capítulo Diez: La Función de Bloquear Voz, y cubriremos la herramienta de ahorro de tiempo más importante para las sesiones de clonación de voz."
     }
 ]

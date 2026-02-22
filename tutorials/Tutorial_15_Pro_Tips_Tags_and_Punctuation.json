@@ -1,30 +1,98 @@
 [
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Beyond the main controls, you can direct a performance using tags and punctuation directly within your script."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The engine understands special tags for human sounds. For example, writing the word laughter in square brackets will cause the model to laugh."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Other useful tags include 'breath', 'sigh', 'gasp', and 'clears throat'. For these to work reliably, you should always place spaces around the brackets."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Punctuation is also a powerful tool for controlling rhythm. The A I will naturally pause at commas and periods."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "If you want to create a longer, more dramatic pause in a monologue, simply insert a line break, or an empty line, in the script."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The model will interpret that empty line as a direction to pause, giving your scene a more natural, human feel."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "We have reached the end of our lessons. Please load the final chapter for some concluding words."
-    }
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Chapter Fifteen: Tags and Punctuation. Beyond the sliders and style instructions, you have two more direct tools for shaping a performance: in-script action tags and punctuation control.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2499417159",
+    "status": "review",
+    "audio_file": "Tutorial_15_Pro_Tips_Tags_and_Punctuation_audio/001_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Action tags are short commands you embed directly inside your text to trigger specific human sounds. The supported tags are: laughter, breath, sigh, gasp, cry, and clears throat. Always place spaces around the brackets for reliable results.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3305135002",
+    "status": "review",
+    "audio_file": "Tutorial_15_Pro_Tips_Tags_and_Punctuation_audio/002_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Tags work best when the style instruction provides matching context. A gasp tag inside a 'calm' instruction will produce a subtle sound. The same gasp tag inside a 'terrified, panicking' instruction will produce something far more visceral. The style amplifies the tag.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3305135002",
+    "status": "review",
+    "audio_file": "Tutorial_15_Pro_Tips_Tags_and_Punctuation_audio/003_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Punctuation is another powerful instrument. The model naturally pauses at commas and periods, with periods creating a slightly longer stop. Use this to shape the rhythm of a line directly in the text, without changing the style instruction.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2895937313",
+    "status": "review",
+    "audio_file": "Tutorial_15_Pro_Tips_Tags_and_Punctuation_audio/004_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "For more dramatic pauses in a monologue, press Enter to add a blank line in the middle of your text. The model interprets that empty line as a direction to pause. This is called the Pause Trick, and it gives your scene a far more natural, human feel than any ellipsis or comma can achieve.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1590016208",
+    "status": "review",
+    "audio_file": "Tutorial_15_Pro_Tips_Tags_and_Punctuation_audio/005_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "There is one more advanced technique: accent forcing with the Lang selector. Select any language in the selector while keeping your text in a different language. The model will produce the text in the original language but spoken with the phonological patterns of the selected one. English text with the Korean language setting, for example, produces English with a natural Korean accent.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2895937313",
+    "status": "review",
+    "audio_file": "Tutorial_15_Pro_Tips_Tags_and_Punctuation_audio/006_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "If you ever experience a voice that slurs or sounds garbled, the fix is almost always the same: lower the Temperature to between point three and point five, simplify the style instruction by removing any conflicting emotions, and check that your action tags have spaces around their brackets.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1256458812",
+    "status": "review",
+    "audio_file": "Tutorial_15_Pro_Tips_Tags_and_Punctuation_audio/007_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Please load the final chapter \u2014 Chapter Sixteen \u2014 for some closing thoughts and a look at the module ecosystem.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "3662510686",
+    "status": "review",
+    "audio_file": "Tutorial_15_Pro_Tips_Tags_and_Punctuation_audio/008_TutorialWizard.wav"
+  }
 ]

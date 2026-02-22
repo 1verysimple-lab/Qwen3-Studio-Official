@@ -1,30 +1,86 @@
 [
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The Transcript Helper tab is your preparation station. This is where you can record, import, edit, and transcribe the audio needed for high-quality voice cloning."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "You can load an existing audio file using the 'Open' button, or you can record a new one directly in the app using the 'Record' button."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Once audio is loaded, its waveform will appear. You can left-click on the waveform to set a start point, and right-click to set an end point. The 'Crop' button will then trim the audio to your selection."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The 'Audio to Text' button is a powerful feature. It uses the integrated Whisper A I to listen to your loaded audio and automatically generate a transcript for it."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "This is the ideal workflow for preparing a voice clone: load your reference audio, click 'Audio to Text' to get an accurate transcript, and then 'Send All to Voice Clone Tab'."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "You can also save your work as a reusable Profile. This bundles the audio and transcript together, which you can load into the Voice Clone tab at any time."
-    },
-    {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Now for our final lessons: a closer look at the pro-level settings. Please load chapter fourteen."
-    }
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Chapter Thirteen: The Transcript Helper. This tab is your audio preparation station. It handles everything needed before you load a voice into the Clone engine \u2014 recording, trimming, transcribing, and exporting.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1788178669",
+    "status": "review",
+    "audio_file": "Tutorial_13_The_Transcript_Helper_audio/001_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "You have two ways to get audio into the helper. Click Open File to load an existing audio file from your computer, or click Record to capture audio directly from your microphone. The microphone device selector lets you choose which input to use if you have more than one.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "4247390659",
+    "status": "review",
+    "audio_file": "Tutorial_13_The_Transcript_Helper_audio/002_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Once audio is loaded, a waveform appears in the display area. Left-click on the waveform to set a start point, and right-click to set an end point. Then click Crop to trim the audio to exactly that selection. This is the fastest way to extract a clean three-to-ten-second segment from a longer recording.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "2481599254",
+    "status": "review",
+    "audio_file": "Tutorial_13_The_Transcript_Helper_audio/003_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The Audio to Text button is the most powerful feature here. It uses the integrated Whisper A I to listen to your loaded audio and generate an accurate text transcript automatically. For most clean recordings, this works extremely well with no editing required.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "4281577209",
+    "status": "review",
+    "audio_file": "Tutorial_13_The_Transcript_Helper_audio/004_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "The ideal workflow for preparing a voice clone is: load or record your reference audio, crop it to the cleanest three to eight seconds, click Audio to Text to generate the transcript, and then click Send All to Voice Clone Tab. Everything transfers in one step \u2014 the audio path and the transcript both populate automatically.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1138564284",
+    "status": "review",
+    "audio_file": "Tutorial_13_The_Transcript_Helper_audio/005_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "You can also save your work as a named Profile. A Transcript Helper Profile bundles the trimmed audio file and its transcript together under one name. You can load this profile into the Voice Clone tab at any future session to instantly restore your reference setup without starting over.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "1146826718",
+    "status": "review",
+    "audio_file": "Tutorial_13_The_Transcript_Helper_audio/006_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "Please load Chapter Fourteen: Pro Tips and Precision Sliders, for a deep dive into the two most powerful fine-tuning controls in the app.",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "142080759",
+    "status": "review",
+    "audio_file": "Tutorial_13_The_Transcript_Helper_audio/007_TutorialWizard.wav"
+  }
 ]

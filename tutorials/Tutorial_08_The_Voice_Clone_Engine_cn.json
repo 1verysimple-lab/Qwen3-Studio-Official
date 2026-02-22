@@ -1,26 +1,58 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "欢迎来到语音克隆引擎，标记为紫色。这也许是这个套件中最强大的工具，让你能够复制特定人物的声音。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "第八章：语音克隆引擎。紫色选项卡是该套件中功能最强大的引擎。给定一个简短的音频样本，它可以再现该声音说出您提供的任何新文本。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "首先，你必须提供一个源语音。这是一个包含你希望克隆的声音的短音频文件。我们将在下一章讨论什么样的源文件是好的。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "要使用它，您首先需要加载一个源语音文件。这是您想要克隆的声音的简短录音。我们将在下一章讨论什么样的源文件是好的。目前，您只需知道三到十秒是理想的长度。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "为了获得最高质量的克隆，你还应该提供参考音频中所说话语的文字记录。‘转录’按钮可以帮助你完成这个任务。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "为获得最高质量的结果，您还应提供一份文字记录。这是说话者在参考音频中所说内容的确切文本。“转录”按钮可以使用内置的Whisper AI自动生成此文本。提供文字记录可以大大提高音调的准确性。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "如果你没有文字记录，你可以勾选‘忽略文本’框。引擎将只关注声音的声学特性，但结果可能不那么准确。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "如果您没有文字记录，请勾选“忽略文本”框。引擎将只关注声音的声学指纹。输出的声音仍然会像说话者，但语调可能稍欠精确。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "一旦你的源音频和文字记录准备好了，你就可以在‘目标文本’框中输入任何新文本，引擎将用克隆的声音生成它。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "在目标文本框中，输入您希望克隆声音说的任何内容。这与源文字记录完全独立。您可以编写整段的新内容，引擎将以克隆的声音将其呈现出来。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "现在让我们讨论一个获得好结果的关键步骤：准备你的音频。请加载第九章。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "对于非常长的目标文本，请使用管道分隔符——两条竖线，像这样：||。这将文本分割成段，每个段落分别生成，然后拼接在一起。这大大提高长输出的一致性。"
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "请加载第九章：准备克隆音频，我们将讨论如何选择和准备理想的参考文件。"
     }
 ]

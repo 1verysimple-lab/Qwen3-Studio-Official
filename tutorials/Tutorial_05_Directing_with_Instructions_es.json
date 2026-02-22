@@ -1,30 +1,58 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Dirigir una voz de IA es como dirigir a un actor humano. La clave es ser claro y conciso. Centrémonos en escribir instrucciones efectivas."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Capítulo Cinco: Dirigiendo con Instrucciones. Piensa en la instrucción de estilo como una nota que le pasas a un actor humano. El modelo la lee y ajusta su actuación en consecuencia. Tu trabajo es escribir con claridad y evitar contradicciones."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Tu instrucción debe centrarse en la actuación y la emoción. Comienza con el aspecto más importante. Por ejemplo, 'Enojado y gritando' es un punto de partida fuerte y claro."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Comienza con la cualidad más importante. Si quieres ira, comienza con 'Enojado'. Si quieres un susurro, comienza con 'Susurrando'. El modelo le da mucho peso al primer descriptor, por lo que cargar la emoción central al principio es la técnica más confiable."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Puedes añadir matices con más descriptores. Por ejemplo, 'Enojado y gritando, con una voz áspera y forzada'. El modelo intentará combinar estas ideas."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Luego agrega especificidad con descriptores de apoyo. 'Enojado y gritando, con una voz tensa y ronca, a un ritmo rápido' es una dirección completa. El modelo intentará combinar todas esas cualidades en una actuación coherente."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Sin embargo, evita instrucciones contradictorias. Un prompt como 'gritando en un susurro silencioso' confundirá al modelo y puede resultar en un audio de baja calidad."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "La regla de oro es: nunca combines instrucciones contradictorias. Una indicación como 'gritando en un susurro silencioso' confundirá al modelo y producirá un audio confuso. En su lugar, prueba 'susurro intenso y enojado, agudo y controlado'. Esa es una actuación consistente con una lógica clara."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "El modelo también entiende el ritmo. Usar frases como 'hablando muy rápido' o 'con pausas largas y dramáticas' puede alterar significativamente el ritmo del habla."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "También puedes dirigir el ritmo. Frases como 'hablando muy lentamente', 'entrega rápida como una ráfaga' o 'con pausas largas y deliberadas entre cada palabra' alterarán significativamente el ritmo del habla. Las instrucciones de ritmo son altamente confiables."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "La mejor manera de aprender es experimentando. Las 'Recetas de Tono' en la guía de ayuda son una excelente fuente de inspiración para instrucciones potentes."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "La Guía de Ayuda, accesible desde la parte superior izquierda de la ventana principal, contiene una tabla completa de Recetas de Tonos: instrucciones preescritas que puedes copiar directamente. Preajustes como 'El Villano', 'Narrador de Terror', 'A S M R' y 'El Desconsolado' están allí para su uso instantáneo."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "A continuación, pasaremos al motor de Diseño de Voz, donde podrás crear personajes completamente nuevos. Por favor, carga el capítulo seis."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Por favor, carga el Capítulo Seis: Diseño de Voz cuando estés listo. Profundizaremos en el motor azul y exploraremos cómo diseñar un hablante completamente nuevo a partir de texto."
     }
 ]

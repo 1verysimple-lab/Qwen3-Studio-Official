@@ -1,44 +1,86 @@
 [
-    {
-        "speaker": "Vivian",
-        "style": "News Anchor",
-        "text": "Chapter 3: Custom Voice Mastery. I am Vivian. This tab is for fast, high-quality production using pre-trained voices like myself.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Vivian",
-        "style": "News Anchor",
-        "text": "In the Custom Voice tab, you can pick from 9 distinct identities across English, Chinese, Japanese, and Korean native accents.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Vivian",
-        "style": "Seductive",
-        "text": "Performance is everything. I am now using the 'Seductive' style. You can type any acting instruction into the box to change our mood instantly.",
-        "temp": 0.9,
-        "top_p": 0.9
-    },
-    {
-        "speaker": "Vivian",
-        "style": "News Anchor",
-        "text": "The 'Generate Voice Set' button is your best friend. It creates multiple emotional versions of your line so you can pick the best one.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Vivian",
-        "style": "News Anchor",
-        "text": "It's now your turn to try. Go to the 'Custom Voice' tab. Write a style description you like in the instruction field, then use the 'Save As' box to save it. We will use this in Chapter 4.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Vivian",
-        "style": "News Anchor",
-        "text": "When done, come back here, load 'Tutorial_04_VoiceDesigner' and click 'Run Scene'.",
-        "temp": 0.6,
-        "top_p": 0.8
-    }
+  {
+    "type": "standard",
+    "speaker": "Vivian",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "Chapter Three: Custom Voice Mastery. I am Vivian. The Custom Voice engine is your fastest path to production-quality audio. It uses pre-trained speaker identities, so the voice you hear is stable, consistent, and ready for long-form narration.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "3156353590",
+    "status": "review",
+    "audio_file": "Tutorial_03_CustomMastery_audio/001_Vivian.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Vivian",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "You have nine speakers to choose from. Ryan and Aiden are native English males. Vivian, Serena, Eric, Dylan, and Uncle Fu are Chinese voices. Ono Anna is Japanese. Sohee is Korean. Each has its own timbre and personality.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "4189872993",
+    "status": "review",
+    "audio_file": "Tutorial_03_CustomMastery_audio/002_Vivian.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Vivian",
+    "style": "Seductive",
+    "language": "English",
+    "text": "Now listen carefully. I have just switched to the Seductive style. That single line of instruction changed my entire delivery. You type the acting direction into the Style Instruction field, and the model responds like a trained actor.",
+    "temp": 0.9,
+    "top_p": 0.9,
+    "seed": "4093883241",
+    "status": "review",
+    "audio_file": "Tutorial_03_CustomMastery_audio/003_Vivian.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Vivian",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "The style dropdown is filled with presets you can load in one click. You can also type your own instruction directly, or modify an existing one. Instructions like 'whisper conspiratorially' or 'read as if excited but trying to stay calm' work extremely well.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "1281831715",
+    "status": "review",
+    "audio_file": "Tutorial_03_CustomMastery_audio/004_Vivian.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Vivian",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "Once you have written a style you love, save it using the Save As field below the instruction box. Give it a name and it will appear in the dropdown from that point on, across all three engines.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "3721274887",
+    "status": "review",
+    "audio_file": "Tutorial_03_CustomMastery_audio/005_Vivian.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Vivian",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "The Lang selector forces the accent of the speaker without changing the language of the text. For example, switching to German while keeping your English text will produce English spoken with a German accent. This is a powerful trick for creating foreign character voices.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "1271171974",
+    "status": "success",
+    "audio_file": "Tutorial_03_CustomMastery_audio/006_Vivian.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Vivian",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "When you are ready, load Chapter Four: Voice Designer to learn how to invent entirely new characters.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "1271171974",
+    "status": "success",
+    "audio_file": "Tutorial_03_CustomMastery_audio/007_Vivian.wav"
+  }
 ]

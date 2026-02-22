@@ -1,44 +1,74 @@
 [
-    {
-        "speaker": "Ryan",
-        "style": "News Anchor",
-        "text": "Finale: Chapter 6. The Batch Studio. This is where all the engines meet. You are currently looking at the editor interface.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Ryan",
-        "style": "News Anchor",
-        "text": "Observe the toolbar above. You can Save and Load your scripts, and even see the name of your current project next to the page icon.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Vivian",
-        "style": "News Anchor",
-        "text": "On the far right is the Style Manager. You can create new acting instructions here and they will instantly appear in all your script blocks.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Vivian",
-        "style": "News Anchor",
-        "text": "The Review system is key. Yellow blocks are fresh takes. Click to approve them (Green) or right-click to reject them (Red) for a retry.",
-        "temp": 0.6,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "It's now your turn to try. Tick the 'Auto-Switch' box at the bottom and click 'RUN SCENE'. The app will automatically swap models and play your whole scene when finished!",
-        "temp": 0.7,
-        "top_p": 0.8
-    },
-    {
-        "speaker": "Ryan",
-        "style": "News Anchor",
-        "text": "You've mastered the main stage! But we aren't done yet. Load Chapter 7 to learn about the 'Prep Station' and automatic transcription.",
-        "temp": 0.6,
-        "top_p": 0.8
-    }
+  {
+    "type": "standard",
+    "speaker": "Ryan",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "Finale: Chapter 6. The Batch Studio. This is where all the engines meet. You are currently looking at the editor interface.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "517539325",
+    "status": "review",
+    "audio_file": "Tutorial_06_BatchStudio_audio/001_Ryan.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Ryan",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "Observe the toolbar above. You can Save and Load your scripts, and even see the name of your current project next to the page icon.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "85943039",
+    "status": "review",
+    "audio_file": "Tutorial_06_BatchStudio_audio/002_Ryan.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Vivian",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "On the far right is the Style Manager. You can create new acting instructions here and they will instantly appear in all your script blocks.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "3454107292",
+    "status": "review",
+    "audio_file": "Tutorial_06_BatchStudio_audio/003_Vivian.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Vivian",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "The Review system is key. Yellow blocks are fresh takes. Click to approve them (Green) or right-click to reject them (Red) for a retry.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "2235440311",
+    "status": "review",
+    "audio_file": "Tutorial_06_BatchStudio_audio/004_Vivian.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Tutorial Wizard",
+    "style": "",
+    "language": "English",
+    "text": "It's now your turn to try. Tick the 'Auto-Switch' box at the bottom and click 'RUN SCENE'. The app will automatically swap models and play your whole scene when finished!",
+    "temp": 0.7,
+    "top_p": 0.8,
+    "seed": "240399690",
+    "status": "review",
+    "audio_file": "Tutorial_06_BatchStudio_audio/005_TutorialWizard.wav"
+  },
+  {
+    "type": "standard",
+    "speaker": "Ryan",
+    "style": "News Anchor",
+    "language": "English",
+    "text": "You've mastered the main stage! But we aren't done yet. Load Chapter 7 to learn about the 'Prep Station' and automatic transcription.",
+    "temp": 0.6,
+    "top_p": 0.8,
+    "seed": "2215823829",
+    "status": "review",
+    "audio_file": "Tutorial_06_BatchStudio_audio/006_Ryan.wav"
+  }
 ]

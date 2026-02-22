@@ -2,42 +2,42 @@
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "Bienvenido al Capítulo 7: La Prep Station. Esta es la pestaña 'Transcript Helper', donde capturas y limpias tus datos de referencia.",
+        "text": "Bienvenido al Capítulo 7: La Estación de Preparación. Esta es la pestaña 'Asistente de Transcripción', donde capturas y limpias tus datos de referencia.",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "El Workbench cuenta con una grabadora que soporta tanto tu Micrófono como el Audio del Sistema a través de la casilla 'Sys Audio'.",
+        "text": "El Banco de Trabajo cuenta con una grabadora que admite tanto tu Micrófono como el Audio del Sistema a través de la casilla de verificación de 'Audio del Sistema' para retroalimentación.",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "Ahora es tu turno. Ve al 'Transcript Helper'. Haz clic en el botón 'Audio to Text'. ¡La aplicación usará el motor Whisper para escuchar tu archivo y escribir el guion por ti!",
+        "text": "Ahora es tu turno de intentarlo. Ve al 'Asistente de Transcripción'. Haz clic en el botón 'Audio a Texto'. ¡La aplicación usará el motor Whisper para escuchar tu archivo y escribir el guion por ti!",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Vivian",
         "style": "News Anchor",
-        "text": "¿Necesitas limpiar una grabación? Haz clic izquierdo en la onda para el inicio y clic derecho para el final, luego haz clic en 'Crop'. Es así de simple.",
+        "text": "¿Necesitas limpiar una grabación? Haz clic izquierdo en la forma de onda para el inicio y clic derecho para el final, luego haz clic en 'Recortar'. Así de simple.",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "Finalmente, dale un nombre a tu voz en el cuadro Profile y haz clic en 'Save'. Esto crea un perfil de estudio permanente que puedes cargar en cualquier parte de la aplicación.",
+        "text": "Finalmente, dale un nombre a tu voz en el cuadro de Perfil y haz clic en 'Guardar'. Esto crea un Perfil de Estudio permanente que puedes cargar en cualquier parte de la aplicación.",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "Cuando estés listo, carga el capítulo final, Capítulo 8, para aprender las técnicas pro para producción de alta gama.",
+        "text": "Cuando estés listo, carga el capítulo final, Capítulo 8, para aprender las técnicas profesionales para una producción de alta gama.",
         "temp": 0.6,
         "top_p": 0.8
     }

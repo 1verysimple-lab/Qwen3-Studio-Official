@@ -2,42 +2,42 @@
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "欢迎来到第7章：Prep Station。这是 'Transcript Helper' 标签页，你在那里捕获和清理参考数据。",
+        "text": "欢迎来到第七章：准备站。这是“转录助手”选项卡，您可以在这里捕获和清理您的参考数据。",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "Workbench 具有录音功能，支持通过 'Sys Audio' 复选框同时录制你的麦克风和系统音频。",
+        "text": "工作台设有一个录音机，通过“系统音频”环回复选框支持您的麦克风和系统音频。",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "现在轮到你尝试了。去 'Transcript Helper'。点击 'Audio to Text' 按钮。应用将使用 Whisper 引擎听你的文件并为你写出剧本！",
+        "text": "现在轮到您来尝试了。转到“转录助手”。单击“音频到文本”按钮。应用程序将使用Whisper引擎收听您的文件并为您编写脚本！",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Vivian",
         "style": "News Anchor",
-        "text": "需要清理录音吗？左键点击波形设置起点，右键点击设置终点，然后点击 'Crop'。就是这么简单。",
+        "text": "需要清理录音吗？在波形上左键单击开始位置，右键单击结束位置，然后单击“裁剪”。就这么简单。",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "最后，在 Profile 框中给你的声音起个名字并点击 'Save'。这会创建一个永久的工作室配置文件，你可以在应用的任何地方加载它。",
+        "text": "最后，在“配置文件”框中为您的声音命名，然后单击“保存”。这将创建一个永久的Studio配置文件，您可以在应用程序的任何位置加载。",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "当你准备好后，加载最后一章，第8章，学习高端制作的专业技巧。",
+        "text": "准备好后，请加载最后一章，第八章，学习高端制作的专业技术。",
         "temp": 0.6,
         "top_p": 0.8
     }

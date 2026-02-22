@@ -2,42 +2,42 @@
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "第5章：Voice Cloning。我是 Aiden。这是紫色引擎，用于创建任何人的完美数字复制品。",
+        "text": "第五章：语音克隆。我是Aiden。这是紫色引擎，用于创建任何人的完美数字复制品。",
         "temp": 0.5,
         "top_p": 0.7
     },
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "为了获得好的克隆，你需要干净的音频。你可以在 'Transcript Helper' 标签页中准备这些，那里包含录音机和手动裁剪工具。",
+        "text": "要获得好的克隆效果，你需要干净的音频。你可以在“转录助手”选项卡中准备这些音频，该选项卡包括一个录音机和一个手动裁剪工具。",
         "temp": 0.5,
         "top_p": 0.7
     },
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "在 Clone 标签页中，你可以使用 'Ignore Text' 模式进行快速声学匹配，但提供文本记录总是能给你更高的准确性。",
+        "text": "在“克隆”选项卡中，您可以使用“忽略文本”模式进行快速声学匹配，但提供转录稿总能为您带来更高的准确性。",
         "temp": 0.5,
         "top_p": 0.7
     },
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "使用 'Lock Voice' 按钮缓存说话者的数据，这样你就可以生成数千行台词而无需额外的加载时间。",
+        "text": "使用“锁定语音”按钮缓存说话者的数据，这样您就可以生成数千行文本而无需任何额外的加载时间。",
         "temp": 0.5,
         "top_p": 0.7
     },
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "现在轮到你尝试了。去 'Voice Clone' 标签页。加载你在上一章保存的角色 WAV 文件。输入一些文本，使用 'Lock Voice' 按钮，并生成你的第一个克隆。",
+        "text": "现在轮到你来尝试了。转到“语音克隆”选项卡。加载你在上一章中保存的角色WAV文件。输入一些文本，使用“锁定语音”按钮，然后生成你的第一个克隆。",
         "temp": 0.5,
         "top_p": 0.7
     },
     {
         "speaker": "Aiden",
         "style": "News Anchor",
-        "text": "完成后，回到 Studio，加载 'Tutorial_06_BatchStudio' 并点击 'Run Scene' 观看大结局。",
+        "text": "完成后，返回工作室，加载“Tutorial_06_BatchStudio”并单击“运行场景”以进行最终演示。",
         "temp": 0.5,
         "top_p": 0.7
     }

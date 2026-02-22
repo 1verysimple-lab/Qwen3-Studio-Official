@@ -1,34 +1,74 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Echemos un vistazo más de cerca a los Controles Deslizantes de Precisión. Estos dos controles, Temperatura y Top P, son tus herramientas principales para afinar una actuación de IA."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Capítulo Catorce: Deslizadores de Precisión. Estos tres controles en la barra de encabezado se aplican a todos los motores: Personalizado, Diseño y Clonación. Dominarlos es la diferencia entre resultados adecuados y un audio de calidad profesional."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "La temperatura controla la creatividad o aleatoriedad de la voz. Piénsalo como un nivel de energía."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "La Temperatura controla la creatividad y la energía. Piénsalo como el voltaje que atraviesa la actuación. Una temperatura baja, por debajo de cero punto cinco, produce una entrega muy estable, neutra, casi robótica. Esto es ideal para narraciones largas, descargos de responsabilidad legales o para arreglar un clon de voz que suena 'borracho' o arrastrado."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Una temperatura baja, por debajo de cero punto cinco, resulta en una entrega muy estable, consistente y a veces robótica. Esto es útil para narraciones neutras o para arreglar una voz que suena inestable."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "El punto óptimo para la mayoría de las voces está entre cero punto seis y cero punto nueve. Esto produce un habla con un sonido natural y buena expresividad. Los tutoriales que estás escuchando ahora se generaron en este rango."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Una temperatura alta, por encima de uno punto cero, resulta en una actuación muy dramática y emocional. Úsalo para gritar o susurrar intensamente, pero ten en cuenta que aumenta el riesgo de fallos en el audio."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Una temperatura alta, por encima de uno punto cero, desata actuaciones dramáticas y muy emotivas. Úsalo para gritar, llorar o para una actuación de personajes intensa. Pero ten en cuenta: una temperatura alta combinada con instrucciones de estilo contradictorias aumenta significativamente la posibilidad de fallos y artefactos de audio."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "El rango recomendado para el habla más natural es entre cero punto seis y cero punto nueve."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Top P controla el rango de vocabulario — cuántos sonidos posibles considera el modelo en cada paso. Un valor bajo, por debajo de cero punto cinco, produce una pronunciación enfocada, nítida y clara. Un valor alto, cerca de uno punto cero, produce una entonación más diversa y un carácter natural en el ritmo."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Top P, por otro lado, controla el rango de sonidos posibles que la IA considera. Un valor más bajo conduce a una pronunciación más clara y enfocada, mientras que un valor más alto permite una entonación más rica en matices y carácter."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "El campo Semilla es el tercer control, y es el más poderoso para la reproducibilidad. Escribe cualquier número entero en el campo Semilla y cada generación que use esa semilla producirá un audio idéntico byte por byte, sin importar cuándo o cuántas veces lo ejecutes. Esto es esencial para comparaciones A/B controladas."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Puedes bloquear los controles deslizantes para evitar que se cambien cuando cargas un perfil que tiene valores guardados diferentes."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Deja el campo Semilla vacío y la aplicación elige automáticamente una semilla aleatoria en el momento de la generación, luego la vuelve a escribir en el campo. Esto significa que siempre tienes disponible la semilla de tu última toma, incluso cuando no lo planeaste con anticipación."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "En nuestro próximo capítulo, cubriremos el uso de etiquetas en el guion y la puntuación. Por favor, carga el capítulo quince."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Haz clic en el botón de Dados junto al campo Semilla para lanzar un nuevo número aleatorio en el campo sin generar. Esto es útil cuando deseas preestablecer una semilla antes de una ejecución por lotes larga, para que cada bloque tenga una semilla de inicio conocida."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Por favor, carga el Capítulo Quince: Consejos Profesionales para Etiquetas y Puntuación, para la capa final de control de actuación en el guion."
     }
 ]

@@ -1,20 +1,7 @@
-Based on the file you just uploaded, **no, it is NOT updated.**
-
-The current version in your file still describes the "Old Way" (building `installer.py` inside your main project folder). If you or a future Gemini follows that, you will get the **3GB Installer Bug** again.
-
-I have rewritten the **Master Protocol** below. It now explicitly includes:
-
-1. **The "Clean Room" Strategy:** Building in `C:\Users\1very\source\installer_dist`.
-2. **The `venv_lite`:** Using the separate, tiny Python environment.
-3. **The Three-URL Config:** Reminding you to update App, Engine, *and* Patch URLs.
-
-Save this as **`RELEASE_PROTOCOL.md`**.
-
----
-
-# 🚀 QWEN3 STUDIO: RELEASE PROTOCOL (GOD MODE)
+# 🚀 QWEN3 STUDIO: RELEASE PROTOCOL
 
 **Author:** Blues | **Location:** Sitges HQ
+**Current Version:** 4.6.0
 **Objective:** Fail-safe protocol to build, package, and deploy Qwen3 Studio.
 
 ---
@@ -23,41 +10,46 @@ Save this as **`RELEASE_PROTOCOL.md`**.
 
 *Before you cook, check the prep.*
 
-1. **Update Configuration**
-* Open `release_config.json`.
-* Change `"app_version": "4.0"` to your new version (e.g., `"4.1"`).
-* *Note:* This automatically updates the zip filename (e.g., `Qwen3Studio_v4.1.zip`).
+1. **Bump the Version (Automated)**
+   Use the version bump script to update all files in one go:
+   ```bash
+   python -X utf8 bump_version.py 4.X.0
+   ```
+   This updates `release_config.json`, `app_main.py`, `app_launcher.py`, `installer.py`, `deploy_workflow.py`, `README.md`, and `FEATURES.md` simultaneously.
+   > ⚠️ Use `-X utf8` flag on Windows to prevent cp1252 encoding errors from arrow characters in print statements.
 
+2. **Verify `release_config.json`**
+   ```json
+   {
+     "app_name": "Qwen3Studio",
+     "app_version": "4.X.0",
+     "hf_repo_id": "Bluesed/QWEN_STUDIO",
+     "engine_repo_id": "Bluesed/blues-qwen",
+     "app_bundle_name": "Qwen3Studio_v4.X.0.zip",
+     "engine_bundle_name": "blues-Qwen3-TTS.zip"
+   }
+   ```
+   > ⚠️ Double-check that `app_bundle_name` has the `.` before `zip` — the bump script regex can eat it.
 
-2. **Code Safety Check (The "Shutil" Rule)**
-* Ensure the following files have `import shutil` at the top.
-* `app_launcher.py` (Critical)
-* `install_tutorials.py` (Critical)
-* `installer.py` (Critical)
-
-
-
-
+3. **Code Safety Check**
+   Ensure the following files have `import shutil` at the top:
+   - `app_launcher.py` (Critical)
+   - `installer.py` (Critical)
 
 ---
 
-## 🍳 PHASE 2: THE APP BUILD (The Heavy Engine)
+## 🍳 PHASE 2: THE APP BUILD (The Heavy Package)
 
 *Compiling the main application into a folder (OneDir).*
 
 1. **Environment:** Use your **Main Project Venv** (`.venv`).
 2. **Clean & Build:**
-```bash
-pyinstaller Qwen3Studio.spec --clean --noconfirm
-
-```
-
-
+   ```bash
+   pyinstaller Qwen3Studio.spec --clean --noconfirm
+   ```
 3. **Sanity Test:**
-* Run `dist/Qwen3Studio/Qwen3Studio.exe`.
-* Ensure it opens without crashing.
-
-
+   - Run `dist/Qwen3Studio/Qwen3Studio.exe`.
+   - Confirm it opens without crashing and that the engine loads.
 
 ---
 
@@ -66,63 +58,51 @@ pyinstaller Qwen3Studio.spec --clean --noconfirm
 *Shipping the 4GB+ payload to the cloud.*
 
 1. **Run the Auto-Uploader:**
-```bash
-python upload_to_hf.py app
-
-```
-
-
+   ```bash
+   python upload_to_hf.py app
+   ```
 2. **Get the Link:**
-* Go to [Hugging Face Repo]().
-* Copy the **Download Link** for the new zip (e.g., `Qwen3Studio_v4.1.zip`).
-
-
+   - Go to the [Hugging Face Repo](https://huggingface.co/Bluesed/QWEN_STUDIO).
+   - Copy the **Download Link** for the new zip (e.g., `Qwen3Studio_v4.X.0.zip`).
 
 ---
 
 ## 📦 PHASE 4: THE INSTALLER (The "Clean Room" Build)
 
-*Building the lightweight (~15MB) setup file. WE DO NOT BUILD THIS IN THE MAIN FOLDER.*
+*Building the lightweight (~15MB) setup file.*
+
+**⚠️ DO NOT build the installer inside the main project folder** — it will bundle the entire venv and produce a 3GB+ binary.
 
 **Location:** `C:\Users\1very\source\installer_dist`
 
 1. **Update `installer.py` URLs**
-* Open `installer.py` in your editor.
-* Update **APP_ZIP_URL** (from Phase 3).
-* Update **ENGINE_ZIP_URL** (The 11GB Engine link).
-* Update **PATCH_ZIP_URL** (The `qwen_tts.zip` Logic Patch).
-
+   Open `installer.py` and update:
+   - `APP_ZIP_URL` — from Phase 3.
+   - `ENGINE_ZIP_URL` — the 11GB engine link.
+   - `PATCH_ZIP_URL` — the `qwen_tts.zip` logic patch.
 
 2. **Move Files to Clean Room**
-* Copy `installer.py` and `pq.ico` -> `C:\Users\1very\source\installer_dist`.
+   ```powershell
+   copy installer.py C:\Users\1very\source\installer_dist\
+   copy pq.ico C:\Users\1very\source\installer_dist\
+   ```
 
-
-3. **Activate "Lite" Environment**
-* Open Terminal.
-* Navigate: `cd C:\Users\1very\source\installer_dist`
-* Activate:
-```powershell
-.\venv_lite\Scripts\activate
-
-```
-
-
-* *Check:* Prompt should say `(venv_lite)`.
-
+3. **Activate the Lite Environment**
+   ```powershell
+   cd C:\Users\1very\source\installer_dist
+   .\venv_lite\Scripts\activate
+   ```
+   Prompt should show `(venv_lite)`.
 
 4. **Build the Installer (Strict Single File)**
-```powershell
-pyinstaller --noconfirm --onefile --console --uac-admin --name "Qwen3_Setup_v4.1" --add-data "pq.ico;." --icon "pq.ico" installer.py
-
-```
-
+   ```powershell
+   pyinstaller --noconfirm --onefile --console --uac-admin --name "Qwen3_Setup_v4.X.0" --add-data "pq.ico;." --icon "pq.ico" installer.py
+   ```
 
 5. **Verify Size**
-* Check `dist/Qwen3_Setup_v4.1.exe`.
-* **Target:** ~15MB.
-* *Fail:* If >100MB, you are using the wrong venv!
-
-
+   - Check `dist/Qwen3_Setup_v4.X.0.exe`.
+   - **Target:** ~15MB.
+   - **Fail condition:** If >100MB, you are using the wrong venv.
 
 ---
 
@@ -131,23 +111,24 @@ pyinstaller --noconfirm --onefile --console --uac-admin --name "Qwen3_Setup_v4.1
 *Opening the doors.*
 
 1. **Final Test**
-* Run the new Installer from your Desktop.
-* Verify it installs App + Engine + Patch.
-* Verify the App launches and loads the model.
-
+   - Run the new installer from a clean location (Desktop).
+   - Verify it installs App + Engine + Patch.
+   - Verify the app launches and the model loads.
 
 2. **Push to GitHub**
-* Create Release `v4.1`.
-* Upload **ONLY** `Qwen3_Setup_v4.1.exe`.
+   - Create Release `v4.X.0`.
+   - Upload **only** `Qwen3_Setup_v4.X.0.exe`.
+   - Paste the release notes from `FEATURES.md`.
 
-
+3. **Update Website** (if applicable)
+   - Update download link on [blues-lab.pro](https://blues-lab.pro).
 
 ---
 
-### 🤖 Can Gemini do this?
+## 🤖 For Future AI Sessions
 
-**Yes.** If you feed this file to a future Gemini session, it will understand:
-
-1. It cannot use the standard environment for the installer.
-2. It must ask you to switch folders.
-3. It must check for the 3 URLs.
+If you feed this file to a future AI session, it will understand:
+1. The installer must be built from `C:\Users\1very\source\installer_dist` using `venv_lite`.
+2. The bump script requires `-X utf8` on Windows.
+3. Three URLs must be updated in `installer.py` before building.
+4. Check `app_bundle_name` in `release_config.json` for the missing-dot bug after bumping.

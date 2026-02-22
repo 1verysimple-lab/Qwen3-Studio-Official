@@ -4,10 +4,15 @@ import sounddevice as sd
 import soundfile as sf
 import numpy as np
 import threading
+import random
+import gc
 import os
 import time
 import json
 import shutil
+import torch
+import difflib
+import tempfile
 
 # --- CONSTANTS ---
 PRESETS = [
@@ -29,6 +34,63 @@ STATUS_COLORS = {
     "success": "#2ecc71",   # Green
     "failed":  "#e74c3c"    # Red
 }
+
+def _deep_destroy_model(app):
+    """
+    Aggressively destroy the loaded model and free VRAM.
+    Deletes internal HF model and processor before dropping the wrapper reference
+    so the CUDA allocator can reclaim pages as soon as flush_vram() runs.
+    Call this from any background thread that needs to sever the model.
+    """
+    m = getattr(app, 'model', None)
+    if m is not None:
+        try:
+            if hasattr(m, 'model'):
+                del m.model
+        except Exception:
+            pass
+        try:
+            if hasattr(m, 'processor'):
+                del m.processor
+        except Exception:
+            pass
+        try:
+            del m
+        except Exception:
+            pass
+        app.model = None
+    app.flush_vram()
+
+
+def detect_long_pauses(audio_data, sample_rate, max_pause_seconds=2.0):
+    """Scans audio array for RMS drops indicating unnatural silences."""
+    if audio_data is None:
+        return False, "No audio data."
+    chunk_length = int(sample_rate * 0.1)  # 100ms chunks
+    threshold = 0.005
+    consecutive_silent_chunks = 0
+    max_allowed_chunks = int(max_pause_seconds / 0.1)
+    for i in range(0, len(audio_data), chunk_length):
+        chunk = audio_data[i:i + chunk_length]
+        rms = np.sqrt(np.mean(chunk ** 2))
+        if rms < threshold:
+            consecutive_silent_chunks += 1
+            if consecutive_silent_chunks > max_allowed_chunks:
+                return False, f"Failed: Unnatural pause detected (>{max_pause_seconds}s)."
+        else:
+            consecutive_silent_chunks = 0
+    return True, "Passed"
+
+
+def verify_transcription(target_text, whisper_transcription):
+    """Fuzzy-matches Whisper's output against the script text."""
+    clean_target = ''.join(e for e in target_text if e.isalnum() or e.isspace()).lower()
+    clean_actual = ''.join(e for e in whisper_transcription if e.isalnum() or e.isspace()).lower()
+    similarity = difflib.SequenceMatcher(None, clean_target, clean_actual).ratio()
+    if similarity < 0.75:
+        return False, f"Low accuracy ({similarity:.2f}). Possible hallucination or garbled speech."
+    return True, "Passed"
+
 
 class ToolTip(object):
     def __init__(self, widget, text='widget info'):
@@ -76,10 +138,12 @@ class ScriptBlock(tk.Frame):
     """
     Represents a single line of dialogue in the scene.
     """
-    def __init__(self, parent, index, delete_callback, available_speakers, available_styles, app_ref, block_type="standard"):
+    def __init__(self, parent, index, delete_callback, generate_callback, available_speakers, available_styles, app_ref, block_type="standard", block_number=None):
         super().__init__(parent, bg="white", pady=5, padx=5, bd=1, relief="solid")
         self.index = index
+        self.block_number = block_number
         self.delete_callback = delete_callback
+        self.generate_callback = generate_callback
         self.app = app_ref
         self.block_type = block_type
         self.generated_audio = None
@@ -95,6 +159,10 @@ class ScriptBlock(tk.Frame):
         # ── COLLAPSED BAR (shown when collapsed) ─────────────────────────────
         self.collapsed_bar = tk.Frame(self, bg="white")
         # Not packed by default — only shown in collapsed state
+
+        self.lbl_num_col = tk.Label(self.collapsed_bar, text=f"#{self.block_number}" if self.block_number else "",
+                                    bg="white", fg="#bdc3c7", font=("Consolas", 7, "bold"), width=3, anchor="e")
+        self.lbl_num_col.pack(side=tk.LEFT, padx=(0, 3))
 
         self.status_light_col = tk.Canvas(self.collapsed_bar, width=16, height=16,
                                           bg="white", highlightthickness=0, cursor="hand2")
@@ -123,6 +191,11 @@ class ScriptBlock(tk.Frame):
         # Top Row: Controls
         top_f = tk.Frame(self.expanded_content, bg="white")
         top_f.pack(fill=tk.X, pady=(0, 5))
+
+        # Block number badge
+        self.lbl_num = tk.Label(top_f, text=f"#{self.block_number}" if self.block_number else "",
+                                bg="white", fg="#bdc3c7", font=("Consolas", 8, "bold"), width=3, anchor="e")
+        self.lbl_num.pack(side=tk.LEFT, padx=(0, 2))
 
         # Status Indicator
         self.status_light = tk.Canvas(top_f, width=24, height=24, bg="white", highlightthickness=0, cursor="hand2")
@@ -164,14 +237,24 @@ class ScriptBlock(tk.Frame):
         self.lbl_temp = tk.Label(top_f, text="0.8", bg="white", font=("Consolas", 8), width=3)
         self.sc_temp = ttk.Scale(top_f, from_=0.1, to=1.5, variable=self.temp_var, orient=tk.HORIZONTAL, length=60)
         self.sc_temp.pack(side=tk.LEFT, padx=2)
-        self.lbl_temp.pack(side=tk.LEFT)
+        self.lbl_temp.pack(side=tk.LEFT, padx=(2, 10))
 
         tk.Label(top_f, text="P:", bg="white", font=("Segoe UI", 8)).pack(side=tk.LEFT, padx=(5, 0))
         self.top_p_var = tk.DoubleVar(value=0.8)
         self.lbl_p = tk.Label(top_f, text="0.8", bg="white", font=("Consolas", 8), width=3)
         self.sc_p = ttk.Scale(top_f, from_=0.1, to=1.0, variable=self.top_p_var, orient=tk.HORIZONTAL, length=60)
         self.sc_p.pack(side=tk.LEFT, padx=2)
-        self.lbl_p.pack(side=tk.LEFT)
+        self.lbl_p.pack(side=tk.LEFT, padx=(2, 10))
+
+        tk.Label(top_f, text="Seed:", bg="white", font=("Segoe UI", 8)).pack(side=tk.LEFT, padx=(6, 0))
+        self.seed_var = tk.StringVar(value="")
+        self.seed_entry = ttk.Entry(top_f, textvariable=self.seed_var, width=9, font=("Consolas", 8))
+        self.seed_entry.pack(side=tk.LEFT, padx=(2, 10))
+        ToolTip(self.seed_entry,
+            "Seed — controls reproducibility.\n"
+            "Empty = a new random seed is chosen at generation time\n"
+            "and written back here so you can replay the exact take.\n"
+            "Enter a number to lock in a specific result.")
 
         # Setup Traces for labels
         self.temp_var.trace_add("write", lambda *a: self.lbl_temp.config(text=f"{self.temp_var.get():.1f}"))
@@ -193,16 +276,23 @@ class ScriptBlock(tk.Frame):
 
         # Bottom Row
         self.bot_f = tk.Frame(self.expanded_content, bg="white")
-        self.bot_f.pack(fill=tk.X, pady=(5, 0))
+        self.bot_f.pack(fill=tk.X, pady=(5, 5))
 
         self.lbl_word_count = tk.Label(self.bot_f, text="0 words", bg="white", fg="grey", font=("Segoe UI", 8))
         self.lbl_word_count.pack(side=tk.LEFT)
 
-        self.btn_play = ttk.Button(self.bot_f, text="▶ Play", command=self.play_audio, state=tk.DISABLED, width=8)
+        self.btn_play = ttk.Button(self.bot_f, text="▶ Play", command=self.play_audio, state=tk.DISABLED, width=8, style="Flat.TButton")
         self.btn_play.pack(side=tk.RIGHT)
 
-        self.btn_stop = ttk.Button(self.bot_f, text="⏹", command=self.stop_audio, state=tk.DISABLED, width=4)
+        self.btn_stop = ttk.Button(self.bot_f, text="⏹", command=self.stop_audio, state=tk.DISABLED, width=4, style="Flat.TButton")
         self.btn_stop.pack(side=tk.RIGHT, padx=2)
+
+        self.btn_multi_gen = ttk.Button(self.bot_f, text="🎲 x3", command=lambda: self.app.director.generate_multi_takes(self), width=5, style="Flat.TButton")
+        self.btn_multi_gen.pack(side=tk.RIGHT, padx=2)
+        ToolTip(self.btn_multi_gen, "Generate 3 alternative takes to choose from")
+
+        self.btn_generate = ttk.Button(self.bot_f, text="⚡ Gen", command=lambda: self.generate_callback(self), width=7, style="Flat.TButton")
+        self.btn_generate.pack(side=tk.RIGHT, padx=2)
         # ─────────────────────────────────────────────────────────────────────
 
         self.chk_retry_var = tk.BooleanVar(value=True)
@@ -359,6 +449,7 @@ class BatchDirector(tk.Frame):
         super().__init__(parent, bg="#f0f0f0")
         self.app = app_reference
         self.blocks = []
+        self._block_counter = 0  # resets on clear/load, increments per new block
         self.script_name_var = tk.StringVar(value="New Script")
         
         # --- TOP TOOLBAR ---
@@ -368,6 +459,10 @@ class BatchDirector(tk.Frame):
         ttk.Button(toolbar, text="➕ Add Block", command=self.add_block).pack(side=tk.LEFT)
         ttk.Button(toolbar, text="➕ Clone Block", command=self.add_clone_block).pack(side=tk.LEFT, padx=2)
         ttk.Button(toolbar, text="🗑 Clear All", command=self.clear_all).pack(side=tk.LEFT, padx=5)
+
+        ttk.Separator(toolbar, orient=tk.VERTICAL).pack(side=tk.LEFT, fill=tk.Y, padx=8)
+        ttk.Button(toolbar, text="⊟ Collapse All", command=self.collapse_all_blocks).pack(side=tk.LEFT, padx=2)
+        ttk.Button(toolbar, text="⊞ Expand All", command=self.expand_all_blocks).pack(side=tk.LEFT, padx=2)
         
         # Script Load/Save
         ttk.Separator(toolbar, orient=tk.VERTICAL).pack(side=tk.LEFT, fill=tk.Y, padx=10)
@@ -408,7 +503,15 @@ class BatchDirector(tk.Frame):
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         
-        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+        # Scoped mousewheel — only scroll when cursor is over the canvas
+        def _bind_mousewheel(event):
+            self.canvas.bind("<MouseWheel>", self._on_mousewheel)
+        def _unbind_mousewheel(event):
+            self.canvas.unbind("<MouseWheel>")
+        self.canvas.bind("<Enter>", _bind_mousewheel)
+        self.canvas.bind("<Leave>", _unbind_mousewheel)
+        self.scroll_frame.bind("<Enter>", _bind_mousewheel)
+        self.scroll_frame.bind("<Leave>", _unbind_mousewheel)
 
         # 2. Right Frame: Tools & Style Manager
         self.right_frame = tk.Frame(self.paned, bg="white", width=150)
@@ -429,12 +532,21 @@ class BatchDirector(tk.Frame):
         self.btn_run.pack(side=tk.RIGHT)
         
         # Auto-Switch Checkbox
-        self.auto_switch_var = tk.BooleanVar(value=False)
+        self.auto_switch_var = tk.BooleanVar(value=True)
         self.chk_auto_switch = tk.Checkbutton(action_bar, text="⚡ Auto-Switch Engines", variable=self.auto_switch_var,
                                               bg="#2c3e50", fg="white", font=("Segoe UI", 10),
                                               selectcolor="#2c3e50", activebackground="#2c3e50", activeforeground="white")
         self.chk_auto_switch.pack(side=tk.RIGHT, padx=15)
-        
+
+        self.auto_verify_var = tk.BooleanVar(value=False)
+        self.chk_auto_verify = tk.Checkbutton(
+            action_bar, text="🔍 Auto-Verify Batch",
+            variable=self.auto_verify_var,
+            bg="#2c3e50", fg="white", font=("Segoe UI", 10),
+            selectcolor="#2c3e50", activebackground="#2c3e50", activeforeground="white"
+        )
+        self.chk_auto_verify.pack(side=tk.RIGHT, padx=15)
+
         # Play All / Stop Controls
         self.btn_stop_scene = tk.Button(action_bar, text="⏹", command=self.stop_scene, bg="#e74c3c", fg="white", font=("Segoe UI", 10, "bold"), bd=0, padx=10, pady=5, cursor="hand2")
         self.btn_stop_scene.pack(side=tk.RIGHT, padx=2)
@@ -528,8 +640,25 @@ class BatchDirector(tk.Frame):
                 self.sm_name_entry.delete(0, tk.END)
                 self.sm_instr_entry.delete("1.0", tk.END)
 
+    def collapse_all_blocks(self):
+        """Collapse every block to its thin bar."""
+        for b in self.blocks:
+            if not b.is_collapsed:
+                b.toggle_collapse()
+
+    def expand_all_blocks(self):
+        """Expand every block to full view."""
+        for b in self.blocks:
+            if b.is_collapsed:
+                b.toggle_collapse()
+
     def _on_mousewheel(self, event):
-        self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        if event.delta:
+            # Windows: delta is ±120 per tick; macOS: delta is ±1
+            units = int(-1 * (event.delta / 120)) if abs(event.delta) >= 120 else int(-1 * event.delta)
+        else:
+            units = 0
+        self.canvas.yview_scroll(units, "units")
 
     def get_speakers(self):
         # Combines Built-in Presets + Saved Design Profiles
@@ -538,6 +667,14 @@ class BatchDirector(tk.Frame):
         designs = list(self.app.design_profiles.keys())
         
         return PRESETS + ["---"] + designs
+
+    def get_builtin_speakers(self):
+        """Returns only the built-in preset voice names (green strip in UI)."""
+        return list(PRESETS)
+
+    def get_custom_voices(self):
+        """Returns voice names that are NOT built-in presets (blue strip = design profiles)."""
+        return list(self.app.design_profiles.keys())
 
     def get_styles(self):
         return sorted(list(self.app.app_config.get("style_instructions", {}).keys()))
@@ -551,8 +688,8 @@ class BatchDirector(tk.Frame):
     def add_block(self, block_type="standard"):
         speakers = self.get_speakers()
         styles = self.get_styles()
-        
-        block = ScriptBlock(self.scroll_frame, len(self.blocks), self.remove_block, speakers, styles, self.app, block_type=block_type)
+        self._block_counter += 1
+        block = ScriptBlock(self.scroll_frame, len(self.blocks), self.remove_block, self.generate_single_block, speakers, styles, self.app, block_type=block_type, block_number=self._block_counter)
         block.pack(fill=tk.X, pady=5, padx=10)
         self.blocks.append(block)
         
@@ -571,77 +708,162 @@ class BatchDirector(tk.Frame):
             for b in self.blocks:
                 b.destroy()
             self.blocks = []
+            self._block_counter = 0
             self.add_block()
 
     def save_script(self):
-        """Saves current blocks to JSON."""
+        """Saves current blocks to JSON, and any generated audio to a companion folder."""
+        f = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON Scripts", "*.json")])
+        if not f: return
+
+        # 1. Prepare companion audio directory
+        base_dir = os.path.dirname(f)
+        base_name = os.path.splitext(os.path.basename(f))[0]
+        audio_dir_name = f"{base_name}_audio"
+        audio_dir_path = os.path.join(base_dir, audio_dir_name)
+
+        has_audio = False
         data = []
-        for b in self.blocks:
-            data.append({
+
+        for i, b in enumerate(self.blocks):
+            block_data = {
                 "type": b.block_type,
                 "speaker": b.speaker_var.get(),
                 "style": b.style_var.get(),
                 "language": b.lang_var.get(),
                 "text": b.text_input.get("1.0", tk.END).strip(),
                 "temp": b.temp_var.get(),
-                "top_p": b.top_p_var.get()
-            })
-            
-        f = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON Scripts", "*.json")])
-        if f:
-            try:
-                with open(f, 'w', encoding='utf-8') as file:
-                    json.dump(data, file, indent=2)
-                self.script_name_var.set(os.path.basename(f))
-                messagebox.showinfo("Saved", f"Script saved to {os.path.basename(f)}")
-            except Exception as e:
-                messagebox.showerror("Error", str(e))
+                "top_p": b.top_p_var.get(),
+                "seed": b.seed_var.get(),
+                "status": b.status,
+                "audio_file": None
+            }
+
+            # 2. Save audio if it exists and has been approved/reviewed
+            if b.generated_audio is not None and b.status in ["success", "review"]:
+                if not has_audio:
+                    os.makedirs(audio_dir_path, exist_ok=True)
+                    has_audio = True
+
+                # Format: 001_SpeakerName.wav
+                spk_clean = "".join(x for x in block_data["speaker"] if x.isalnum())
+                audio_filename = f"{i+1:03d}_{spk_clean}.wav"
+                full_audio_path = os.path.join(audio_dir_path, audio_filename)
+
+                try:
+                    sf.write(full_audio_path, b.generated_audio, b.sample_rate)
+                    # Store RELATIVE path so the folder and JSON can be moved together
+                    block_data["audio_file"] = os.path.join(audio_dir_name, audio_filename).replace("\\", "/")
+                except Exception as e:
+                    print(f"Failed to save audio for block {i+1}: {e}")
+
+            data.append(block_data)
+
+        try:
+            with open(f, 'w', encoding='utf-8') as file:
+                json.dump(data, file, indent=2)
+            self.script_name_var.set(os.path.basename(f))
+
+            msg = f"Script saved to {os.path.basename(f)}"
+            if has_audio:
+                msg += f"\nAudio saved to companion folder: {audio_dir_name}/"
+            messagebox.showinfo("Saved", msg)
+
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
 
     def load_script(self):
-        """Loads blocks from JSON."""
+        """Loads blocks from JSON and attempts to link their companion audio."""
         f = filedialog.askopenfilename(filetypes=[("JSON Scripts", "*.json")])
         if not f: return
-        
+
         try:
             with open(f, 'r', encoding='utf-8') as file:
                 data = json.load(file)
-            
+
             if not isinstance(data, list): raise Exception("Invalid format")
-            
-            self.load_script_data(data, name=os.path.basename(f))
-            messagebox.showinfo("Loaded", f"Loaded {len(data)} blocks.")
-            
+
+            # Pass the base directory so we can resolve relative audio paths
+            base_dir = os.path.dirname(f)
+            loaded_audio_count = self.load_script_data(data, name=os.path.basename(f), base_dir=base_dir)
+
+            msg = f"Loaded {len(data)} blocks."
+            if loaded_audio_count > 0:
+                msg += f"\nSuccessfully restored {loaded_audio_count} audio renders."
+            messagebox.showinfo("Loaded", msg)
+
         except Exception as e:
             messagebox.showerror("Error", f"Failed to load script:\n{e}")
 
-    def load_script_data(self, data, name="Custom Script"):
-        """Programmatically loads blocks from a list of dicts."""
-        if not isinstance(data, list): return
-        
+    def load_script_data(self, data, name="Custom Script", base_dir=None):
+        """Programmatically loads blocks from a list of dicts. Resolves audio if base_dir is provided."""
+        if not isinstance(data, list): return 0
+
         # Clear existing
         for b in self.blocks: b.destroy()
         self.blocks = []
+        self._block_counter = 0
         self.script_name_var.set(name)
-        
+
         available_styles = self.get_styles()
-        
+        loaded_audio_count = 0
+
         for item in data:
-            b = self.add_block(item.get("type", item.get("block_type", "standard"))) # support both keys
+            b = self.add_block(item.get("type", item.get("block_type", "standard")))
             b.speaker_var.set(item.get("speaker", ""))
             b.text_input.insert("1.0", item.get("text", ""))
-            
+
             if "temp" in item: b.temp_var.set(item["temp"])
             if "top_p" in item: b.top_p_var.set(item["top_p"])
+            if "seed" in item: b.seed_var.set(str(item["seed"]))
             if "language" in item: b.lang_var.set(item["language"])
-            
+
             # Check Style availability
             st = item.get("style", "")
             if st and st not in available_styles:
                 st = "---"
             b.style_var.set(st)
-            
+
+            # Guard against empty language strings saved by older versions
+            if not b.lang_var.get():
+                b.lang_var.set("English")
+
+            # --- AUDIO RESTORATION LOGIC ---
+            audio_file = item.get("audio_file")
+            saved_status = item.get("status", "pending")
+
+            # Only honour success/review status when audio was actually restored.
+            # If the audio companion folder is missing, degrade to pending so
+            # the block gets re-generated rather than silently crashing on Run.
+            audio_restored = False
+
+            if audio_file and base_dir:
+                audio_path = os.path.join(base_dir, os.path.normpath(audio_file))
+                if os.path.exists(audio_path):
+                    try:
+                        audio_data, sr = sf.read(audio_path)
+                        b.generated_audio = audio_data
+                        b.sample_rate = sr
+                        audio_restored = True
+                        loaded_audio_count += 1
+                    except Exception as e:
+                        print(f"Failed to load audio {audio_path}: {e}")
+                else:
+                    print(f"Audio file not found, marking pending: {audio_path}")
+
+            if audio_restored:
+                b.set_status(saved_status)
+            elif saved_status in ("success", "review"):
+                # Had audio before but file is gone — re-queue for generation
+                b.set_status("pending")
+            else:
+                # Preserve failed/pending as-is; never restore busy/queued
+                b.set_status(saved_status if saved_status not in ("busy", "queued") else "pending")
+
             # Update visual indicator
             b.update_engine_indicator(load_defaults=False)
+
+        return loaded_audio_count
 
     def start_scene_generation(self):
         """Main Loop: Iterates through blocks and generates audio."""
@@ -689,29 +911,384 @@ class BatchDirector(tk.Frame):
         else: # custom or None
             final_queue = custom_tasks + design_tasks + clone_tasks
 
+        # Pre-read all Tkinter widget values on the main thread (Tkinter is not thread-safe)
+        block_data_map = {}
+        for b in final_queue:
+            block_data_map[id(b)] = {
+                "text": b.text_input.get("1.0", tk.END).strip(),
+                "speaker": b.speaker_var.get(),
+                "lang": b.lang_var.get(),
+                "style": b.style_var.get(),
+                "temp": b.temp_var.get(),
+                "top_p": b.top_p_var.get(),
+                "seed": b.seed_var.get().strip(),
+            }
+
         self.app.set_busy(True, "Directing Scene...")
         self.btn_run.config(state=tk.DISABLED)
-        
-        threading.Thread(target=self._generation_worker, args=(final_queue,), daemon=True).start()
+
+        threading.Thread(target=self._generation_worker, args=(final_queue, block_data_map), daemon=True).start()
+
+    def generate_single_block(self, block):
+        """Generate audio for one specific block without touching others."""
+        if not self.app.model:
+            messagebox.showerror("Error", "Model not loaded!")
+            return
+        if self.btn_run['state'] == tk.DISABLED:
+            messagebox.showwarning("Busy", "Generation already running. Please wait.")
+            return
+
+        # Pre-read widget values on main thread
+        block_data_map = {
+            id(block): {
+                "text": block.text_input.get("1.0", tk.END).strip(),
+                "speaker": block.speaker_var.get(),
+                "lang": block.lang_var.get(),
+                "style": block.style_var.get(),
+                "temp": block.temp_var.get(),
+                "top_p": block.top_p_var.get(),
+                "seed": block.seed_var.get().strip(),
+            }
+        }
+
+        self.app.set_busy(True, f"Generating block #{block.block_number}...")
+        self.btn_run.config(state=tk.DISABLED)
+        threading.Thread(
+            target=self._generation_worker,
+            args=([block], block_data_map),
+            kwargs={"play_on_complete": False},
+            daemon=True
+        ).start()
+
+    # ── Multi-Take ────────────────────────────────────────────────────────────
+
+    def generate_multi_takes(self, block):
+        """Generate 3 variations of one block and let the user pick the best."""
+        if not self.app.model:
+            messagebox.showerror("Error", "Model not loaded!")
+            return
+        if self.btn_run['state'] == tk.DISABLED:
+            messagebox.showwarning("Busy", "Generation already running. Please wait.")
+            return
+
+        # Pre-read on main thread
+        mt_data = {
+            "text": block.text_input.get("1.0", tk.END).strip(),
+            "speaker": block.speaker_var.get(),
+            "lang": block.lang_var.get(),
+            "style": block.style_var.get(),
+            "temp": block.temp_var.get(),
+            "top_p": block.top_p_var.get(),
+        }
+
+        self.app.set_busy(True, f"Generating 3 takes for block #{block.block_number}...")
+        self.btn_run.config(state=tk.DISABLED)
+        threading.Thread(target=self._multi_take_worker, args=(block, mt_data), daemon=True).start()
+
+    def _multi_take_worker(self, block, mt_data):
+        """Background thread: engine check → 3-take loop → open picker."""
+
+        # --- Helpers called on the main thread via root.after ---
+        def _fail(msg):
+            self.app.set_busy(False)
+            self.btn_run.config(state=tk.NORMAL)
+            self.lbl_progress.config(text="Multi-take failed.")
+            messagebox.showerror("Multi-Take Error", msg)
+
+        def _cancel():
+            self.app.set_busy(False)
+            self.btn_run.config(state=tk.NORMAL)
+            self.lbl_progress.config(text="Multi-take cancelled.")
+
+        def _open(takes):
+            self.app.set_busy(False)
+            self.btn_run.config(state=tk.NORMAL)
+            self.lbl_progress.config(text="Multi-take complete — pick your take.")
+            self._show_take_picker(block, takes)
+
+        # --- Use pre-read block fields (thread-safe) ---
+        text = mt_data["text"]
+        if not text:
+            self.app.root.after(0, lambda: _fail("Block has no text."))
+            return
+
+        speaker_selection = mt_data["speaker"]
+        lang = mt_data["lang"]
+        if not lang or lang == "Auto":
+            lang = "English"
+
+        style_name = mt_data["style"]
+        temp = mt_data["temp"]
+        top_p = mt_data["top_p"]
+        instruction = self.app.app_config.get("style_instructions", {}).get(style_name, "")
+
+        # --- Step A: Determine required engine ---
+        if block.block_type == "clone":
+            required_mode = "base"
+        elif speaker_selection in PRESETS:
+            required_mode = "custom"
+        else:
+            required_mode = "design"
+
+        if self.app.current_model_type != required_mode:
+            should_switch = self.auto_switch_var.get()
+
+            if not should_switch:
+                user_response = [None]
+                def ask_switch():
+                    msg = (f"Multi-take needs the {required_mode.upper()} engine, "
+                           f"but {self.app.current_model_type.upper()} is loaded.\n\n"
+                           f"Switch engines now?")
+                    user_response[0] = messagebox.askyesno("Switch Engine", msg)
+                self.app.root.after(0, ask_switch)
+                while user_response[0] is None:
+                    if self.app.cancel_signal.is_set():
+                        break
+                    time.sleep(0.1)
+                if user_response[0]:
+                    should_switch = True
+
+            if not should_switch or self.app.cancel_signal.is_set():
+                self.app.root.after(0, _cancel)
+                return
+
+            switch_msg = f"Switching to {required_mode.upper()} engine..."
+            self.app.root.after(0, lambda m=switch_msg: self.lbl_progress.config(text=m))
+            try:
+                self.app.switch_model(required_mode)
+                timeout = 90
+                if not self.app._model_load_event.wait(timeout=timeout):
+                    raise Exception("Model load timed out.")
+                if self.app.cancel_signal.is_set():
+                    self.app.root.after(0, _cancel)
+                    return
+                if self.app.current_model_type != required_mode or self.app.model is None:
+                    raise Exception("Model failed to load.")
+                time.sleep(1)
+            except Exception as e:
+                err = str(e)
+                self.app.root.after(0, lambda er=err: _fail(er))
+                return
+
+        # --- Meta-Tensor Safety Guard ---
+        # Sample params from multiple depths: a partial VRAM load puts early layers on
+        # CUDA and later layers on "meta", so checking only param[0] misses the failure.
+        try:
+            if self.app.model is None:
+                raise RuntimeError("Model not loaded.")
+            if hasattr(self.app.model, "model") and hasattr(self.app.model.model, "parameters"):
+                checked = 0
+                for p in self.app.model.model.parameters():
+                    if str(p.device) == "meta":
+                        _deep_destroy_model(self.app)
+                        raise RuntimeError(
+                            "VRAM Overflow: The engine entered a corrupted meta state. "
+                            "Memory has been forcefully purged. Use the Reset button to reload.")
+                    checked += 1
+                    if checked >= 20:  # sample first 20 params across early and mid layers
+                        break
+        except RuntimeError as e:
+            err = str(e)
+            self.app.root.after(0, lambda er=err: messagebox.showerror("VRAM Error", er))
+            self.app.root.after(0, lambda: self.app.set_busy(False))
+            self.app.root.after(0, lambda: self.btn_run.config(state=tk.NORMAL))
+            return
+
+        # --- Pre-resolve clone prompt and design profile (once, outside loop) ---
+        cached_prompt = None
+        design_desc = ""
+        design_instruct = instruction
+
+        if required_mode == "base":
+            try:
+                self.app.root.after(0, lambda: self.lbl_progress.config(
+                    text=f"Locking voice: {speaker_selection}..."))
+                profile_data = self.app.voice_configs.get(speaker_selection)
+                if not profile_data:
+                    raise Exception("Clone profile not found.")
+                audio_path = profile_data.get("audio_path")
+                ref_txt = profile_data.get("transcript")
+                if not audio_path or not os.path.exists(audio_path):
+                    raise Exception("Source audio file missing.")
+                cached_prompt = self.app.model.create_voice_clone_prompt(
+                    ref_audio=audio_path, ref_text=ref_txt)
+            except Exception as e:
+                err = str(e)
+                self.app.root.after(0, lambda er=err: _fail(er))
+                return
+
+        elif required_mode == "design":
+            profile = self.app.design_profiles.get(speaker_selection)
+            if not profile and hasattr(self.app, 'voice_recipes'):
+                profile = self.app.voice_recipes.get(speaker_selection)
+            if not profile:
+                self.app.root.after(0, lambda: _fail(f"Profile '{speaker_selection}' not found."))
+                return
+            design_desc = profile.get("desc", "")
+            prof_instruct = profile.get("instruct", "")
+            design_instruct = f"{instruction}. {prof_instruct}" if instruction else prof_instruct
+
+        # --- Step B: Generation loop ---
+        takes = []
+        for i in range(3):
+            if self.app.cancel_signal.is_set():
+                break
+
+            current_seed = random.randint(0, 0xFFFFFFFF)
+            n = i + 1
+            self.app.root.after(0, lambda n=n: self.lbl_progress.config(
+                text=f"Generating take {n}/3..."))
+
+            try:
+                wavs = None
+                sr = 24000
+
+                if required_mode == "custom":
+                    wavs, sr = self.app.model.generate_custom_voice(
+                        text=text, speaker=speaker_selection,
+                        instruct=instruction, language=lang,
+                        temperature=temp, top_p=top_p, seed=current_seed)
+
+                elif required_mode == "design":
+                    wavs, sr = self.app.model.generate_voice_design(
+                        text=text, voice_description=design_desc,
+                        instruct=design_instruct, language=lang,
+                        temperature=temp, top_p=top_p, seed=current_seed)
+
+                elif required_mode == "base":
+                    wavs, sr = self.app.model.generate_voice_clone(
+                        text=text, language=lang,
+                        voice_clone_prompt=cached_prompt,
+                        temperature=temp, top_p=top_p, seed=current_seed)
+
+                if wavs:
+                    takes.append({"audio": wavs[0], "sr": sr, "seed": current_seed})
+
+            except Exception as e:
+                err_str = str(e).lower()
+                if "meta tensor" in err_str or ("meta" in err_str and "tensor" in err_str):
+                    # Broken model — deep-destroy and abort all remaining takes.
+                    _deep_destroy_model(self.app)
+                    self.app.root.after(0, lambda: _fail(
+                        "VRAM Overflow: The engine entered a meta state during generation.\n\n"
+                        "Memory has been purged. Use the \u21ba Reset button to reload the engine."))
+                    return
+                print(f"Multi-take {i + 1} failed: {e}")
+            finally:
+                self.app.flush_vram()
+
+        # --- Step C: Completion ---
+        if not takes:
+            self.app.root.after(0, lambda: _fail("All 3 takes failed to generate."))
+            return
+
+        self.app.root.after(0, lambda t=takes: _open(t))
+
+    def _show_take_picker(self, block, takes):
+        """Modal dialog: play each take and accept the best one."""
+        dialog = tk.Toplevel(self.app.root)
+        dialog.title("Select Best Take")
+        dialog.resizable(False, False)
+        dialog.transient(self.app.root)
+        dialog.grab_set()
+
+        tk.Label(dialog,
+                 text=f"Block #{block.block_number}  —  pick the best take",
+                 font=("Segoe UI", 11, "bold"),
+                 padx=20, pady=12).pack()
+
+        ttk.Separator(dialog, orient=tk.HORIZONTAL).pack(fill=tk.X, padx=10)
+
+        def on_close():
+            sd.stop()
+            self.app.set_busy(False)
+            self.btn_run.config(state=tk.NORMAL)
+            dialog.destroy()
+
+        def accept(take):
+            sd.stop()
+            block.generated_audio = take["audio"]
+            block.sample_rate = take["sr"]
+            block.seed_var.set(str(take["seed"]))
+            block.set_status("review")
+            on_close()
+
+        for i, take in enumerate(takes):
+            row = tk.Frame(dialog, pady=8, padx=20)
+            row.pack(fill=tk.X)
+            tk.Label(row,
+                     text=f"Take {i + 1}   (Seed: {take['seed']})",
+                     font=("Segoe UI", 10), width=30, anchor="w").pack(side=tk.LEFT)
+            ttk.Button(row, text="▶ Play", width=8,
+                       command=lambda t=take: [sd.stop(), sd.play(t["audio"], t["sr"])]
+                       ).pack(side=tk.LEFT, padx=(0, 6))
+            ttk.Button(row, text="✔ Accept", width=8,
+                       command=lambda t=take: accept(t)
+                       ).pack(side=tk.LEFT)
+
+        ttk.Separator(dialog, orient=tk.HORIZONTAL).pack(fill=tk.X, padx=10, pady=(8, 0))
+        ttk.Button(dialog, text="Discard all takes",
+                   command=on_close
+                   ).pack(pady=10)
+
+        dialog.protocol("WM_DELETE_WINDOW", on_close)
+
+    # ── End Multi-Take ────────────────────────────────────────────────────────
 
     def retry_marked_blocks(self):
         # Deprecated: functionality moved to main run button
         self.start_scene_generation()
 
-    def _generation_worker(self, queue):
+    def _generation_worker(self, queue, block_data_map=None, play_on_complete=True):
         total = len(queue)
-        
+
+        # Sanity-check: detect meta-tensor state before processing any blocks.
+        # This happens when a model switch or fresh load did not fully materialise
+        # weights onto a real device.  Fail fast with a clear message instead of
+        # letting every block silently crash with "Tensor.item() cannot be called
+        # on meta tensors".
+        try:
+            if self.app.model is None:
+                raise RuntimeError("No model loaded. Please load a model before generating.")
+            if hasattr(self.app.model, "model") and hasattr(self.app.model.model, "parameters"):
+                checked = 0
+                for p in self.app.model.model.parameters():
+                    if str(p.device) == "meta":
+                        _deep_destroy_model(self.app)
+                        raise RuntimeError(
+                            "VRAM Overflow: The engine entered a corrupted meta state. "
+                            "Memory has been forcefully purged. Use the Reset button to reload.")
+                    checked += 1
+                    if checked >= 20:
+                        break
+        except RuntimeError as probe_err:
+            err_msg = str(probe_err)
+            self.app.root.after(0, lambda e=err_msg: messagebox.showerror("Model Error", e))
+            self.app.root.after(0, self.app.set_busy, False)
+            self.app.root.after(0, lambda: self.btn_run.config(state=tk.NORMAL))
+            self.app.root.after(0, lambda: self.lbl_progress.config(text="Generation failed - model not ready."))
+            return
+
         # State for Clone Prompt Caching
         current_clone_speaker = None
         cached_prompt = None
 
+        # Tracks engine mode when a meta-tensor abort breaks the loop (for auto-recovery)
+        _meta_abort_mtype = None
+
         for i, block in enumerate(queue):
             if self.app.cancel_signal.is_set(): break
             
-            text = block.text_input.get("1.0", tk.END).strip()
-            speaker_selection = block.speaker_var.get()
-            lang = block.lang_var.get()
-            
+            bdata = block_data_map[id(block)] if block_data_map else {}
+            text = bdata.get("text", block.text_input.get("1.0", tk.END).strip())
+            speaker_selection = bdata.get("speaker", block.speaker_var.get())
+            lang = bdata.get("lang", block.lang_var.get())
+
+            # Guard: empty / "Auto" language can cause meta-tensor crashes in some
+            # model builds. Fall back to "English" if blank.
+            if not lang or lang == "Auto":
+                lang = "English"
+
             if not text:
                 self.app.root.after(0, lambda b=block: b.set_status("failed"))
                 continue
@@ -757,19 +1334,19 @@ class BatchDirector(tk.Frame):
                 
                 try:
                     self.app.switch_model(required_mode)
-                    
+
                     # 3. Wait for Switch to Complete (since switch_model is threaded)
-                    timeout = 90 # seconds
-                    start_wait = time.time()
-                    while self.app.current_model_type != required_mode or self.app.model is None:
-                        if self.app.cancel_signal.is_set(): break
-                        if time.time() - start_wait > timeout: 
-                            raise Exception("Model load timed out.")
-                        time.sleep(0.5)
-                    
+                    timeout = 90  # seconds
+                    if not self.app._model_load_event.wait(timeout=timeout):
+                        raise Exception("Model load timed out.")
+                    if self.app.cancel_signal.is_set():
+                        break
+                    if self.app.current_model_type != required_mode or self.app.model is None:
+                        raise Exception("Model failed to load.")
+
                     # 4. Stabilization Period
-                    time.sleep(1) 
-                        
+                    time.sleep(1)
+
                 except Exception as e:
                     print(f"Failed to switch model: {e}")
                     self.app.root.after(0, lambda b=block: b.set_status("failed"))
@@ -779,11 +1356,22 @@ class BatchDirector(tk.Frame):
             self.app.root.after(0, lambda b=block: b.set_status("busy"))
             self.app.root.after(0, lambda idx=i+1: self.lbl_progress.config(text=f"Generating block {idx}/{total}..."))
             
-            style_name = block.style_var.get()
-            temp = block.temp_var.get()
-            top_p = block.top_p_var.get()
+            style_name = bdata.get("style", block.style_var.get())
+            temp = bdata.get("temp", block.temp_var.get())
+            top_p = bdata.get("top_p", block.top_p_var.get())
             instruction = self.app.app_config.get("style_instructions", {}).get(style_name, "")
-            
+
+            # Resolve seed: use stored value or generate a fresh random one.
+            # If random, write it back into the block's entry so it's saved with the script.
+            try:
+                raw_seed = bdata.get("seed", block.seed_var.get().strip())
+                block_seed = int(raw_seed)
+                if block_seed < 0:
+                    raise ValueError
+            except (ValueError, AttributeError):
+                block_seed = random.randint(0, 0xFFFFFFFF)
+                self.app.root.after(0, lambda s=block_seed, b=block: b.seed_var.set(str(s)))
+
             try:
                 wavs = None
                 sr = 24000
@@ -795,13 +1383,13 @@ class BatchDirector(tk.Frame):
                         speaker=speaker_selection,
                         instruct=instruction,
                         language=lang,
-                        temperature=temp, top_p=top_p
+                        temperature=temp, top_p=top_p, seed=block_seed
                     )
 
                 elif required_mode == "design":
                     # DESIGN PROFILE (Voice Design)
                     profile = self.app.design_profiles.get(speaker_selection)
-                    
+
                     # Fallback to recipes if not in profiles
                     if not profile and hasattr(self.app, 'voice_recipes'):
                         profile = self.app.voice_recipes.get(speaker_selection)
@@ -811,47 +1399,47 @@ class BatchDirector(tk.Frame):
 
                     desc = profile.get("desc", "")
                     prof_instruct = profile.get("instruct", "")
-                    
+
                     final_instruct = prof_instruct
-                    if instruction: 
+                    if instruction:
                         final_instruct = f"{instruction}. {prof_instruct}"
-                    
+
                     wavs, sr = self.app.model.generate_voice_design(
                         text=text,
                         voice_description=desc,
                         instruct=final_instruct,
                         language=lang,
-                        temperature=temp, top_p=top_p
+                        temperature=temp, top_p=top_p, seed=block_seed
                     )
-                
+
                 elif required_mode == "base":
                     # VOICE CLONE (Base Model)
                     # Check if we need to generate a new prompt
                     if speaker_selection != current_clone_speaker:
                         self.app.root.after(0, lambda: self.lbl_progress.config(text=f"Locking Voice: {speaker_selection}..."))
-                        
+
                         profile_data = self.app.voice_configs.get(speaker_selection)
                         if not profile_data: raise Exception("Profile not found")
-                        
+
                         audio_path = profile_data.get("audio_path")
                         ref_txt = profile_data.get("transcript")
-                        
+
                         if not audio_path or not os.path.exists(audio_path):
                             raise Exception("Source audio missing")
-                            
+
                         # Create prompt
                         cached_prompt = self.app.model.create_voice_clone_prompt(
                             ref_audio=audio_path,
                             ref_text=ref_txt
                         )
                         current_clone_speaker = speaker_selection
-                    
+
                     # Generate using cached prompt
                     wavs, sr = self.app.model.generate_voice_clone(
                         text=text,
                         language=lang,
                         voice_clone_prompt=cached_prompt,
-                        temperature=temp, top_p=top_p
+                        temperature=temp, top_p=top_p, seed=block_seed
                     )
 
                 # Store Result
@@ -876,10 +1464,18 @@ class BatchDirector(tk.Frame):
                     except Exception as e:
                         print(f"Failed to save history: {e}")
 
+                    self.app.flush_vram()
+
                 else:
                     raise Exception("No audio returned")
 
             except Exception as e:
+                err_str = str(e).lower()
+                if "meta tensor" in err_str or ("meta" in err_str and "tensor" in err_str):
+                    _meta_abort_mtype = required_mode
+                    _deep_destroy_model(self.app)
+                    self.app.root.after(0, lambda b=block: b.set_status("failed"))
+                    break
                 print(f"Block failed: {e}")
                 self.app.root.after(0, lambda b=block: b.set_status("failed"))
         
@@ -887,10 +1483,134 @@ class BatchDirector(tk.Frame):
             self.app.set_busy(False)
             self.btn_run.config(state=tk.NORMAL)
             self.lbl_progress.config(text="Scene Complete")
-            if self.auto_switch_var.get():
+            if play_on_complete and self.auto_switch_var.get():
                 self.play_scene()
-        
-        self.app.root.after(0, on_complete)
+
+        if _meta_abort_mtype:
+            # Auto-recover: reload the engine then re-enable UI and inform the user.
+            # UI stays locked (btn_run disabled) until the reload is complete.
+            def _do_recover():
+                self.lbl_progress.config(text="VRAM overflow — reloading engine…")
+                self.app.current_model_type = None  # force switch_model to actually reload
+                def _on_recovered():
+                    self.btn_run.config(state=tk.NORMAL)
+                    self.lbl_progress.config(text="Engine reloaded. Review failed blocks and re-run.")
+                    messagebox.showwarning(
+                        "VRAM Overflow — Recovered",
+                        "The engine hit a VRAM overflow mid-batch.\n\n"
+                        "Remaining blocks were skipped. The engine has been reloaded automatically.\n"
+                        "Review the failed blocks (red ✗) and click Run Scene to regenerate them.")
+                self.app.switch_model(_meta_abort_mtype, on_success=_on_recovered)
+            self.app.root.after(0, _do_recover)
+        elif self.auto_verify_var.get():
+            # on_complete is handed off to _auto_verify_pass, which calls it only after
+            # the engine has been fully reloaded, keeping the UI locked until then.
+            self._auto_verify_pass(queue, on_complete=on_complete)
+        else:
+            self.app.root.after(0, on_complete)
+
+    def _auto_verify_pass(self, queue, on_complete=None):
+        """
+        Post-generation audit. Runs in the background thread.
+        VRAM sequence: Qwen3 purge -> Whisper load -> audit loop -> Whisper purge -> engine reload.
+        on_complete is called only after the engine is fully reloaded so the UI stays locked
+        throughout the entire verify cycle.
+        """
+        saved_mtype = self.app.current_model_type
+
+        def _reload_engine(label_text):
+            """Schedule engine reload from main thread; call on_complete when ready."""
+            self.app.current_model_type = None  # force switch_model to actually load
+            def _after_reload():
+                if on_complete:
+                    on_complete()
+                self.lbl_progress.config(text=label_text)
+            self.app.root.after(0, lambda: self.app.switch_model(saved_mtype, on_success=_after_reload))
+
+        try:
+            from faster_whisper import WhisperModel
+        except ImportError:
+            self.app.root.after(0, lambda: messagebox.showerror(
+                "Whisper Not Found",
+                "Auto-Verify requires faster-whisper.\n\n"
+                "Run:  pip install faster-whisper\nthen restart the application."
+            ))
+            # Model was never touched — just unblock the UI.
+            if on_complete:
+                self.app.root.after(0, on_complete)
+            return
+
+        # --- 1. Purge Qwen3 from VRAM ---
+        self.app.root.after(0, lambda: self.lbl_progress.config(text="Auto-Verify: Purging VRAM..."))
+        _deep_destroy_model(self.app)   # deep teardown: HF model → processor → wrapper → flush
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+        time.sleep(2)                   # let the CUDA driver reclaim pages before Whisper loads
+
+        # --- 2. Load Whisper ---
+        self.app.root.after(0, lambda: self.lbl_progress.config(text="Auto-Verify: Loading Whisper..."))
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        compute_type = "float16" if device == "cuda" else "int8"
+        try:
+            whisper_model = WhisperModel("small", device=device, compute_type=compute_type)
+        except Exception as e:
+            err = str(e)
+            self.app.root.after(0, lambda: messagebox.showerror("Whisper Load Error", err))
+            _reload_engine("Auto-Verify failed (Whisper load error).")
+            return
+
+        # --- 3. Audit loop ---
+        total_audited = 0
+        flagged = 0
+
+        for block in queue:
+            if block.generated_audio is None:
+                continue
+            total_audited += 1
+            block_text = block.text_input.get("1.0", tk.END).strip()
+            failure_reason = None
+
+            # Check 1: silence detection (pure numpy, no I/O)
+            passed, msg = detect_long_pauses(block.generated_audio, block.sample_rate)
+            if not passed:
+                failure_reason = msg
+
+            # Check 2: transcription similarity (only if silence passed)
+            if failure_reason is None:
+                tmp_path = None
+                try:
+                    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+                        tmp_path = tmp.name
+                    sf.write(tmp_path, block.generated_audio, block.sample_rate)
+                    segs, _ = whisper_model.transcribe(tmp_path)
+                    transcription = " ".join(s.text for s in segs).strip()
+                    passed_t, msg_t = verify_transcription(block_text, transcription)
+                    if not passed_t:
+                        failure_reason = msg_t
+                except Exception as e:
+                    failure_reason = f"Transcription error: {e}"
+                finally:
+                    if tmp_path and os.path.exists(tmp_path):
+                        try:
+                            os.unlink(tmp_path)
+                        except Exception:
+                            pass
+
+            if failure_reason:
+                flagged += 1
+                reason = failure_reason
+                def _flag(b=block, r=reason):
+                    b.set_status("review")
+                    ToolTip(b.status_light, f"⚠ Auto-Verify: {r}")
+                self.app.root.after(0, _flag)
+
+        # --- 4. Unload Whisper ---
+        del whisper_model
+        self.app.flush_vram()
+
+        # --- 5. Reload engine (unblocks UI when done) ---
+        summary = f"Auto-Verify complete: {total_audited} audited, {flagged} flagged for review."
+        _reload_engine(summary)
 
     def play_scene(self):
         """Concatenates and plays the full scene audio."""
@@ -917,41 +1637,89 @@ class BatchDirector(tk.Frame):
         sd.stop()
 
     def render_full_scene(self):
-        """Concatenates all successful audio blocks into one WAV."""
+        """Concatenates audio blocks into one WAV.
+        
+        Render logic:
+          - green (success) + yellow (review) → always included
+          - red (failed) / grey (pending) / queued → skipped, but user is warned
+          - If any review/unknown blocks exist → ask for confirmation first
+        """
+        # Categorise blocks
+        include = []   # success or review WITH audio
+        missing = []   # failed / pending / queued (no usable audio)
+        review  = []   # review blocks (audio present but unconfirmed)
+
+        for b in self.blocks:
+            num = f"#{b.block_number}" if b.block_number else f"block"
+            if b.status in ("success", "review") and b.generated_audio is not None:
+                include.append(b)
+                if b.status == "review":
+                    review.append(num)
+            else:
+                missing.append((num, b.status))
+
+        # Nothing at all to render
+        if not include:
+            messagebox.showwarning("Nothing to Render",
+                "No generated audio found.\n\nRun the scene first, then render.")
+            return
+
+        # Warn about blocks that will be SKIPPED
+        skip_msgs = []
+        red_blocks   = [n for n, s in missing if s == "failed"]
+        grey_blocks  = [n for n, s in missing if s in ("pending", "queued")]
+
+        if red_blocks:
+            skip_msgs.append(f"⛔  Rejected (red) — will be skipped:\n    {', '.join(red_blocks)}")
+        if grey_blocks:
+            skip_msgs.append(f"⚪  Not generated (grey) — will be skipped:\n    {', '.join(grey_blocks)}")
+
+        # Warn about unconfirmed review blocks that WILL be included
+        confirm_msgs = []
+        if review:
+            confirm_msgs.append(f"🟡  Unconfirmed (yellow) — will be included:\n    {', '.join(review)}")
+
+        # Build the prompt
+        if skip_msgs or confirm_msgs:
+            lines = ["Some blocks need your attention before rendering:\n"]
+            lines += confirm_msgs
+            lines += skip_msgs
+            lines += ["\nProceed with the render?"]
+            if not messagebox.askyesno("Render Review", "\n".join(lines)):
+                return
+
+        # Build audio
         audio_segments = []
         valid_sr = 24000
-        
-        for b in self.blocks:
-            if b.status == "success" and b.generated_audio is not None:
-                audio_segments.append(b.generated_audio)
-                valid_sr = b.sample_rate
-                # Add a small silence gap? (Optional, e.g. 0.2s)
-                silence = np.zeros(int(valid_sr * 0.2)) 
-                audio_segments.append(silence)
-        
-        if not audio_segments:
-            messagebox.showwarning("Empty", "No audio generated yet.")
-            return
-            
+        for b in include:
+            audio_segments.append(b.generated_audio)
+            valid_sr = b.sample_rate
+            silence = np.zeros(int(valid_sr * 0.2))
+            audio_segments.append(silence)
+
         full_audio = np.concatenate(audio_segments)
-        
+
         dst = filedialog.asksaveasfilename(defaultextension=".wav", title="Save Full Scene")
         if dst:
             sf.write(dst, full_audio, valid_sr)
-            
+
             # Auto-Save copy to Session History
             try:
                 ts = time.strftime("%Y%m%d-%H%M%S")
                 fname = f"{ts}_Full_Scene_Render.wav"
                 hist_path = os.path.join(self.app.temp_dir, fname)
                 sf.write(hist_path, full_audio, valid_sr)
-                
                 if hasattr(self.app, 'refresh_history_list'):
                     self.app.refresh_history_list()
             except Exception as e:
                 print(f"Failed to save render to history: {e}")
 
-            messagebox.showinfo("Export", "Scene rendered successfully.")
+            n_included = len(include)
+            n_skipped  = len(missing)
+            detail = f"{n_included} block(s) rendered"
+            if n_skipped:
+                detail += f", {n_skipped} skipped"
+            messagebox.showinfo("Export Complete", f"Scene rendered successfully.\n{detail}")
 
     def export_clips(self):
         """Exports individual files to a folder."""

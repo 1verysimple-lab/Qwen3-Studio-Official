@@ -2,43 +2,57 @@
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "Bienvenido al Capítulo 2: El Panel de Navegación. Soy Ryan. Veamos el diseño de la aplicación.",
-        "temp": 0.5,
-        "top_p": 0.7
+        "text": "Capítulo Dos: La Cubierta de Navegación. Soy Ryan y seré tu guía turístico. Repasemos el diseño de arriba a abajo.",
+        "temp": 0.6,
+        "top_p": 0.8
     },
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "En la parte superior está el Header. Aquí es donde encuentras los Precision Sliders. Temperature controla mi creatividad, mientras que Top P controla la amplitud de mi vocabulario.",
-        "temp": 0.5,
-        "top_p": 0.7
+        "text": "En la parte superior se encuentra la barra de Encabezado. A la izquierda verás el nombre y la versión de la aplicación. A la derecha están los Deslizadores de Precisión: Temperatura y Top P. Estos dos controles son tus herramientas principales para dar forma a cómo suena cualquier voz. Los cubriremos en detalle más adelante.",
+        "temp": 0.6,
+        "top_p": 0.8
     },
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "El botón Stop arriba a la derecha es tu interruptor de seguridad. Si el motor parece atascado o lento, usa el botón 'Reset' junto al nombre del modelo para limpiar la memoria.",
-        "temp": 0.5,
-        "top_p": 0.7
+        "text": "Junto a los deslizadores, busca el campo Semilla. Este es un número que puedes escribir para que una generación sea exactamente reproducible. Déjalo vacío y la aplicación elegirá una semilla aleatoria, que luego escribirá para que puedas reutilizar esa toma exacta más tarde.",
+        "temp": 0.6,
+        "top_p": 0.8
     },
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "Debajo del encabezado están las Tabs. Tenemos cinco estaciones: Transcript Helper, Voice Clone, Voice Design, Custom Voice, y donde estamos ahora: el Batch Studio.",
-        "temp": 0.5,
-        "top_p": 0.7
+        "text": "También en el encabezado están el botón Detener, que detiene cualquier generación activa de inmediato, y el botón Reiniciar, que limpia el modelo de la memoria. Usa Reiniciar si el motor se ralentiza o comienza a producir audio extraño después de una sesión larga.",
+        "temp": 0.6,
+        "top_p": 0.8
     },
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "Finalmente, mira la parte inferior de la ventana. La Status Bar de color siempre te dirá qué motor está cargado y te avisará si estás en la pestaña incorrecta.",
-        "temp": 0.5,
-        "top_p": 0.7
+        "text": "Debajo del encabezado están las Pestañas. La pestaña verde es Voz Personalizada. La pestaña azul es Diseño de Voz. La pestaña morada es Clonación de Voz. Luego tienes el Asistente de Transcripción, el Estudio de Lotes y el Administrador de Módulos.",
+        "temp": 0.6,
+        "top_p": 0.8
     },
     {
         "speaker": "Ryan",
         "style": "News Anchor",
-        "text": "Ahora es tu turno. Carga 'Tutorial_03_CustomMastery' y haz clic en 'Run Scene' para explorar los ajustes preestablecidos de Custom Voice.",
-        "temp": 0.5,
-        "top_p": 0.7
+        "text": "Si tienes plugins habilitados, también puedes ver pestañas adicionales. Por ejemplo, el Administrador de Estilos y Perfiles agrega una pestaña para organizar tus estilos y diseños de voz. La pestaña Tutorial, donde cargaste este guion, también es un plugin.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "En la parte inferior de la ventana se encuentra la Barra de Estado. Te muestra qué motor está cargado actualmente y te advierte si intentas generar usando la pestaña incorrecta para el modelo activo. Siempre echa un vistazo a la barra de estado antes de iniciar una ejecución de lote larga.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Ryan",
+        "style": "News Anchor",
+        "text": "Cuando estés listo, ve a la pestaña de Tutorial y carga el Capítulo Tres: Maestría Personalizada, luego ejecútalo para explorar tu lista de voces incorporadas.",
+        "temp": 0.6,
+        "top_p": 0.8
     }
 ]

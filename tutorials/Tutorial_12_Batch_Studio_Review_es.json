@@ -1,30 +1,74 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Después de ejecutar una escena en el Estudio de Lotes, cada bloque tendrá una nueva toma de audio, lista para tu revisión."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Capítulo Doce: Revisión en Batch Studio. Después de ejecutar una escena, el estudio entra en una fase de revisión. Cada bloque que se completó con éxito muestra un icono de estado a su izquierda. Este icono te dice exactamente en qué estado se encuentra la toma."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "El icono de estado en cada bloque indica su estado. Un signo de interrogación amarillo significa que la toma es un borrador nuevo que necesita revisión."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Un signo de interrogación amarillo significa que la toma es un nuevo borrador, a la espera de tu decisión. Una marca de verificación verde significa que la has aprobado. Un signo de exclamación rojo significa que la has rechazado. Los bloques sin ningún icono aún no se han generado."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Puedes previsualizar cualquier toma haciendo clic en el botón de reproducción de su bloque. Si estás contento con la actuación, haz clic en el icono amarillo para aprobarla. Se convertirá en una marca de verificación verde."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Para revisar una toma, haz clic en el botón de Reproducir en su bloque para escucharla. Si estás satisfecho, haz clic en el icono del signo de interrogación amarillo para aprobar. Se vuelve verde. Si no estás satisfecho, haz clic con el botón derecho en el icono y selecciona Rechazar. Se vuelve rojo."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Los bloques aprobados y en verde no se volverán a generar la próxima vez que ejecutes la escena, lo que ahorra tiempo."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Antes de comenzar a revisar las tomas manualmente, hay una herramienta que puede hacer el primer filtrado por ti. La casilla Auto-Verificar Lote está en la barra de herramientas junto a Auto-Cambiar. Actívala antes de ejecutar una escena y el estudio auditará cada bloque completado automáticamente cuando termine la generación."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Si no estás satisfecho con una toma, puedes hacer clic derecho en el icono para rechazarla. Se convertirá en un signo de exclamación rojo. Los bloques rechazados se volverán a generar en la siguiente ejecución."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Auto-Verificar realiza dos comprobaciones. Primero, escanea el audio en busca de silencios anormales — cualquier pausa de más de dos segundos es señal de una alucinación o interrupción. Segundo, usa un modelo de reconocimiento de voz para transcribir lo generado y compararlo con tu guión original. Un porcentaje de coincidencia inferior al setenta y cinco por ciento se marca. Pasa el cursor sobre el punto amarillo de cualquier bloque marcado para ver el motivo exacto."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Una vez que hayas aprobado todas las tomas de tu escena, puedes usar el botón 'Exportar Aprobados' para guardar todos los archivos de audio con luz verde en una única carpeta organizada."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Este sistema de aprobación es lo que hace que la producción por lotes sea eficiente. Cuando vuelves a hacer clic en Ejecutar Escena, el estudio se salta todos los bloques aprobados en verde y solo regenera los rechazados en rojo y los bloques pendientes restantes. Nunca pierdes tiempo volviendo a generar tomas que ya te gustan."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "A continuación, echemos un vistazo al conjunto de herramientas para preparar nuestro audio de origen. Por favor, carga el capítulo trece."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "El botón Reproducir Todo en la barra de herramientas reproduce cada toma aprobada en secuencia, en orden, dándote una vista previa de toda la escena ensamblada. Esta es una forma rápida de verificar el flujo y el ritmo de una producción de varias voces antes de exportar."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Cuando tu escena esté completamente aprobada, haz clic en Exportar Aprobados en la barra de herramientas. Esto guarda todas las tomas con luz verde como archivos W A V numerados en una sola carpeta de tu elección. Los archivos se nombran en secuencia para que se importen limpiamente en cualquier D A W o editor de video."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Por favor, carga el Capítulo Trece: El Asistente de Transcripción, donde veremos las herramientas de preparación para el audio de origen de la clonación de voz."
     }
 ]

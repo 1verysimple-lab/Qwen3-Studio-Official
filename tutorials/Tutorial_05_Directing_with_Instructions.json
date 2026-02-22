@@ -1,30 +1,58 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Directing an A I voice is like directing a human actor. The key is to be clear and concise. Let's focus on writing effective instructions."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Chapter Five: Directing with Instructions. Think of the style instruction as a note you pass to a human actor. The model reads it and adjusts its performance accordingly. Your job is to write clearly and avoid contradictions."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Your instruction should focus on performance and emotion. Start with the most important aspect. For example, 'Angry and shouting' is a strong, clear starting point."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Lead with the single most important quality. If you want anger, start with 'Angry'. If you want a whisper, start with 'Whispering'. The model weights the first descriptor heavily, so front-loading the core emotion is the most reliable technique."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "You can add nuance with more descriptors. For instance, 'Angry and shouting, with a raspy, strained voice'. The model will attempt to combine these ideas."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Then add specificity with supporting descriptors. 'Angry and shouting, with a strained, hoarse voice, fast pace' is a complete direction. The model will attempt to combine all of those qualities into one coherent performance."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "However, avoid contradictory instructions. A prompt like 'shouting in a quiet whisper' will confuse the model and may result in poor quality audio."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "The golden rule is: never combine contradictory instructions. A prompt like 'shouting in a quiet whisper' will confuse the model and produce garbled audio. Instead, try 'intense angry whisper, sharp and controlled'. That is a consistent performance with a clear logic."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The model also understands pacing. Using phrases like 'speaking very quickly' or 'with long, dramatic pauses' can significantly alter the rhythm of the speech."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "You can also direct pacing. Phrases like 'speaking very slowly', 'rapid fire delivery', or 'with long, deliberate pauses between each word' will significantly alter the rhythm of the speech. Pacing instructions are highly reliable."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "The best way to learn is by experimenting. The 'Tone Recipes' in the help guide are an excellent source of inspiration for powerful instructions."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "The Help Guide, accessible from the top-left of the main window, contains a full table of Tone Recipes — pre-written instructions you can copy directly. Presets like 'The Villain', 'Horror Narrator', 'A S M R', and 'The Heartbroken' are there for instant use."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "English", "temp": 0.7, "top_p": 0.8,
-        "text": "Next, we will move to the Voice Design engine, where you can create entirely new characters. Please load chapter six."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Please load Chapter Six: Voice Design when you are ready. We will go deeper into the blue engine and explore how to architect an entirely new speaker from text."
     }
 ]

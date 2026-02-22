@@ -1,43 +1,50 @@
 [
     {
         "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "欢迎来到实验室！这是第4章：Voice Design。我就是在这里通过简单的文字描述被创造出来的。",
+        "style": "",
+        "text": "第四章：语音设计引擎。我就是在这里被创造的。我不是一个预先训练好的说话者。我是一个由语音设计引擎根据文本描述组装而成的角色——一位七十多岁的老人，低沉浑厚的男低音，阳刚沙哑，带有粗犷的嗓音质感。",
         "temp": 0.7,
         "top_p": 0.8
     },
     {
         "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "在这个标签页中，你看到两个主要框。Description 框定义了 '身体' —— 比如年龄、性别和声音质感。",
+        "style": "",
+        "text": "语音设计选项卡以蓝色标记。在里面，您会找到两个文本字段。第一个是语音描述。这定义了说话者的物理身体——比如年龄、性别、声线质感和口音。这些特质在您生成的每一行中都保持一致。",
         "temp": 0.7,
         "top_p": 0.8
     },
     {
         "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "Style 框定义了 '表演'。你甚至可以在这里加载你在第3章中保存的那个自定义风格！",
+        "style": "",
+        "text": "第二个字段是风格指令。它的工作方式与自定义语音选项卡中的完全相同。它控制说话者当下的表现——他们的情感、节奏和精力。您可以在不改变基础声音的情况下在不同录音之间更改此项。",
         "temp": 0.7,
         "top_p": 0.8
     },
     {
         "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "现在轮到你尝试了。去 'Voice Design' 标签页。在描述框中输入：'A futuristic AI assistant voice, neutral and crisp'。在目标文本框中输入：'Engine Loaded'，然后点击 'Generate Design'。",
+        "style": "",
+        "text": "当您找到喜欢的组合时，请单击“保存配置文件”。给它一个名字，它将被存储为一个可重复使用的语音设计配置文件。您可以从选项卡顶部的下拉菜单中加载它，以立即恢复描述和风格。",
         "temp": 0.7,
         "top_p": 0.8
     },
     {
         "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "接下来，去你的 Session History。右键点击你的新录音并选择 'Set as Notification Sound'。这会把你的作品变成应用的就绪提示音！",
+        "style": "",
+        "text": "如果您启用了样式和配置文件管理器插件，它会添加一个专用选项卡，您可以在其中浏览、编辑、启用和禁用所有已保存的样式和配置文件。禁用的项目会从下拉菜单中隐藏，而不会被删除。",
         "temp": 0.7,
         "top_p": 0.8
     },
     {
         "speaker": "Tutorial Wizard",
-        "style": "News Anchor",
-        "text": "最后，再创建一个你喜欢的角色，生成一行台词，然后在历史记录中点击 'Save WAV'。我们将在第5章克隆那个文件。准备好后加载它。",
+        "style": "",
+        "text": "还有一个有用的小技巧可以锁定语音设计的声音。生成您喜欢的一行，从会话历史中将其另存为WAV文件，然后将该WAV文件加载到语音克隆选项卡中作为参考。然后，克隆引擎可以在任何新文本中以高一致性再现该角色。",
+        "temp": 0.7,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "text": "准备好后，请加载第五章：用指令指导，我将教你如何编写每次都能获得你想要表现的风格提示。",
         "temp": 0.7,
         "top_p": 0.8
     }

@@ -1,22 +1,66 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Has llegado al final de esta visita guiada. Ahora posees el conocimiento fundamental para dirigir los tres motores creativos, gestionar escenas complejas y producir audio de alta calidad."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Capítulo Dieciséis: Palabras Finales. Has completado el recorrido completo. Ahora entiendes los tres motores de síntesis, el flujo de producción de Batch Studio, los controles de precisión y las herramientas de actuación en el guion."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Recuerda que la IA es un socio creativo. Los mejores resultados a menudo provienen de la experimentación. No tengas miedo de probar descripciones o instrucciones inusuales."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Antes de terminar, hablemos del sistema de Módulos. La pestaña del Administrador de Módulos es donde controlas qué complementos están activos. Cada complemento amplía la aplicación con capacidades adicionales, y se pueden habilitar o deshabilitar en cualquier momento sin reiniciar."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Si alguna vez necesitas un repaso, la nueva Guía de Ayuda está disponible desde el enlace en la esquina superior izquierda de la ventana principal. Contiene una versión de texto completa de todo lo que hemos discutido."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Los complementos incluidos son: este Plugin de Tutorial, que estás usando ahora mismo. El Plugin de Medidor de Pico, que agrega un medidor de V U flotante en tiempo real para monitorear los niveles de salida y evitar la saturación; busca el botón de barras de señal en el encabezado cuando esté habilitado."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "El mundo del audio es ahora tuyo para crear. Este estudio es simplemente un conjunto de herramientas; la visión es solo tuya."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "También se incluye el Administrador de Estilos y Perfiles, que agrega una pestaña dedicada para navegar, editar, habilitar y deshabilitar todas tus instrucciones de estilo y perfiles de diseño de voz guardados. Es la forma más limpia de curar tu biblioteca creativa a medida que crece."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Gracias por acompañarme. ¡Feliz dirección!"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "El Administrador de Módulos también admite la sincronización de complementos desde el repositorio oficial a través de GitHub. Esto significa que los nuevos complementos creados por la comunidad se pueden descargar y activar directamente desde la aplicación."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Para una referencia completa de cada función, receta de tono, etiqueta y técnica cubierta en esta serie, abre la Guía de Ayuda desde la parte superior izquierda de la ventana principal. Es una guía de texto completa que cubre todo en un solo lugar."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Una reflexión final. Esta suite es un conjunto de instrumentos. La habilidad del músico es lo que determina la calidad de la música. Experimenta libremente. Prueba descripciones inusuales. Combina estilos inesperados. El modelo te sorprenderá."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Gracias por tu tiempo. El estudio es tuyo. Feliz dirección."
     }
 ]

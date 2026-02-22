@@ -1,26 +1,58 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "你的语音克隆质量直接取决于你的源音频质量。垃圾进，垃圾出。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "第九章：准备克隆音频。克隆的质量直接反映了参考音频的质量。完美的克隆来自完美的样本。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "你的源音频文件应该尽可能干净。这意味着没有背景音乐，没有噪音，也没有其他人在说话。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "最重要的要求是安静。您的参考音频必须只包含一个声音，没有背景音乐，没有混响，没有人群噪音，也没有其他说话者。即使是少量的背景声音也会滲入克隆中。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "理想的长度是三到十秒之间。少于三秒可能无法提供足够的数据，而超过十五秒有时会引入不稳定性。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "理想的长度在三到十秒之间。少于三秒，模型没有足够的声学数据来工作。超过十五秒并不能改善结果，有时甚至会引入不稳定性。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "说话者应该以正常、中性的语调说话。带有大喊或耳语的高度情绪化的表演可能会导致克隆质量差，以后很难指导。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "说话者应使用中性、对话的语气。高度情绪化的表演——喊叫、哭泣或耳语——更难干净地克隆，并且克隆后产生的语音更难指导。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "你可以使用转录助手选项卡来录制你自己的声音，或者将一个较长的音频文件修剪成一个完美的、干净的样本。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "您可以使用“转录助手”选项卡直接在应用程序中录制您自己的参考音频。它还可以将现有的音频文件裁剪成完美的样本，其内置的Whisper转录功能将自动为您生成准确的文本转录。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "一旦你有了一个高质量的样本，你就可以使用一个功能来大大加快你的工作流程。我们接下来就来探索这个。请加载第十章。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "一个非常实用的工作流程：使用转录助手录制您自己朗读五到八秒的纯文本，修剪剪辑，单击“音频到文本”，然后点击“全部发送到语音克隆选项卡”。所有内容一步到位。"
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "请加载第十章：锁定语音功能，我们将介绍语音克隆会话中最重要的节省时间的工具。"
     }
 ]

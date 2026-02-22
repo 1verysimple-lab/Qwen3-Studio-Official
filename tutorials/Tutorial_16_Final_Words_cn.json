@@ -1,22 +1,66 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "你已经到达了这次导览的终点。你现在拥有指导所有三个创意引擎、管理复杂场景和制作高质量音频的基础知识。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "第十六章：结束语。您已完成全部教程。现在您了解了所有三种合成引擎、批量工作室制作流程、精确控制以及脚本内表演工具。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "请记住，AI是一个创意伙伴。最好的结果往往来自实验。不要害怕尝试不寻常的描述或指令。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "在结束之前，让我们谈谈模块系统。模块管理器选项卡是您控制哪些插件处于活动状态的地方。每个插件都为应用程序扩展了附加功能，并且可以随时启用或禁用，无需重新启动。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "如果你需要复习，新的帮助指南可从主窗口左上角的链接获得。它包含我们讨论过的所有内容的全文本版本。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "捆绑的插件包括：您现在正在使用的本教程插件。峰值计插件，它添加了一个浮动的实时VU表来监控输出电平并防止削波——启用后，请在标题栏中寻找信号条按钮。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "音频的世界现在由你来创造。这个工作室仅仅是一套工具；愿景完全由你决定。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "还包括风格和配置文件管理器，它添加了一个专用选项卡，用于浏览、编辑、启用和禁用所有已保存的风格指令和语音设计配置文件。随着您的创意库的增长，这是整理它的最干净的方法。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "感谢你的参与。祝你指导愉快！"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "模块管理器还支持通过GitHub从官方存储库同步插件。这意味着社区创建的新插件可以直接在应用程序内下载和激活。"
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "有关本系列涵盖的每一项功能、音调配方、标签和技术的完整参考，请从主窗口的左上角打开帮助指南。这是一份全面的文本指南，涵盖了所有内容。"
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "最后一点想法。这个套件是一套乐器。音乐家的技能决定了音乐的质量。自由地进行实验。尝试不寻常的描述。结合意想不到的风格。这个模型会给你带来惊喜。"
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "感谢您的时间。工作室是您的了。祝您指导愉快。"
     }
 ]

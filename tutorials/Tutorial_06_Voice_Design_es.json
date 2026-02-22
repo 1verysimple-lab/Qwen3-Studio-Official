@@ -1,26 +1,58 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "El motor de Diseño de Voz, marcado en azul, es donde puedes inventar nuevos locutores. En esta pestaña, no estás dirigiendo a un actor pre-entrenado; estás creando uno desde la imaginación."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Capítulo Seis: El Motor de Diseño de Voz. La pestaña azul es tu laboratorio de creación de personajes. A diferencia del motor de Voz Personalizada, aquí no hay una identidad de hablante pre-entrenada. Describes la voz que quieres en un lenguaje sencillo, y el modelo la sintetiza desde cero."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Este proceso utiliza dos prompts distintos. El primero es la Descripción de la Voz. Esto describe las cualidades físicas y consistentes del locutor."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Este motor utiliza dos indicaciones completamente separadas que el modelo combina. La Descripción de la Voz define las cualidades físicas y consistentes del hablante. Piénsalo como el cuerpo del personaje. Estas cualidades no cambian entre tomas."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "Piensa en atributos como edad, género, acento y textura vocal. Por ejemplo, 'Un hombre mayor con una voz profunda y áspera y acento británico'."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "La Instrucción de Estilo define la actuación actual. Piénsalo como el estado de ánimo del personaje en esta escena. Puedes generar la misma descripción de voz diez veces con diez instrucciones de estilo diferentes, y obtener diez actuaciones emocionales completamente diferentes."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "El segundo prompt es la Instrucción de Estilo, que funciona igual que en la pestaña de Voz Personalizada. Esto define el estado emocional y la actuación actual del locutor."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Los resultados del diseño de voz desde cero no son deterministas. La misma descripción puede producir voces ligeramente diferentes en cada ejecución. Esto es normal. Cuando encuentres una voz que te encante, fija el número de Semilla del encabezado para reproducirla exactamente, o guarda un W A V y usa el motor de Clonación."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "La IA combina estas dos piezas de información para generar una voz única. Los resultados pueden ser sorprendentes, así que siéntete libre de experimentar con combinaciones creativas."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Hablando de eso, si diseñas una voz que quieres reutilizar en un proyecto largo, este es el flujo de trabajo: genera una línea limpia, guárdala como W A V desde el Historial de Sesiones, luego carga ese W A V en la pestaña de Clonación de Voz como referencia. El motor de clonación reproducirá ese personaje en cualquier texto con una estabilidad mucho mayor."
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Spanish", "temp": 0.7, "top_p": 0.8,
-        "text": "En nuestro próximo capítulo, nos centraremos en el arte de escribir descripciones efectivas para este motor. Por favor, carga el capítulo siete."
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "El motor de Diseño de Voz también es el motor detrás de los bloques de Diseño del Estudio de Lotes. Cuando agregas un bloque de Diseño en el Estudio de Lotes, puedes cargar cualquier perfil guardado para usar tu personaje personalizado dentro de una escena de varias voces."
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "Por favor, carga el Capítulo Siete: El Arte de la Descripción. Nos centraremos en el arte de escribir excelentes descripciones de voz para este motor."
     }
 ]

@@ -1,30 +1,66 @@
 [
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "除了主控件之外，你还可以直接在脚本中使用标签和标点符号来指导表演。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "第十五章：标签和标点符号。除了滑块和风格说明，您还有两种更直接的工具来塑造表演：脚本内动作标签和标点符号控制。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "引擎能理解人类声音的特殊标签。例如，在方括号中写入‘笑声’一词会让模型发笑。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "动作标签是您直接嵌入文本中的简短命令，以触发特定的人类声音。支持的标签有：笑声、呼吸、叹气、喘气、哭泣和清喉咙。为了获得可靠的结果，请务必在括号周围留出空格。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "其他有用的标签包括‘呼吸’、‘叹气’、‘喘气’和‘清嗓子’。为了让它们可靠地工作，你应该总是在括号周围留出空格。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "当风格指令提供匹配的上下文时，标签的效果最好。在“平静”指令中的喘气标签会产生微妙的声音。在“惊恐、恐慌”指令中的同一个喘气标签会产生更发自内心的声音。风格会放大标签的效果。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "标点符号也是控制节奏的强大工具。AI会在逗号和句号处自然停顿。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "标点符号是另一个强大的工具。模型会在逗号和句号处自然停顿，句号会产生稍长的停顿。使用它直接在文本中塑造一行的节奏，而无需更改风格指令。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "如果你想在独白中创造一个更长、更戏剧性的停顿，只需在脚本中插入一个换行符或一个空行。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "要在独白中制造更富戏剧性的停顿，请按Enter键在文本中间添加一个空行。模型会将该空行解释为暂停的指令。这被称为“暂停技巧”，它能让你的场景比任何省略号或逗号都更能营造出一种自然、人性化的感觉。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "模型会将该空行解释为暂停的指令，为你的场景带来更自然、更人性化的感觉。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "还有一种更高级的技术：使用语言选择器强制口音。在选择器中选择任何语言，同时保持文本为其他语言。模型将以原始语言生成文本，但使用所选语言的音韵模式。例如，使用韩语设置的英语文本会产生带有自然韩国口音的英语。"
     },
     {
-        "speaker": "Tutorial Wizard", "style": "News Anchor", "language": "Chinese", "temp": 0.7, "top_p": 0.8,
-        "text": "我们的课程已经到了尾声。请加载最后一章，听一些结束语。"
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "如果您遇到声音含糊不清或听起来混乱的情况，解决方法几乎总是一样的：将温度降低到零点三到零点五之间，通过删除任何冲突的情绪来简化风格指令，并检查您的动作标签的括号周围是否有空格。"
+    },
+    {
+        "speaker": "Tutorial Wizard",
+        "style": "",
+        "language": "English",
+        "temp": 0.7,
+        "top_p": 0.8,
+        "text": "请加载最后一章——第十六章——以获取一些结束语和对模块生态系统的一瞥。"
     }
 ]

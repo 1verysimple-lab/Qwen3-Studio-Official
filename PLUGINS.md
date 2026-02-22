@@ -1,106 +1,156 @@
 # 🔌 Qwen3-TTS Plugin System (Developer Guide)
 
-The Qwen3-TTS Pro Suite is designed to be extensible. You can add entirely new features, tabs, or automation scripts without modifying the core application code.
+The Qwen3-TTS Pro Suite is designed to be extensible. You can add new features, tabs, or automation services without modifying the core application code.
 
 ---
 
-## 🛠️ How it Works
-On startup, the application scans the `./modules/` folder. The **Module Hub** then checks the `enabled_modules.json` registry to determine which plugins should be initialized.
+## 🛠️ How It Works
 
-### The Modules Manager (Main Tab)
-Starting in v4.1.0, you can manage your plugins via the **Modules** tab in the main application:
-*   **Synchronize**: Pulls the latest official plugins from the GitHub repository.
-*   **Toggle**: Enable or disable plugins without deleting the files.
-*   **Validation**: The Hub automatically verifies that the plugin contains the required `initialize(app)` header.
+On startup, the application scans the `./modules/` folder. The **Module Hub** checks `enabled_modules.json` to determine which plugins should be initialised. Plugins that fail to load are logged and skipped — a broken plugin does not crash the app.
+
+### The Modules Manager Tab
+* **Synchronise**: Pulls the latest official plugins from the GitHub repository.
+* **Toggle**: Enable or disable plugins without deleting the files. Takes effect immediately — no restart required.
+* **Validation**: The Hub verifies each plugin contains the required `initialize(app)` function before loading.
 
 ### The Plugin Interface
-Every plugin must define an `initialize(app)` function. This function is called by the main application and receives the `app` instance (the `QwenTTSApp` object), giving you full control over the suite.
+
+Every plugin must define a single top-level function:
 
 ```python
 def initialize(app):
-    # Your code starts here
-    print("My Plugin Loaded!")
+    # app is the QwenTTSApp instance
+    # Called once at startup after the main UI is fully built
+    print("My plugin loaded!")
 ```
 
 ---
 
-## Creating your first Plugin (Hello World)
+## 📦 Bundled Plugins
 
-Create a file named `hello_plugin.py` in the `modules/` folder:
+| Plugin File | Status | Description |
+| :--- | :--- | :--- |
+| `tutorial_plugin.py` | Enabled | Interactive multi-chapter tutorial experience. |
+| `peak_meter_plugin.py` | Enabled | Floating real-time peak meter (📶 VU button in header). |
+| `style_profile_manager_plugin.py` | Enabled | Manage, enable/disable, and inline-edit Styles and Voice Design Profiles. |
+| `text_parser_plugin.py` | Enabled | Script Helper tab for splitting and cleaning long texts. |
+| `autoscript_plugin.py` | Disabled | Demo plugin showing external automation control of the engine. |
+
+---
+
+## 🏗️ Creating Your First Plugin (Hello World)
+
+Create `modules/hello_plugin.py`:
 
 ```python
 import tkinter as tk
 from tkinter import ttk
 
 def initialize(app):
-    # 1. Add a new tab to the main window
+    # Add a new tab to the main window
     plugin_tab = ttk.Frame(app.notebook)
     app.notebook.add(plugin_tab, text="Hello")
 
-    # 2. Add some UI
-    label = tk.Label(plugin_tab, text="Hello from my Plugin!", font=("Segoe UI", 12))
-    label.pack(pady=20)
+    # Add some UI
+    tk.Label(plugin_tab, text="Hello from my Plugin!", font=("Segoe UI", 12)).pack(pady=20)
 
-    # 3. Create a button that uses the main app's engine
+    # Trigger a generation from the plugin
     def say_hello():
-        app.speaker_var.set("Aiden (English Male)")
+        app.speaker_var.set("Aiden")
         app.text_input_custom.delete("1.0", tk.END)
-        app.text_input_custom.insert("1.0", "Hello! I am being controlled by an external plugin.")
+        app.text_input_custom.insert("1.0", "Hello, I am being controlled by an external plugin.")
         app.start_gen_custom()
 
     ttk.Button(plugin_tab, text="Run Engine", command=say_hello).pack()
 ```
 
----
-
-## The "Auto-Script" Tab
-The "Auto-Script" tab visible in the application is a **demonstration plugin** (located in `./modules/autoscript_plugin.py`). It serves two purposes:
-1. It shows users how an automated workflow looks.
-2. It provides developers with a reference implementation for controlling the engine via scripts.
+Enable it from the **Modules** tab and it appears immediately.
 
 ---
 
-## ☁️ Headless Plugins & Background Services
-Plugins do **not** have to create a visible tab. They can run entirely in the background. Possible "Smarter" implementations include:
+## 🤖 Headless Plugins & Background Services
 
-*   **Watch Folders:** A plugin that monitors a specific folder for `.json` script files. When a file is dropped in, the plugin automatically triggers the engine and saves the audio, without any user interaction required.
-*   **Local HTTP API:** A plugin can start a micro-webserver (like FastAPI or Flask) inside the app. This allows other applications (games, web apps, or automation tools) to send generation requests directly to Qwen3 Studio via standard web requests.
-*   **Context Menu Extensions:** Adding new right-click options to the "Session History" list to send audio to external editors or cloud storage.
+Plugins do **not** need to create a visible tab. They can run entirely in the background. Use cases:
+
+* **Watch Folder**: Monitor a folder for `.txt` files and automatically trigger generation when one is dropped in.
+* **Local HTTP API**: Start a micro-server (FastAPI/Flask) inside the app so other applications can request audio via HTTP.
+* **Custom Exporter**: Push finished audio directly to a game engine, DAW, or cloud storage after each batch block completes.
+* **Context Menu Extension**: Add right-click options to the Session History list.
 
 ---
 
-## 🤖 Automated Scripting & Callbacks
-Starting in v3.6.2, the generation methods support **callbacks**. This allows your plugin to run a sequence of generations automatically.
+## 🔑 Key `app` Attributes
 
-### Example: The `on_complete` system
+### UI & Core
+| Attribute | Type | Description |
+| :--- | :--- | :--- |
+| `app.root` | `tk.Tk` | The main Tkinter window. |
+| `app.notebook` | `ttk.Notebook` | Main tab container. Add your plugin tab here. |
+| `app.colors` | `dict` | Theme colour palette. Use `app.colors["accent"]`, `app.colors["bg"]`, etc. |
+
+### Engine & Model
+| Attribute | Type | Description |
+| :--- | :--- | :--- |
+| `app.model` | `Qwen3TTSModel` or `None` | The currently loaded inference model. |
+| `app.current_model_type` | `str` | `"custom"`, `"design"`, or `"base"`. |
+| `app.switch_model(mtype)` | method | Switches to the specified engine type asynchronously. |
+| `app.flush_vram()` | method | Runs `gc.collect()` + `torch.cuda.empty_cache()` + `ipc_collect()`. Call after heavy operations. |
+
+### Configuration & State
+| Attribute | Type | Description |
+| :--- | :--- | :--- |
+| `app.app_config` | `dict` | Live user configuration. Persist changes with `app.save_app_config()`. |
+| `app.voice_configs` | `dict` | Loaded clone voice profiles (name → `{audio_path, transcript}`). |
+| `app.design_profiles` | `dict` | Custom Voice Design profiles (name → `{desc, instruct, temp, top_p}`). |
+| `app.voice_recipes` | `dict` | Built-in read-only Voice Design recipes. |
+| `app.set_busy(state, msg)` | method | Lock/unlock the UI and update the status message. |
+
+### Batch Studio
+| Attribute | Type | Description |
+| :--- | :--- | :--- |
+| `app.director` | `BatchDirector` | The Batch Studio controller. Access blocks via `app.director.blocks`. |
+
+### Generation Controls
+| Attribute | Type | Description |
+| :--- | :--- | :--- |
+| `app.speaker_var` | `tk.StringVar` | Current speaker selection in Custom Voice tab. |
+| `app.seed_var` | `tk.StringVar` | Seed field in Precision Settings. |
+| `app.start_gen_custom()` | method | Trigger Custom Voice generation. |
+
+---
+
+## 🔄 Generation Callbacks
+
+The `switch_model` method accepts an optional callback fired after the model finishes loading:
+
 ```python
-def run_automation(app):
-    def on_finished(result):
-        if result["status"] == "success":
-            print(f"Generation finished in {result['duration']}s")
-            # You can now trigger the next line or process the audio
-        else:
-            print(f"Error: {result['message']}")
+def on_engine_ready():
+    print(f"Engine is ready: {app.current_model_type}")
 
-    # Trigger generation with a callback
-    app.start_gen_custom(on_complete=on_finished)
+app.switch_model("custom", on_success=on_engine_ready)
 ```
 
-**The `result` dictionary contains:**
-*   `status`: "success" or "error"
-*   `audio`: The raw numpy waveform data.
-*   `sample_rate`: The sample rate of the audio.
-*   `duration`: Time taken to generate.
-*   `mode`: Which engine was used ("custom", "design", or "base").
+---
+
+## 📋 Monkey-Patching for Seamless Integration
+
+For plugins that need to intercept existing behaviour (e.g., filtering the style dropdown), you can replace methods on the app instance:
+
+```python
+def initialize(app):
+    original_update = app.update_style_combo
+
+    def filtered_update():
+        original_update()
+        # Post-process the combo values
+        current = list(app.style_combo["values"])
+        app.style_combo["values"] = [v for v in current if not v.startswith("_")]
+
+    app.update_style_combo = filtered_update
+```
+
+The Style & Profile Manager (`style_profile_manager_plugin.py`) uses this pattern to filter disabled styles and profiles from all dropdowns.
 
 ---
 
-## 🔑 Key `app` Attributes you can access:
-*   `app.notebook`: The main UI tab container.
-*   `app.model`: The currently loaded AI model.
-*   `app.root`: The main Tkinter window.
-*   `app.speaker_var`: The variable controlling the Custom Voice dropdown.
-*   `app.ensure_model(mode)`: Call this to check/switch engines automatically.
-
----
 © 2026 Blues Creative Engineering.

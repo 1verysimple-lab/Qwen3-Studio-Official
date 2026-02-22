@@ -2,42 +2,49 @@
     {
         "speaker": "Vivian",
         "style": "News Anchor",
-        "text": "Capítulo 3: Maestría en Custom Voice. Soy Vivian. Esta pestaña es para producción rápida y de alta calidad usando voces preentrenadas como yo.",
+        "text": "Capítulo Tres: Dominio de la Voz Personalizada. Soy Vivian. El motor de Voz Personalizada es tu camino más rápido hacia un audio con calidad de producción. Utiliza identidades de hablantes pre-entrenados, por lo que la voz que escuchas es estable, consistente y está lista para narraciones de larga duración.",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Vivian",
         "style": "News Anchor",
-        "text": "En la pestaña Custom Voice, puedes elegir entre 9 identidades distintas con acentos nativos en inglés, chino, japonés y coreano.",
+        "text": "Tienes nueve hablantes para elegir. Ryan y Aiden son hombres nativos de habla inglesa. Vivian, Serena, Eric, Dylan y el Tío Fu son voces chinas. Ono Anna es japonesa. Sohee es coreana. Cada uno tiene su propio timbre y personalidad.",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Vivian",
         "style": "Seductive",
-        "text": "La actuación lo es todo. Ahora estoy usando el estilo 'Seductive'. Puedes escribir cualquier instrucción de actuación en el cuadro para cambiar nuestro estado de ánimo al instante.",
+        "text": "Ahora escucha con atención. Acabo de cambiar al estilo Seductor. Esa única línea de instrucción cambió toda mi entrega. Escribes la dirección de actuación en el campo de Instrucción de Estilo, y el modelo responde como un actor entrenado.",
         "temp": 0.9,
         "top_p": 0.9
     },
     {
         "speaker": "Vivian",
         "style": "News Anchor",
-        "text": "El botón 'Generate Voice Set' es tu mejor amigo. Crea múltiples versiones emocionales de tu línea para que puedas elegir la mejor.",
+        "text": "El menú desplegable de estilos está lleno de preajustes que puedes cargar con un solo clic. También puedes escribir tu propia instrucción directamente, o modificar una existente. Instrucciones como 'susurrar conspirativamente' o 'leer como si estuviera emocionado pero tratando de mantener la calma' funcionan extremadamente bien.",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Vivian",
         "style": "News Anchor",
-        "text": "Ahora es tu turno. Ve a la pestaña 'Custom Voice'. Escribe una descripción de estilo que te guste en el campo de instrucción, luego usa el cuadro 'Save As' para guardarlo. Usaremos esto en el Capítulo 4.",
+        "text": "Una vez que hayas escrito un estilo que te encante, guárdalo usando el campo Guardar Como debajo del cuadro de instrucciones. Dale un nombre y aparecerá en el menú desplegable a partir de ese momento, en los tres motores.",
         "temp": 0.6,
         "top_p": 0.8
     },
     {
         "speaker": "Vivian",
         "style": "News Anchor",
-        "text": "Cuando termines, vuelve aquí, carga 'Tutorial_04_VoiceDesigner' y haz clic en 'Run Scene'.",
+        "text": "El selector de Idioma fuerza el acento del hablante sin cambiar el idioma del texto. Por ejemplo, cambiar a alemán mientras mantienes tu texto en inglés producirá un inglés hablado con acento alemán. Este es un truco poderoso para crear voces de personajes extranjeros.",
+        "temp": 0.6,
+        "top_p": 0.8
+    },
+    {
+        "speaker": "Vivian",
+        "style": "News Anchor",
+        "text": "Cuando estés listo, carga el Capítulo Cuatro: Diseñador de Voz para aprender a inventar personajes completamente nuevos.",
         "temp": 0.6,
         "top_p": 0.8
     }
