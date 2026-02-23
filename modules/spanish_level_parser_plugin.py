@@ -140,15 +140,13 @@ def initialize(app):
             return
 
         # Confirm before sending
-        if messagebox.askyesno("Confirm", f"Load {len(script_data)} audio blocks into Batch Studio?
-This will replace the current scene."):
+        if messagebox.askyesno("Confirm", f"Load {len(script_data)} audio blocks into Batch Studio?\nThis will replace the current scene."):
             try:
                 app.director.load_script_data(script_data, name=os.path.basename(filename))
                 app.notebook.select(app.tab_batch) # Switch to Batch Studio tab
                 messagebox.showinfo("Success", f"{len(script_data)} blocks sent to Batch Studio.")
             except Exception as e:
-                messagebox.showerror("Error", f"Failed to send to Batch Studio:
-{e}")
+                messagebox.showerror("Error", f"Failed to send to Batch Studio:\n{e}")
 
     def load_json_file():
         """Opens a file dialog and triggers the parsing process."""
