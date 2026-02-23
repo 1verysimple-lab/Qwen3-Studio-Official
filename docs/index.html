@@ -577,6 +577,31 @@
     .footer-links span { color: var(--border); }
     .footer-note { font-size: 0.82rem; color: var(--muted); line-height: 1.85; }
 
+    /* ===== VIDEO EMBED ===== */
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 32px 64px -16px rgba(0,0,0,0.6);
+      background: #000;
+    }
+    .video-wrap::before {
+      content: '';
+      display: block;
+      padding-top: 56.25%; /* 16:9 */
+    }
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 920px) {
       .feature-block { grid-template-columns: 1fr; gap: 36px; }
@@ -621,6 +646,7 @@
   <!-- ===== STICKY NAV ===== -->
   <nav>
     <ul>
+      <li><a href="#video">Video</a></li>
       <li><a href="#engines">Engines</a></li>
       <li><a href="#batch">Batch Studio</a></li>
       <li><a href="#more">Features</a></li>
@@ -630,6 +656,26 @@
       <li><a href="https://github.com/1verysimple-lab/Qwen3-Studio-Official/blob/main/FEATURES.md">Field Guide ↗</a></li>
     </ul>
   </nav>
+
+  <!-- ===== VIDEO ===== -->
+  <div class="container" id="video" style="padding-bottom: 48px;">
+    <div class="fade-in" style="text-align: center; margin-bottom: 40px;">
+      <p class="section-label cyan">Feature Walkthrough</p>
+      <h2 class="section-title">See It In Action</h2>
+      <p class="section-desc" style="margin: 0 auto 0;">A full tour of every engine, the Batch Studio workflow, and the plugin system — from first launch to finished audio.</p>
+    </div>
+    <div class="video-wrap fade-in">
+      <iframe
+        src="https://www.youtube.com/embed/gpUGG4AfSPQ"
+        title="Qwen3 Studio v4.6.0 — Feature Walkthrough"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        loading="lazy">
+      </iframe>
+    </div>
+  </div>
+
+  <hr class="divider">
 
   <!-- ===== THREE ENGINES ===== -->
   <div class="container" id="engines">
