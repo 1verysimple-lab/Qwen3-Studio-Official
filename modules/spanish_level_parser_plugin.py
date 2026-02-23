@@ -62,7 +62,8 @@ def initialize(app):
         except Exception as e:
             print(f"Spanish Parser: Could not refresh speakers: {e}")
 
-    refresh_speakers()
+    # Defer speaker loading to prevent race condition during startup
+    app.root.after(100, refresh_speakers)
     
     # Refresh button
     ttk.Button(speaker_frame, text="↻", command=refresh_speakers, width=3).grid(row=0, column=2, rowspan=2, sticky="e")
