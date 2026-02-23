@@ -3,5 +3,6 @@
     "tutorial_plugin.py": true,
     "test_vibe_check.py": false,
     "autoscript_plugin.py": false,
-    "style_profile_manager_plugin.py": true
+    "style_profile_manager_plugin.py": true,
+    "spanish_level_parser_plugin.py": true
 }
