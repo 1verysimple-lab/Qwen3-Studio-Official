@@ -48,30 +48,53 @@ def initialize(app):
     speaker_es_combo = ttk.Combobox(speaker_frame, textvariable=speaker_es_var, state="readonly", width=25)
     speaker_es_combo.grid(row=1, column=1, sticky="ew", pady=(5,0))
 
-    def refresh_speakers():
-        """Populates speaker dropdowns from the director."""
+    # ── Generation Settings ────────────────────────────────────────────────
+    settings_frame = ttk.LabelFrame(ui_frame, text=" Generation Settings ", padding=(10, 6))
+    settings_frame.grid(row=3, column=0, columnspan=3, sticky="ew", pady=5)
+    settings_frame.columnconfigure(1, weight=1)
+
+    # Style
+    ttk.Label(settings_frame, text="Style:").grid(row=0, column=0, sticky="w", padx=(0, 5))
+    style_var = tk.StringVar()
+    style_combo = ttk.Combobox(settings_frame, textvariable=style_var, state="readonly", width=25)
+    style_combo.grid(row=0, column=1, sticky="ew")
+
+    # Seed
+    ttk.Label(settings_frame, text="Seed:").grid(row=1, column=0, sticky="w", padx=(0, 5), pady=(5,0))
+    seed_var = tk.StringVar()
+    seed_entry = ttk.Entry(settings_frame, textvariable=seed_var, width=27)
+    seed_entry.grid(row=1, column=1, sticky="w", pady=(5,0))
+
+    def refresh_dropdowns():
+        """Populates speaker and style dropdowns from the director."""
         try:
+            # Speakers
             speakers = app.director.get_speakers()
-            # Filter out the '---' separator
             speakers = [s for s in speakers if s != "---"]
             speaker_en_combo['values'] = speakers
             speaker_es_combo['values'] = speakers
             if speakers:
-                speaker_en_combo.current(0)
-                speaker_es_combo.current(0)
-        except Exception as e:
-            print(f"Spanish Parser: Could not refresh speakers: {e}")
+                if not speaker_en_var.get(): speaker_en_combo.current(0)
+                if not speaker_es_var.get(): speaker_es_combo.current(0)
 
-    # Defer speaker loading to prevent race condition during startup
-    app.root.after(100, refresh_speakers)
+            # Styles
+            styles = app.director.get_styles()
+            style_combo['values'] = styles
+            if styles and not style_var.get():
+                style_combo.current(0)
+
+        except Exception as e:
+            print(f"Spanish Parser: Could not refresh dropdowns: {e}")
+
+    # Defer dropdown loading to prevent race condition during startup
+    app.root.after(200, refresh_dropdowns)
     
     # Refresh button
-    ttk.Button(speaker_frame, text="↻", command=refresh_speakers, width=3).grid(row=0, column=2, rowspan=2, sticky="e")
-
-
+    ttk.Button(speaker_frame, text="↻", command=refresh_dropdowns, width=3).grid(row=0, column=2, rowspan=2)
+    
     # ── File Loading ───────────────────────────────────────────────────────
     file_frame = ttk.Frame(ui_frame)
-    file_frame.grid(row=3, column=0, columnspan=3, sticky="ew", pady=10)
+    file_frame.grid(row=4, column=0, columnspan=3, sticky="ew", pady=10)
     file_frame.columnconfigure(1, weight=1)
 
     ttk.Button(file_frame, text="📂 Load Level JSON...", command=lambda: load_json_file()).pack(side=tk.LEFT)
@@ -109,6 +132,8 @@ def initialize(app):
         script_data = []
         speaker_en = speaker_en_var.get()
         speaker_es = speaker_es_var.get()
+        style = style_var.get()
+        seed = seed_var.get().strip()
 
         if not speaker_en or not speaker_es:
             messagebox.showwarning("No Speaker", "Please select both an English and a Spanish voice.")
@@ -127,11 +152,10 @@ def initialize(app):
                 "speaker": speaker,
                 "text": text,
                 "language": lang,
-                "style": "",
+                "style": style,
                 "temp": 0.8,
                 "top_p": 0.8,
-                # Use the JSON key as a pseudo-seed to help identify the block
-                "seed": key  
+                "seed": seed
             }
             script_data.append(entry)
 
