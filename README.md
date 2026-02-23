@@ -57,7 +57,7 @@ To run the suite:
    ```
 2. **For NVIDIA GPU users:** Install PyTorch with the correct CUDA build first to avoid "kernel image" errors:
    ```bash
-   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
    ```
 3. Install remaining dependencies:
    ```bash

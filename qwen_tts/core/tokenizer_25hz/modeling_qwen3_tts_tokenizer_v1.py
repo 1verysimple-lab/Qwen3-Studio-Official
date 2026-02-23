@@ -24,7 +24,13 @@ from torch import nn
 from torch.nn import Parameter
 from torch.nn import functional as F
 from transformers.modeling_utils import ALL_ATTENTION_FUNCTIONS, PreTrainedModel
-from transformers.utils import ModelOutput, auto_docstring, logging
+try:
+    from transformers.utils import ModelOutput, auto_docstring, logging
+except ImportError:
+    from transformers.utils import ModelOutput, logging
+    def auto_docstring(*args, **kwargs):
+        if len(args) == 1 and callable(args[0]): return args[0]
+        return lambda cls: cls
 from transformers.utils.hub import cached_file
 
 from torch.nn.utils.rnn import pad_sequence

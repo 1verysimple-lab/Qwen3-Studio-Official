@@ -9,7 +9,7 @@ from pathlib import Path
 from tqdm import tqdm
 
 # --- 1. CONFIGURATION ---
-APP_ZIP_URL = "https://huggingface.co/datasets/Bluesed/QWEN_STUDIO/resolve/main/Qwen3Studio_v4.6.0.zip?download=true"
+APP_ZIP_URL = "https://huggingface.co/Bluesed/QWEN_STUDIO/resolve/main/Qwen3Studio_v4.6.0.zip?download=true"
 ENGINE_ZIP_URL = "https://huggingface.co/Bluesed/blues-qwen/resolve/main/blues-Qwen3-TTS.zip?download=true"
 PATCH_ZIP_URL = "https://huggingface.co/Bluesed/blues-qwen/resolve/main/qwen_tts.zip?download=true"
 
@@ -130,60 +130,82 @@ def create_shortcut_safe(target_exe, icon_path):
         print(f"⚠️  Shortcut creation failed: {e}")
 
 def main():
+    W = 62
     os.system('cls' if os.name == 'nt' else 'clear')
-    print("="*60)
-    print("   🚀 QWEN3 STUDIO INSTALLER (Aggressive Patch)")
-    print("="*60)
+    print("=" * W)
+    print("  QWEN3 STUDIO v4.6.0  —  SETUP".center(W))
+    print(f"  Installing to: {INSTALL_DIR}")
+    print("=" * W)
 
+    results = {}
+
+    # Step 1: Prepare
+    print("\n[1/3]  Preparing installation directory...")
     if INSTALL_DIR.exists():
-        print(f"🗑️  Cleaning old installation...")
+        print("       Removing previous installation...")
         try:
             shutil.rmtree(INSTALL_DIR)
         except Exception:
-            print("⚠️  App is running. Close it and press ENTER.")
+            print("       App is running. Close it, then press ENTER to continue.")
             input()
             shutil.rmtree(INSTALL_DIR, ignore_errors=True)
-
     INSTALL_DIR.mkdir(parents=True, exist_ok=True)
+    print("       Ready.")
 
-    # App
+    # Step 2: Application
+    print("\n[2/3]  Downloading application (~5 GB)...")
     app_zip = INSTALL_DIR / "app.zip"
-    if download_file(APP_ZIP_URL, app_zip, "Application"):
-        print("📦 Extracting App...")
-        with zipfile.ZipFile(app_zip, 'r') as z: z.extractall(INSTALL_DIR)
+    if download_file(APP_ZIP_URL, app_zip, "Qwen3Studio"):
+        print("       Extracting...")
+        with zipfile.ZipFile(app_zip, 'r') as z:
+            z.extractall(INSTALL_DIR)
         os.remove(app_zip)
-        nested_app = INSTALL_DIR / "Qwen3Studio"
-        if nested_app.exists() and nested_app.is_dir():
-            for item in os.listdir(nested_app):
-                shutil.move(str(nested_app / item), str(INSTALL_DIR))
-            os.rmdir(nested_app)
+        results['Application'] = True
+        print("       Extracted successfully.")
+    else:
+        results['Application'] = False
 
-    # Engine
+    # Step 3: AI Engine weights
+    print("\n[3/3]  Downloading AI engine weights (~11 GB)...")
     engine_zip = INSTALL_DIR / "engine.zip"
-    if download_file(ENGINE_ZIP_URL, engine_zip, "Weights"):
+    if download_file(ENGINE_ZIP_URL, engine_zip, "AI Engine"):
         install_engine_smartly(engine_zip, INSTALL_DIR, ENGINE_DIR)
         os.remove(engine_zip)
+        results['AI Engine'] = True
+    else:
+        results['AI Engine'] = False
 
-    # Patch (Aggressive)
-    patch_zip = INSTALL_DIR / "patch.zip"
-    if download_file(PATCH_ZIP_URL, patch_zip, "Logic"):
-        install_patch_aggressive(patch_zip, ENGINE_DIR)
-        os.remove(patch_zip)
-
-    # Shortcut
+    # Shortcut (no separate step — quick, always runs)
     target_exe = INSTALL_DIR / EXE_NAME
     bundled_icon = Path(resource_path(ICON_NAME))
     dest_icon = INSTALL_DIR / ICON_NAME
+    shortcut_ok = False
     if bundled_icon.exists():
         shutil.copy(bundled_icon, dest_icon)
-        if target_exe.exists():
-            create_shortcut_safe(target_exe, dest_icon)
+    if target_exe.exists():
+        create_shortcut_safe(target_exe, dest_icon if dest_icon.exists() else target_exe)
+        shortcut_ok = True
+    results['Desktop shortcut'] = shortcut_ok
 
-    print("\n" + "="*60)
-    print("🎉 INSTALLATION COMPLETE!")
-    print("   Launch from your Desktop.")
-    print("="*60)
-    time.sleep(5)
+    # Summary
+    all_ok = all(results.values())
+    print("\n" + "=" * W)
+    if all_ok:
+        print("  INSTALLATION COMPLETE".center(W))
+    else:
+        print("  INSTALLATION FINISHED WITH ERRORS".center(W))
+    print("=" * W)
+    for name, ok in results.items():
+        status = "  OK  " if ok else " FAIL "
+        print(f"  [ {status} ]  {name}")
+    print()
+    if all_ok:
+        print("  Qwen3 Studio is ready. Launch it from your Desktop.")
+    else:
+        print("  One or more steps failed — check the log above.")
+        print("  Re-run this installer to try again.")
+    print("=" * W)
+    input("\n  Press ENTER to close...")
 
 if __name__ == "__main__":
     main()

@@ -67,7 +67,7 @@ def zip_application_fast():
             for root, dirs, files in os.walk(source_dir):
                 for file in files:
                     file_path = Path(root) / file
-                    archive_name = file_path.relative_to(source_dir.parent)
+                    archive_name = file_path.relative_to(source_dir)
                     zipf.write(file_path, archive_name)
                     
         print(f"? Packaging Complete: {output_zip.name}")

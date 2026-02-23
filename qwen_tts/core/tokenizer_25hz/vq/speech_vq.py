@@ -13,7 +13,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import sox
 import copy
 import torch
 import operator
@@ -124,6 +123,7 @@ class XVectorExtractor(nn.Module):
         providers = ["CPUExecutionProvider"]
         self.ort_session = onnxruntime.InferenceSession(audio_codec_with_xvector, sess_options=option, providers=providers)
 
+        import sox
         self.tfm = sox.Transformer()
         self.tfm.norm(db_level=-6)
 

@@ -190,10 +190,8 @@ except Exception as e:
 # --- LOCAL IMPORTS ---
 try:
     from qwen_tts import Qwen3TTSModel
-except ImportError:
-    # Fallback mock for UI testing if model file missing
-    print("Warning: qwen_tts.py not found. Model logic will fail.")
-    Qwen3TTSModel = None 
+except Exception:
+    Qwen3TTSModel = None
 
 # --- NEW IMPORT ---
 from batch_director import BatchDirector

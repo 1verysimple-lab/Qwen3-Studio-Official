@@ -29,7 +29,18 @@ last_generation_time.txt
 # Local scratch / temp files
 fix_prompt.md
 files_root.txt
-qwen3_tts_pro_suite.html
+outputdir*.txt
+resume.md
+/qwen3_tts_pro_suite.html
+
+# Binary archives and zip artifacts
+*.zip
 
 # Claude Code project-local config
 .claude/
+
+# Private dev/build tooling
+deploy_workflow.py
+bump_version.py
+release_protocol.md
+release_config.json
