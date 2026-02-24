@@ -9,7 +9,7 @@ from pathlib import Path
 from tqdm import tqdm
 
 # --- 1. CONFIGURATION ---
-APP_ZIP_URL = "https://huggingface.co/Bluesed/QWEN_STUDIO/resolve/main/Qwen3Studio_v4.6.0.zip?download=true"
+APP_ZIP_URL = "https://huggingface.co/Bluesed/QWEN_STUDIO/resolve/main/Qwen3Studio_v4.6.1.zip?download=true"
 ENGINE_ZIP_URL = "https://huggingface.co/Bluesed/blues-qwen/resolve/main/blues-Qwen3-TTS.zip?download=true"
 PATCH_ZIP_URL = "https://huggingface.co/Bluesed/blues-qwen/resolve/main/qwen_tts.zip?download=true"
 

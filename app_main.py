@@ -83,7 +83,7 @@ sox_path = ""
 VERSION_FILE = ""
 CONFIG_FILE = ""
 MODULES_DIR = ""
-APP_VERSION = "4.6.0"
+APP_VERSION = "4.6.1"
 MODEL_CUSTOM = ""
 MODEL_BASE = ""
 MODEL_DESIGN = ""
@@ -4344,19 +4344,36 @@ class QwenTTSApp:
         threading.Thread(target=loop, daemon=True).start()
 
     def _get_vram_usage(self):
-        """Helper to query nvidia-smi."""
-        try:
-            si = None
-            if os.name == 'nt':
-                si = subprocess.STARTUPINFO()
-                si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-                si.wShowWindow = subprocess.SW_HIDE
-            cmd = "nvidia-smi --query-gpu=memory.used,memory.total --format=csv,nounits,noheader"
-            output = subprocess.check_output(cmd.split(), startupinfo=si).decode('utf-8').strip()
-            used, total = map(int, output.split(','))
-            return used, total
-        except Exception:
-            return 0, 0
+        """Query nvidia-smi with explicit path fallbacks for frozen/bundled builds."""
+        si = None
+        if os.name == 'nt':
+            si = subprocess.STARTUPINFO()
+            si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            si.wShowWindow = subprocess.SW_HIDE
+
+        query = ["--query-gpu=memory.used,memory.total", "--format=csv,nounits,noheader"]
+
+        # Explicit paths tried without shell first; bare name via shell as final fallback
+        attempts = [
+            (False, [r"C:\Windows\System32\nvidia-smi.exe"] + query),
+            (False, [r"C:\Program Files\NVIDIA Corporation\NVSMI\nvidia-smi.exe"] + query),
+            (True,  "nvidia-smi --query-gpu=memory.used,memory.total --format=csv,nounits,noheader"),
+        ]
+
+        for use_shell, cmd in attempts:
+            try:
+                output = subprocess.check_output(
+                    cmd,
+                    startupinfo=si,
+                    stderr=subprocess.DEVNULL,
+                    shell=use_shell,
+                ).decode("utf-8").strip()
+                used, total = map(int, output.split(","))
+                return used, total
+            except Exception:
+                continue
+
+        return 0, 0
 
 # =========================================================================
 # 🚀 LAUNCHER LOGIC

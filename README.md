@@ -1,4 +1,4 @@
-# 🎙️ Qwen3-TTS Pro Suite v4.6.0
+# 🎙️ Qwen3-TTS Pro Suite v4.6.1
 
 **Local AI Voice Design, Cloning, and Batch Production**
 

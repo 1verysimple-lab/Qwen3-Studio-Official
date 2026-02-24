@@ -129,7 +129,7 @@ def version_to_tuple(v):
 def check_for_updates():
     """Checks GitHub for version.json and handles patching or full update prompts."""
     # 1. Read local version
-    local_version = "4.6.0"  # <--- THE FIX (Hardcode the truth)
+    local_version = "4.6.1"  # <--- THE FIX (Hardcode the truth)
     if os.path.exists(LOCAL_VERSION_FILE):
         try:
             with open(LOCAL_VERSION_FILE, "r") as f:
