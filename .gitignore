@@ -49,6 +49,7 @@ install_tutorials.py
 tiny_loader.py
 hf_files.json
 INFO_STRUCTURE.MD
+modules/spanish_level_parser_plugin.py
 
 # Personal promo/test content
 promo_batch.json
