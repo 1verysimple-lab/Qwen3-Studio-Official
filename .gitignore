@@ -44,3 +44,22 @@ deploy_workflow.py
 bump_version.py
 release_protocol.md
 release_config.json
+upload_to_hf.py
+install_tutorials.py
+tiny_loader.py
+hf_files.json
+INFO_STRUCTURE.MD
+
+# Personal promo/test content
+promo_batch.json
+promo_script.json
+
+# Personal dev utilities
+get the function names.py
+KILL PROCESS.BAT
+Installation Cleaner.ps1
+qwen studio setup.jpg
+
+# Per-user local state
+app_config.json
+modules/enabled_modules.json
